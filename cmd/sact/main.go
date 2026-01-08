@@ -10,19 +10,28 @@ import (
 	"github.com/tokuhirom/sact/internal"
 )
 
-func initLogger(logPath string) error {
+func buildLogger(logPath string) (*slog.Logger, error) {
 	if logPath == "" {
-		return nil
+		logPath = os.DevNull // not portable
 	}
 
 	f, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
-		return fmt.Errorf("failed to open log file: %w", err)
+		return nil, fmt.Errorf("failed to open log file: %w", err)
 	}
 
 	logger := slog.New(slog.NewTextHandler(f, &slog.HandlerOptions{
 		Level: slog.LevelInfo,
 	}))
+	return logger, nil
+}
+
+func initLogger(logPath string) error {
+	logger, err := buildLogger(logPath)
+	if err != nil {
+		return fmt.Errorf("failed to build logger: %w", err)
+	}
+
 	slog.SetDefault(logger)
 	return nil
 }

@@ -27,7 +27,7 @@ func NewSakuraClient(zone string) (*SakuraClient, error) {
 		return nil, fmt.Errorf("failed to create Sakura Cloud API caller: %w", err)
 	}
 
-	slog.Info("Sakura Cloud API caller created successfully", slog.String("zone", zone))
+	slog.Info("Sakura Cloud API caller created successfully!", slog.String("zone", zone))
 
 	return &SakuraClient{
 		caller: caller,
@@ -40,6 +40,24 @@ type Server struct {
 	Name           string
 	InstanceStatus string
 	Zone           string
+}
+
+// Implement list.Item interface
+func (s Server) FilterValue() string {
+	return s.Name
+}
+
+func (s Server) Title() string {
+	return s.Name
+}
+
+func (s Server) Description() string {
+	return fmt.Sprintf("ID: %s | Status: %s", s.ID, s.InstanceStatus)
+}
+
+func (c *SakuraClient) GetAuthStatus(ctx context.Context) (*iaas.AuthStatus, error) {
+	op := iaas.NewAuthStatusOp(c.caller)
+	return op.Read(ctx)
 }
 
 func (c *SakuraClient) ListServers(ctx context.Context) ([]Server, error) {
