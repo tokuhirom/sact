@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/stretchr/testify/assert"
 )
@@ -526,6 +527,8 @@ func TestDetailViewRendering(t *testing.T) {
 
 	// Test detail display
 	m.detailLoading = false
+	m.windowWidth = 100
+	m.windowHeight = 50
 	m.serverDetail = &ServerDetail{
 		Server: Server{
 			ID:             "123456",
@@ -543,6 +546,10 @@ func TestDetailViewRendering(t *testing.T) {
 		Tags:      []string{"production", "web"},
 		CreatedAt: "2024-01-01 12:00:00",
 	}
+	// Initialize viewport with content
+	content := renderServerDetail(m.serverDetail)
+	m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+	m.detailViewport.SetContent(content)
 
 	output = m.View()
 	assert.Contains(t, output, "test-server")
@@ -556,7 +563,7 @@ func TestDetailViewRendering(t *testing.T) {
 	assert.Contains(t, output, "disk-1")
 	assert.Contains(t, output, "100 GB")
 	assert.Contains(t, output, "production")
-	assert.Contains(t, output, "ESC or q to go back")
+	assert.Contains(t, output, "scroll")
 }
 
 func TestServerDetailLoadedMsg(t *testing.T) {

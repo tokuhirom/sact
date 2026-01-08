@@ -114,10 +114,18 @@ type DNS struct {
 	CreatedAt   string
 }
 
+type DNSRecord struct {
+	Name  string
+	Type  string
+	RData string
+	TTL   int
+}
+
 type DNSDetail struct {
 	DNS
 	Tags         []string
 	RecordCount  int
+	Records      []DNSRecord
 	NameServers  []string
 	IconID       string
 	CreatedAt    string
@@ -529,6 +537,17 @@ func (c *SakuraClient) GetDNSDetail(ctx context.Context, dnsID string) (*DNSDeta
 		nameServers = append(nameServers, ns)
 	}
 
+	// Get DNS records
+	records := []DNSRecord{}
+	for _, rec := range d.Records {
+		records = append(records, DNSRecord{
+			Name:  rec.Name,
+			Type:  string(rec.Type),
+			RData: rec.RData,
+			TTL:   rec.TTL,
+		})
+	}
+
 	detail := &DNSDetail{
 		DNS: DNS{
 			ID:          d.ID.String(),
@@ -540,6 +559,7 @@ func (c *SakuraClient) GetDNSDetail(ctx context.Context, dnsID string) (*DNSDeta
 		},
 		Tags:        d.Tags,
 		RecordCount: len(d.Records),
+		Records:     records,
 		NameServers: nameServers,
 		IconID:      d.IconID.String(),
 		CreatedAt:   createdAt,

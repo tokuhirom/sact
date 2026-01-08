@@ -9,6 +9,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/textinput"
+	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -169,6 +170,7 @@ type model struct {
 	dnsDetail     *DNSDetail
 	detailLoading bool
 	resourceType  ResourceType
+	detailViewport viewport.Model
 }
 
 type serversLoadedMsg struct {
@@ -411,6 +413,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			headerHeight++ // Add line for search input
 		}
 		m.list.SetSize(msg.Width, msg.Height-headerHeight)
+
+		// Update detail viewport size if in detail mode
+		if m.detailMode {
+			m.detailViewport.Width = msg.Width
+			m.detailViewport.Height = msg.Height - 10
+		}
 		return m, nil
 
 	case tea.KeyMsg:
@@ -423,8 +431,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.switchDetail = nil
 				m.dnsDetail = nil
 				return m, nil
+			default:
+				// Pass other keys to viewport for scrolling
+				var cmd tea.Cmd
+				m.detailViewport, cmd = m.detailViewport.Update(msg)
+				return m, cmd
 			}
-			return m, nil
 		}
 
 		// Handle search mode
@@ -617,6 +629,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		m.serverDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderServerDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
 		return m, nil
 
 	case switchDetailLoadedMsg:
@@ -628,6 +644,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		m.switchDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderSwitchDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
 		return m, nil
 
 	case dnsLoadedMsg:
@@ -656,6 +676,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		m.dnsDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderDNSDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
 		return m, nil
 	}
 
@@ -686,18 +710,10 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil {
-			b.WriteString(renderServerDetail(m.serverDetail))
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil {
+			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
-			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
-		} else if m.switchDetail != nil {
-			b.WriteString(renderSwitchDetail(m.switchDetail))
-			b.WriteString("\n")
-			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
-		} else if m.dnsDetail != nil {
-			b.WriteString(renderDNSDetail(m.dnsDetail))
-			b.WriteString("\n")
-			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
+			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
 		}
 		return b.String()
 	}
@@ -833,6 +849,25 @@ func renderDNSDetail(detail *DNSDetail) string {
 	}
 
 	b.WriteString(fmt.Sprintf("Records:     %d\n", detail.RecordCount))
+
+	// Display DNS records in table format
+	if len(detail.Records) > 0 {
+		b.WriteString("\nDNS Records:\n")
+		b.WriteString(fmt.Sprintf("  %-8s %-30s %-8s %s\n", "Type", "Name", "TTL", "Data"))
+		b.WriteString(fmt.Sprintf("  %-8s %-30s %-8s %s\n", "----", "----", "---", "----"))
+		for _, rec := range detail.Records {
+			// Truncate long RData
+			rdata := rec.RData
+			if len(rdata) > 60 {
+				rdata = rdata[:57] + "..."
+			}
+			b.WriteString(fmt.Sprintf("  %-8s %-30s %-8d %s\n",
+				rec.Type,
+				rec.Name,
+				rec.TTL,
+				rdata))
+		}
+	}
 
 	if len(detail.NameServers) > 0 {
 		b.WriteString("\nName Servers:\n")
