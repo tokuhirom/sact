@@ -41,38 +41,74 @@ var (
 	otherStatusStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("11"))
 )
 
-// Custom delegate for single-line server display
-type serverDelegate struct{}
+// Custom delegate for single-line resource display (handles Server and Switch)
+type resourceDelegate struct{}
 
-func (d serverDelegate) Height() int                             { return 1 }
-func (d serverDelegate) Spacing() int                            { return 0 }
-func (d serverDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
-func (d serverDelegate) Render(w io.Writer, m list.Model, index int, item list.Item) {
-	server, ok := item.(Server)
-	if !ok {
-		return
-	}
-
-	// Format: "[>] ServerName (ID: xxx, Status: UP)"
-	statusStyle := otherStatusStyle
-	switch server.InstanceStatus {
-	case "UP":
-		statusStyle = upStatusStyle
-	case "DOWN":
-		statusStyle = downStatusStyle
-	}
-
+func (d resourceDelegate) Height() int                             { return 1 }
+func (d resourceDelegate) Spacing() int                            { return 0 }
+func (d resourceDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
+func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list.Item) {
 	var str string
-	if index == m.Index() {
-		str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s ID: %-20s Status: %s",
-			server.Name,
-			server.ID,
-			statusStyle.Render(server.InstanceStatus)))
+
+	// Handle Server
+	if server, ok := item.(Server); ok {
+		statusStyle := otherStatusStyle
+		switch server.InstanceStatus {
+		case "UP":
+			statusStyle = upStatusStyle
+		case "DOWN":
+			statusStyle = downStatusStyle
+		}
+
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s ID: %-20s Status: %s",
+				server.Name,
+				server.ID,
+				statusStyle.Render(server.InstanceStatus)))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s ID: %-20s Status: %s",
+				server.Name,
+				server.ID,
+				statusStyle.Render(server.InstanceStatus)))
+		}
+	} else if sw, ok := item.(Switch); ok {
+		// Handle Switch
+		width := m.Width()
+
+		// Build info string based on available width
+		var info string
+		if width < 100 {
+			// Compact mode: just ID
+			info = fmt.Sprintf("ID: %-20s", sw.ID)
+		} else if width < 140 {
+			// Medium mode: ID + ServerCount
+			info = fmt.Sprintf("ID: %-20s Servers: %d", sw.ID, sw.ServerCount)
+		} else {
+			// Full mode: ID + ServerCount + DefaultRoute + CreatedAt
+			routeInfo := ""
+			if sw.DefaultRoute != "" {
+				routeInfo = fmt.Sprintf("Route: %-15s", sw.DefaultRoute)
+			}
+			dateInfo := ""
+			if sw.CreatedAt != "" {
+				dateInfo = fmt.Sprintf("Created: %s", sw.CreatedAt)
+			}
+
+			info = fmt.Sprintf("ID: %-20s Servers: %-2d %s %s",
+				sw.ID, sw.ServerCount, routeInfo, dateInfo)
+		}
+
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+				sw.Name,
+				info))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+				sw.Name,
+				info))
+		}
 	} else {
-		str = itemStyle.Render(fmt.Sprintf("  %-40s ID: %-20s Status: %s",
-			server.Name,
-			server.ID,
-			statusStyle.Render(server.InstanceStatus)))
+		return
 	}
 
 	fmt.Fprint(w, str)
@@ -97,12 +133,19 @@ type model struct {
 	currentMatch  int   // Current match index in searchMatches
 	detailMode    bool
 	serverDetail  *ServerDetail
+	switchDetail  *SwitchDetail
 	detailLoading bool
+	resourceType  ResourceType
 }
 
 type serversLoadedMsg struct {
 	servers []Server
 	err     error
+}
+
+type switchesLoadedMsg struct {
+	switches []Switch
+	err      error
 }
 
 type authStatusLoadedMsg struct {
@@ -115,11 +158,24 @@ type serverDetailLoadedMsg struct {
 	err    error
 }
 
+type switchDetailLoadedMsg struct {
+	detail *SwitchDetail
+	err    error
+}
+
 func loadServers(client *SakuraClient) tea.Cmd {
 	return func() tea.Msg {
 		ctx := context.Background()
 		servers, err := client.ListServers(ctx)
 		return serversLoadedMsg{servers: servers, err: err}
+	}
+}
+
+func loadSwitches(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		switches, err := client.ListSwitches(ctx)
+		return switchesLoadedMsg{switches: switches, err: err}
 	}
 }
 
@@ -149,6 +205,19 @@ func loadServerDetail(client *SakuraClient, serverID string) tea.Cmd {
 	}
 }
 
+func loadSwitchDetail(client *SakuraClient, switchID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetSwitchDetail(ctx, switchID)
+		if err != nil {
+			slog.Error("Failed to load switch detail", slog.Any("error", err))
+			return switchDetailLoadedMsg{err: err}
+		}
+		slog.Info("Switch detail loaded successfully", slog.String("switchID", switchID))
+		return switchDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -161,12 +230,12 @@ func InitialModel(client *SakuraClient, defaultZone string) model {
 	}
 
 	// Create list with custom delegate
-	delegate := serverDelegate{}
-	serverList := list.New([]list.Item{}, delegate, 0, 0)
-	serverList.Title = "Servers"
-	serverList.SetShowStatusBar(false)
-	serverList.SetFilteringEnabled(false) // Disable built-in filtering
-	serverList.Styles.Title = titleStyle
+	delegate := resourceDelegate{}
+	resourceList := list.New([]list.Item{}, delegate, 0, 0)
+	resourceList.Title = "Servers"
+	resourceList.SetShowStatusBar(false)
+	resourceList.SetFilteringEnabled(false) // Disable built-in filtering
+	resourceList.Styles.Title = titleStyle
 
 	// Initialize search input
 	ti := textinput.New()
@@ -174,13 +243,14 @@ func InitialModel(client *SakuraClient, defaultZone string) model {
 	ti.CharLimit = 50
 
 	return model{
-		client:      client,
-		list:        serverList,
-		zones:       zones,
-		currentZone: defaultZone,
-		cursor:      cursor,
-		loading:     true,
-		searchInput: ti,
+		client:       client,
+		list:         resourceList,
+		zones:        zones,
+		currentZone:  defaultZone,
+		cursor:       cursor,
+		loading:      true,
+		searchInput:  ti,
+		resourceType: ResourceTypeServer,
 	}
 }
 
@@ -203,13 +273,22 @@ func (m *model) performSearch() {
 
 	items := m.list.Items()
 	for i, item := range items {
-		server, ok := item.(Server)
-		if !ok {
+		// Handle Server
+		if server, ok := item.(Server); ok {
+			if strings.Contains(strings.ToLower(server.Name), query) ||
+				strings.Contains(strings.ToLower(server.ID), query) {
+				m.searchMatches = append(m.searchMatches, i)
+			}
 			continue
 		}
-		if strings.Contains(strings.ToLower(server.Name), query) ||
-			strings.Contains(strings.ToLower(server.ID), query) {
-			m.searchMatches = append(m.searchMatches, i)
+		// Handle Switch
+		if sw, ok := item.(Switch); ok {
+			if strings.Contains(strings.ToLower(sw.Name), query) ||
+				strings.Contains(strings.ToLower(sw.ID), query) ||
+				strings.Contains(strings.ToLower(sw.Desc), query) ||
+				strings.Contains(strings.ToLower(sw.DefaultRoute), query) {
+				m.searchMatches = append(m.searchMatches, i)
+			}
 		}
 	}
 
@@ -268,6 +347,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "esc", "q":
 				m.detailMode = false
 				m.serverDetail = nil
+				m.switchDetail = nil
 				return m, nil
 			}
 			return m, nil
@@ -304,13 +384,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "enter":
-			// Show server detail
+			// Show detail based on resource type
 			if len(m.list.Items()) > 0 {
 				selectedItem := m.list.SelectedItem()
 				if server, ok := selectedItem.(Server); ok {
 					m.detailMode = true
 					m.detailLoading = true
 					return m, loadServerDetail(m.client, server.ID)
+				}
+				if sw, ok := selectedItem.(Switch); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadSwitchDetail(m.client, sw.ID)
 				}
 			}
 			return m, nil
@@ -329,6 +414,28 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.prevMatch()
 			return m, nil
 
+		case "t":
+			// Toggle resource type
+			if m.resourceType == ResourceTypeServer {
+				m.resourceType = ResourceTypeSwitch
+				m.list.Title = "Switches"
+			} else {
+				m.resourceType = ResourceTypeServer
+				m.list.Title = "Servers"
+			}
+			slog.Info("User switched resource type",
+				slog.String("type", m.resourceType.String()))
+			m.loading = true
+			// Clear search when switching resource types
+			m.searchQuery = ""
+			m.searchMatches = []int{}
+			m.currentMatch = -1
+			// Load appropriate resources
+			if m.resourceType == ResourceTypeServer {
+				return m, loadServers(m.client)
+			}
+			return m, loadSwitches(m.client)
+
 		case "z":
 			oldZone := m.currentZone
 			m.cursor = (m.cursor + 1) % len(m.zones)
@@ -342,12 +449,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.searchQuery = ""
 			m.searchMatches = []int{}
 			m.currentMatch = -1
-			return m, loadServers(m.client)
+			// Load appropriate resources based on current type
+			if m.resourceType == ResourceTypeServer {
+				return m, loadServers(m.client)
+			}
+			return m, loadSwitches(m.client)
 
 		case "r":
 			slog.Info("User requested refresh", slog.String("zone", m.currentZone))
 			m.loading = true
-			return m, loadServers(m.client)
+			// Refresh appropriate resources based on current type
+			if m.resourceType == ResourceTypeServer {
+				return m, loadServers(m.client)
+			}
+			return m, loadSwitches(m.client)
 		}
 
 	case serversLoadedMsg:
@@ -363,6 +478,23 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		items := make([]list.Item, len(msg.servers))
 		for i, server := range msg.servers {
 			items[i] = server
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case switchesLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load switches", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Switches loaded successfully", slog.Int("count", len(msg.switches)))
+
+		// Convert switches to list items
+		items := make([]list.Item, len(msg.switches))
+		for i, sw := range msg.switches {
+			items[i] = sw
 		}
 		m.list.SetItems(items)
 		return m, nil
@@ -385,6 +517,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		m.serverDetail = msg.detail
+		return m, nil
+
+	case switchDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load switch detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.switchDetail = msg.detail
 		return m, nil
 	}
 
@@ -414,16 +557,20 @@ func (m model) View() string {
 	// Detail mode view
 	if m.detailMode {
 		if m.detailLoading {
-			b.WriteString("Loading server details...\n")
+			b.WriteString("Loading details...\n")
 		} else if m.serverDetail != nil {
 			b.WriteString(renderServerDetail(m.serverDetail))
+			b.WriteString("\n")
+			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
+		} else if m.switchDetail != nil {
+			b.WriteString(renderSwitchDetail(m.switchDetail))
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
 		}
 		return b.String()
 	}
 
-	// Zone selector
+	// Zone selector and resource type
 	b.WriteString("Zone: ")
 	for i, zone := range m.zones {
 		if i == m.cursor {
@@ -433,6 +580,8 @@ func (m model) View() string {
 		}
 		b.WriteString(" ")
 	}
+	b.WriteString(" | Type: ")
+	b.WriteString(selectedStyle.Render(m.resourceType.String()))
 	b.WriteString("\n")
 
 	// Search mode or search status
@@ -450,15 +599,15 @@ func (m model) View() string {
 		b.WriteString("\n")
 	}
 
-	// Server list or loading/error
+	// Resource list or loading/error
 	if m.loading {
-		b.WriteString("Loading servers...\n")
+		b.WriteString(fmt.Sprintf("Loading %s...\n", strings.ToLower(m.resourceType.String())))
 	} else if m.err != nil {
 		b.WriteString(fmt.Sprintf("Error: %v\n", m.err))
 	} else {
 		b.WriteString(m.list.View())
 		b.WriteString("\n")
-		b.WriteString(helpStyle.Render("Enter: details | /: search | n/N: next/prev | z: zone | r: refresh | q: quit"))
+		b.WriteString(helpStyle.Render("Enter: details | /: search | n/N: next/prev | t: type | z: zone | r: refresh | q: quit"))
 	}
 
 	return b.String()
@@ -494,6 +643,37 @@ func renderServerDetail(detail *ServerDetail) string {
 		for _, disk := range detail.Disks {
 			b.WriteString(fmt.Sprintf("  - %s (%d GB)\n", disk.Name, disk.SizeGB))
 		}
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
+
+func renderSwitchDetail(detail *SwitchDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Switch: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Subnets:     %d\n", detail.SubnetCount))
+	b.WriteString(fmt.Sprintf("Servers:     %d connected\n", detail.ServerCount))
+
+	if detail.DefaultRoute != "" {
+		b.WriteString(fmt.Sprintf("Route:       %s\n", detail.DefaultRoute))
 	}
 
 	if len(detail.Tags) > 0 {
