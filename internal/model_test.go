@@ -533,9 +533,10 @@ func TestDetailViewRendering(t *testing.T) {
 			InstanceStatus: "UP",
 			Zone:           "tk1b",
 		},
-		CPU:         4,
-		MemoryGB:    8,
-		IPAddresses: []string{"192.168.1.1"},
+		CPU:             4,
+		MemoryGB:        8,
+		IPAddresses:     []string{"192.168.1.1"},
+		UserIPAddresses: []string{"10.0.0.1", "10.0.0.2"},
 		Disks: []DiskInfo{
 			{Name: "disk-1", SizeGB: 100},
 		},
@@ -550,6 +551,8 @@ func TestDetailViewRendering(t *testing.T) {
 	assert.Contains(t, output, "4 Core(s)")
 	assert.Contains(t, output, "8 GB")
 	assert.Contains(t, output, "192.168.1.1")
+	assert.Contains(t, output, "User IP:")
+	assert.Contains(t, output, "10.0.0.1")
 	assert.Contains(t, output, "disk-1")
 	assert.Contains(t, output, "100 GB")
 	assert.Contains(t, output, "production")

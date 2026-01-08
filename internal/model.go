@@ -485,6 +485,10 @@ func renderServerDetail(detail *ServerDetail) string {
 		b.WriteString(fmt.Sprintf("IP Address:  %s\n", strings.Join(detail.IPAddresses, ", ")))
 	}
 
+	if len(detail.UserIPAddresses) > 0 {
+		b.WriteString(fmt.Sprintf("User IP:     %s\n", strings.Join(detail.UserIPAddresses, ", ")))
+	}
+
 	if len(detail.Disks) > 0 {
 		b.WriteString("\nDisks:\n")
 		for _, disk := range detail.Disks {

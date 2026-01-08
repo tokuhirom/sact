@@ -45,14 +45,15 @@ type Server struct {
 
 type ServerDetail struct {
 	Server
-	Description    string
-	Tags           []string
-	CPU            int
-	MemoryGB       int
-	InterfaceCount int
-	Disks          []DiskInfo
-	IPAddresses    []string
-	CreatedAt      string
+	Description     string
+	Tags            []string
+	CPU             int
+	MemoryGB        int
+	InterfaceCount  int
+	Disks           []DiskInfo
+	IPAddresses     []string
+	UserIPAddresses []string
+	CreatedAt       string
 }
 
 type DiskInfo struct {
@@ -172,6 +173,9 @@ func (c *SakuraClient) GetServerDetail(ctx context.Context, serverID string) (*S
 		for _, iface := range server.Interfaces {
 			if iface.IPAddress != "" {
 				detail.IPAddresses = append(detail.IPAddresses, iface.IPAddress)
+			}
+			if iface.UserIPAddress != "" {
+				detail.UserIPAddresses = append(detail.UserIPAddresses, iface.UserIPAddress)
 			}
 		}
 	}
