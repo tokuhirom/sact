@@ -95,6 +95,9 @@ type model struct {
 	searchQuery   string
 	searchMatches []int // Indices of matching items
 	currentMatch  int   // Current match index in searchMatches
+	detailMode    bool
+	serverDetail  *ServerDetail
+	detailLoading bool
 }
 
 type serversLoadedMsg struct {
@@ -105,6 +108,11 @@ type serversLoadedMsg struct {
 type authStatusLoadedMsg struct {
 	accountName string
 	err         error
+}
+
+type serverDetailLoadedMsg struct {
+	detail *ServerDetail
+	err    error
 }
 
 func loadServers(client *SakuraClient) tea.Cmd {
@@ -125,6 +133,19 @@ func loadAuthStatus(client *SakuraClient) tea.Cmd {
 		}
 		slog.Info("Auth status loaded successfully", slog.String("account", authStatus.AccountName))
 		return authStatusLoadedMsg{accountName: authStatus.AccountName}
+	}
+}
+
+func loadServerDetail(client *SakuraClient, serverID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetServerDetail(ctx, serverID)
+		if err != nil {
+			slog.Error("Failed to load server detail", slog.Any("error", err))
+			return serverDetailLoadedMsg{err: err}
+		}
+		slog.Info("Server detail loaded successfully", slog.String("serverID", serverID))
+		return serverDetailLoadedMsg{detail: detail}
 	}
 }
 
@@ -241,6 +262,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 
 	case tea.KeyMsg:
+		// Handle detail mode
+		if m.detailMode {
+			switch msg.String() {
+			case "esc", "q":
+				m.detailMode = false
+				m.serverDetail = nil
+				return m, nil
+			}
+			return m, nil
+		}
+
 		// Handle search mode
 		if m.searchMode {
 			switch msg.String() {
@@ -266,6 +298,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			slog.Info("User requested quit")
 			m.quitting = true
 			return m, tea.Quit
+
+		case "enter":
+			// Show server detail
+			if len(m.list.Items()) > 0 {
+				selectedItem := m.list.SelectedItem()
+				if server, ok := selectedItem.(Server); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadServerDetail(m.client, server.ID)
+				}
+			}
+			return m, nil
 
 		case "/":
 			m.searchMode = true
@@ -327,6 +371,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		slog.Info("Setting account name in model", slog.String("accountName", msg.accountName))
 		m.accountName = msg.accountName
 		return m, nil
+
+	case serverDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load server detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.serverDetail = msg.detail
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -351,6 +406,18 @@ func (m model) View() string {
 		b.WriteString("\n")
 	}
 	b.WriteString("\n")
+
+	// Detail mode view
+	if m.detailMode {
+		if m.detailLoading {
+			b.WriteString("Loading server details...\n")
+		} else if m.serverDetail != nil {
+			b.WriteString(renderServerDetail(m.serverDetail))
+			b.WriteString("\n")
+			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
+		}
+		return b.String()
+	}
 
 	// Zone selector
 	b.WriteString("Zone: ")
@@ -386,6 +453,47 @@ func (m model) View() string {
 		b.WriteString(fmt.Sprintf("Error: %v\n", m.err))
 	} else {
 		b.WriteString(m.list.View())
+		b.WriteString("\n")
+		b.WriteString(helpStyle.Render("Enter: details | /: search | n/N: next/prev | z: zone | r: refresh | q: quit"))
+	}
+
+	return b.String()
+}
+
+func renderServerDetail(detail *ServerDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Server: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Status:      %s\n", detail.InstanceStatus))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Description != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Description))
+	}
+
+	b.WriteString(fmt.Sprintf("CPU:         %d Core(s)\n", detail.CPU))
+	b.WriteString(fmt.Sprintf("Memory:      %d GB\n", detail.MemoryGB))
+
+	if len(detail.IPAddresses) > 0 {
+		b.WriteString(fmt.Sprintf("IP Address:  %s\n", strings.Join(detail.IPAddresses, ", ")))
+	}
+
+	if len(detail.Disks) > 0 {
+		b.WriteString("\nDisks:\n")
+		for _, disk := range detail.Disks {
+			b.WriteString(fmt.Sprintf("  - %s (%d GB)\n", disk.Name, disk.SizeGB))
+		}
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
 	}
 
 	return b.String()

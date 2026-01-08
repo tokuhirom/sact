@@ -7,6 +7,7 @@ import (
 
 	"github.com/sacloud/iaas-api-go"
 	"github.com/sacloud/iaas-api-go/helper/api"
+	"github.com/sacloud/iaas-api-go/types"
 )
 
 type SakuraClient struct {
@@ -40,6 +41,23 @@ type Server struct {
 	Name           string
 	InstanceStatus string
 	Zone           string
+}
+
+type ServerDetail struct {
+	Server
+	Description    string
+	Tags           []string
+	CPU            int
+	MemoryGB       int
+	InterfaceCount int
+	Disks          []DiskInfo
+	IPAddresses    []string
+	CreatedAt      string
+}
+
+type DiskInfo struct {
+	Name   string
+	SizeGB int
 }
 
 // Implement list.Item interface
@@ -109,4 +127,72 @@ func (c *SakuraClient) SetZone(zone string) {
 
 func (c *SakuraClient) GetZone() string {
 	return c.zone
+}
+
+func (c *SakuraClient) GetServerDetail(ctx context.Context, serverID string) (*ServerDetail, error) {
+	if c.zone == "" {
+		slog.Error("Zone is not set in client")
+		return nil, fmt.Errorf("zone is not set")
+	}
+
+	slog.Info("Fetching server detail from Sakura Cloud",
+		slog.String("zone", c.zone),
+		slog.String("serverID", serverID))
+
+	serverOp := iaas.NewServerOp(c.caller)
+
+	// Parse server ID
+	id := types.StringID(serverID)
+
+	server, err := serverOp.Read(ctx, c.zone, id)
+	if err != nil {
+		slog.Error("Failed to fetch server detail",
+			slog.String("zone", c.zone),
+			slog.String("serverID", serverID),
+			slog.Any("error", err))
+		return nil, err
+	}
+
+	detail := &ServerDetail{
+		Server: Server{
+			ID:             server.ID.String(),
+			Name:           server.Name,
+			InstanceStatus: string(server.InstanceStatus),
+			Zone:           c.zone,
+		},
+		Description: server.Description,
+		Tags:        server.Tags,
+		CPU:         server.CPU,
+		MemoryGB:    server.GetMemoryGB(),
+	}
+
+	// Get IP addresses
+	if len(server.Interfaces) > 0 {
+		detail.InterfaceCount = len(server.Interfaces)
+		for _, iface := range server.Interfaces {
+			if iface.IPAddress != "" {
+				detail.IPAddresses = append(detail.IPAddresses, iface.IPAddress)
+			}
+		}
+	}
+
+	// Get disk info
+	for _, disk := range server.Disks {
+		if disk != nil {
+			detail.Disks = append(detail.Disks, DiskInfo{
+				Name:   disk.Name,
+				SizeGB: disk.GetSizeGB(),
+			})
+		}
+	}
+
+	if !server.CreatedAt.IsZero() {
+		detail.CreatedAt = server.CreatedAt.Format("2006-01-02 15:04:05")
+	}
+
+	slog.Info("Successfully fetched server detail",
+		slog.String("zone", c.zone),
+		slog.String("serverID", serverID))
+
+	return detail, nil
 }

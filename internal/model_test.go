@@ -459,3 +459,122 @@ func TestEmptyServerList(t *testing.T) {
 	m.performSearch()
 	assert.Equal(t, 0, len(m.searchMatches))
 }
+
+func TestEnterDetailMode(t *testing.T) {
+	client, _ := NewSakuraClient("tk1b")
+	m := InitialModel(client, "tk1b")
+	m.loading = false
+
+	// Add a test server
+	servers := []Server{
+		{ID: "123", Name: "test-server", InstanceStatus: "UP", Zone: "tk1b"},
+	}
+	items := make([]list.Item, len(servers))
+	for i, s := range servers {
+		items[i] = s
+	}
+	m.list.SetItems(items)
+
+	// Press Enter to show details
+	msg := tea.KeyMsg{Type: tea.KeyEnter}
+	updated, cmd := m.Update(msg)
+	m = updated.(model)
+
+	assert.True(t, m.detailMode)
+	assert.True(t, m.detailLoading)
+	assert.NotNil(t, cmd)
+}
+
+func TestExitDetailMode(t *testing.T) {
+	client, _ := NewSakuraClient("tk1b")
+	m := InitialModel(client, "tk1b")
+	m.detailMode = true
+	m.serverDetail = &ServerDetail{
+		Server: Server{ID: "123", Name: "test", InstanceStatus: "UP", Zone: "tk1b"},
+	}
+
+	// Press ESC to exit detail mode
+	msg := tea.KeyMsg{Type: tea.KeyEsc}
+	updated, _ := m.Update(msg)
+	m = updated.(model)
+
+	assert.False(t, m.detailMode)
+	assert.Nil(t, m.serverDetail)
+}
+
+func TestDetailViewRendering(t *testing.T) {
+	client, _ := NewSakuraClient("tk1b")
+	m := InitialModel(client, "tk1b")
+	m.detailMode = true
+	m.detailLoading = true
+
+	// Test loading state
+	output := m.View()
+	assert.Contains(t, output, "Loading server details...")
+
+	// Test detail display
+	m.detailLoading = false
+	m.serverDetail = &ServerDetail{
+		Server: Server{
+			ID:             "123456",
+			Name:           "test-server",
+			InstanceStatus: "UP",
+			Zone:           "tk1b",
+		},
+		CPU:         4,
+		MemoryGB:    8,
+		IPAddresses: []string{"192.168.1.1"},
+		Disks: []DiskInfo{
+			{Name: "disk-1", SizeGB: 100},
+		},
+		Tags:      []string{"production", "web"},
+		CreatedAt: "2024-01-01 12:00:00",
+	}
+
+	output = m.View()
+	assert.Contains(t, output, "test-server")
+	assert.Contains(t, output, "123456")
+	assert.Contains(t, output, "UP")
+	assert.Contains(t, output, "4 Core(s)")
+	assert.Contains(t, output, "8 GB")
+	assert.Contains(t, output, "192.168.1.1")
+	assert.Contains(t, output, "disk-1")
+	assert.Contains(t, output, "100 GB")
+	assert.Contains(t, output, "production")
+	assert.Contains(t, output, "ESC or q to go back")
+}
+
+func TestServerDetailLoadedMsg(t *testing.T) {
+	client, _ := NewSakuraClient("tk1b")
+	m := InitialModel(client, "tk1b")
+	m.detailMode = true
+	m.detailLoading = true
+
+	detail := &ServerDetail{
+		Server: Server{ID: "123", Name: "test", InstanceStatus: "UP", Zone: "tk1b"},
+		CPU:    2,
+	}
+
+	msg := serverDetailLoadedMsg{detail: detail, err: nil}
+	updated, _ := m.Update(msg)
+	m = updated.(model)
+
+	assert.False(t, m.detailLoading)
+	assert.NotNil(t, m.serverDetail)
+	assert.Equal(t, "test", m.serverDetail.Name)
+}
+
+func TestServerDetailLoadedMsgWithError(t *testing.T) {
+	client, _ := NewSakuraClient("tk1b")
+	m := InitialModel(client, "tk1b")
+	m.detailMode = true
+	m.detailLoading = true
+
+	msg := serverDetailLoadedMsg{detail: nil, err: assert.AnError}
+	updated, _ := m.Update(msg)
+	m = updated.(model)
+
+	assert.False(t, m.detailLoading)
+	assert.False(t, m.detailMode) // Should exit detail mode on error
+	assert.NotNil(t, m.err)
+}
