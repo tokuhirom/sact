@@ -697,9 +697,6 @@ func (m model) View() string {
 	var b strings.Builder
 
 	// Header
-	b.WriteString(titleStyle.Render("sact - さくらのクラウド TUI"))
-	b.WriteString("\n")
-
 	if m.accountName != "" {
 		b.WriteString(statusBarStyle.Render(fmt.Sprintf("Account: %s", m.accountName)))
 		b.WriteString("\n")
