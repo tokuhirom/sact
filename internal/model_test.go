@@ -56,6 +56,18 @@ func TestUpdateQuit(t *testing.T) {
 	assert.NotNil(t, cmd)
 }
 
+func TestEscInListViewDoesNotQuit(t *testing.T) {
+	client, _ := NewSakuraClient("tk1b")
+	m := InitialModel(client, "tk1b")
+	m.loading = false
+
+	msg := tea.KeyMsg{Type: tea.KeyEsc}
+	updated, _ := m.Update(msg)
+	m = updated.(model)
+
+	assert.False(t, m.quitting)
+}
+
 func TestUpdateZoneSwitch(t *testing.T) {
 	client, _ := NewSakuraClient("tk1b")
 	m := InitialModel(client, "tk1b")

@@ -299,6 +299,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.quitting = true
 			return m, tea.Quit
 
+		case "esc":
+			// Ignore ESC in list view to prevent accidental exit
+			return m, nil
+
 		case "enter":
 			// Show server detail
 			if len(m.list.Items()) > 0 {
