@@ -13,4 +13,7 @@ func TestServerList(t *testing.T) {
 	servers, err := client.ListServers(t.Context())
 	require.NoError(t, err)
 	require.IsType(t, []Server{}, servers)
+	for i, server := range servers {
+		t.Logf("server %d: %+v", i, server)
+	}
 }

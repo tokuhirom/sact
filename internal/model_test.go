@@ -258,7 +258,7 @@ func TestViewLoading(t *testing.T) {
 
 	output := m.View()
 	assert.Contains(t, output, "sact")
-	assert.Contains(t, output, "Loading servers...")
+	assert.Contains(t, output, "Loading server...")
 	assert.Contains(t, output, "tk1b") // Zone should be shown
 }
 
@@ -352,9 +352,9 @@ func TestAuthStatusLoadedMsg(t *testing.T) {
 	assert.Equal(t, "my-account", m.accountName)
 }
 
-func TestServerDelegateRender(t *testing.T) {
+func TestResourceDelegateRender(t *testing.T) {
 	// Test that delegate renders properly
-	delegate := serverDelegate{}
+	delegate := resourceDelegate{}
 
 	assert.Equal(t, 1, delegate.Height())
 	assert.Equal(t, 0, delegate.Spacing())
@@ -522,7 +522,7 @@ func TestDetailViewRendering(t *testing.T) {
 
 	// Test loading state
 	output := m.View()
-	assert.Contains(t, output, "Loading server details...")
+	assert.Contains(t, output, "Loading details...")
 
 	// Test detail display
 	m.detailLoading = false
