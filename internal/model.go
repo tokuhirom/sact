@@ -107,6 +107,38 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				sw.Name,
 				info))
 		}
+	} else if dns, ok := item.(DNS); ok {
+		// Handle DNS
+		width := m.Width()
+
+		// Build info string based on available width
+		var info string
+		if width < 100 {
+			// Compact mode: just ID
+			info = fmt.Sprintf("ID: %-20s", dns.ID)
+		} else if width < 140 {
+			// Medium mode: ID + RecordCount
+			info = fmt.Sprintf("ID: %-20s Records: %d", dns.ID, dns.RecordCount)
+		} else {
+			// Full mode: ID + RecordCount + CreatedAt
+			dateInfo := ""
+			if dns.CreatedAt != "" {
+				dateInfo = fmt.Sprintf("Created: %s", dns.CreatedAt)
+			}
+
+			info = fmt.Sprintf("ID: %-20s Records: %-3d %s",
+				dns.ID, dns.RecordCount, dateInfo)
+		}
+
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+				dns.Name,
+				info))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+				dns.Name,
+				info))
+		}
 	} else {
 		return
 	}
@@ -134,6 +166,7 @@ type model struct {
 	detailMode    bool
 	serverDetail  *ServerDetail
 	switchDetail  *SwitchDetail
+	dnsDetail     *DNSDetail
 	detailLoading bool
 	resourceType  ResourceType
 }
@@ -160,6 +193,16 @@ type serverDetailLoadedMsg struct {
 
 type switchDetailLoadedMsg struct {
 	detail *SwitchDetail
+	err    error
+}
+
+type dnsLoadedMsg struct {
+	dnsList []DNS
+	err     error
+}
+
+type dnsDetailLoadedMsg struct {
+	detail *DNSDetail
 	err    error
 }
 
@@ -215,6 +258,27 @@ func loadSwitchDetail(client *SakuraClient, switchID string) tea.Cmd {
 		}
 		slog.Info("Switch detail loaded successfully", slog.String("switchID", switchID))
 		return switchDetailLoadedMsg{detail: detail}
+	}
+}
+
+func loadDNS(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		dnsList, err := client.ListDNS(ctx)
+		return dnsLoadedMsg{dnsList: dnsList, err: err}
+	}
+}
+
+func loadDNSDetail(client *SakuraClient, dnsID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetDNSDetail(ctx, dnsID)
+		if err != nil {
+			slog.Error("Failed to load DNS detail", slog.Any("error", err))
+			return dnsDetailLoadedMsg{err: err}
+		}
+		slog.Info("DNS detail loaded successfully", slog.String("dnsID", dnsID))
+		return dnsDetailLoadedMsg{detail: detail}
 	}
 }
 
@@ -289,6 +353,15 @@ func (m *model) performSearch() {
 				strings.Contains(strings.ToLower(sw.DefaultRoute), query) {
 				m.searchMatches = append(m.searchMatches, i)
 			}
+			continue
+		}
+		// Handle DNS
+		if dns, ok := item.(DNS); ok {
+			if strings.Contains(strings.ToLower(dns.Name), query) ||
+				strings.Contains(strings.ToLower(dns.ID), query) ||
+				strings.Contains(strings.ToLower(dns.Desc), query) {
+				m.searchMatches = append(m.searchMatches, i)
+			}
 		}
 	}
 
@@ -348,6 +421,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.detailMode = false
 				m.serverDetail = nil
 				m.switchDetail = nil
+				m.dnsDetail = nil
 				return m, nil
 			}
 			return m, nil
@@ -397,6 +471,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadSwitchDetail(m.client, sw.ID)
 				}
+				if dns, ok := selectedItem.(DNS); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadDNSDetail(m.client, dns.ID)
+				}
 			}
 			return m, nil
 
@@ -415,11 +494,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "t":
-			// Toggle resource type
-			if m.resourceType == ResourceTypeServer {
+			// Cycle through resource types: Server -> Switch -> DNS -> Server
+			switch m.resourceType {
+			case ResourceTypeServer:
 				m.resourceType = ResourceTypeSwitch
 				m.list.Title = "Switches"
-			} else {
+			case ResourceTypeSwitch:
+				m.resourceType = ResourceTypeDNS
+				m.list.Title = "DNS"
+			case ResourceTypeDNS:
 				m.resourceType = ResourceTypeServer
 				m.list.Title = "Servers"
 			}
@@ -431,12 +514,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.searchMatches = []int{}
 			m.currentMatch = -1
 			// Load appropriate resources
-			if m.resourceType == ResourceTypeServer {
+			switch m.resourceType {
+			case ResourceTypeServer:
 				return m, loadServers(m.client)
+			case ResourceTypeSwitch:
+				return m, loadSwitches(m.client)
+			case ResourceTypeDNS:
+				return m, loadDNS(m.client)
 			}
-			return m, loadSwitches(m.client)
+			return m, nil
 
 		case "z":
+			// Zone switching only affects Server and Switch (DNS is global)
+			if m.resourceType == ResourceTypeDNS {
+				return m, nil
+			}
 			oldZone := m.currentZone
 			m.cursor = (m.cursor + 1) % len(m.zones)
 			m.currentZone = m.zones[m.cursor]
@@ -450,19 +542,27 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.searchMatches = []int{}
 			m.currentMatch = -1
 			// Load appropriate resources based on current type
-			if m.resourceType == ResourceTypeServer {
+			switch m.resourceType {
+			case ResourceTypeServer:
 				return m, loadServers(m.client)
+			case ResourceTypeSwitch:
+				return m, loadSwitches(m.client)
 			}
-			return m, loadSwitches(m.client)
+			return m, nil
 
 		case "r":
 			slog.Info("User requested refresh", slog.String("zone", m.currentZone))
 			m.loading = true
 			// Refresh appropriate resources based on current type
-			if m.resourceType == ResourceTypeServer {
+			switch m.resourceType {
+			case ResourceTypeServer:
 				return m, loadServers(m.client)
+			case ResourceTypeSwitch:
+				return m, loadSwitches(m.client)
+			case ResourceTypeDNS:
+				return m, loadDNS(m.client)
 			}
-			return m, loadSwitches(m.client)
+			return m, nil
 		}
 
 	case serversLoadedMsg:
@@ -529,6 +629,34 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.switchDetail = msg.detail
 		return m, nil
+
+	case dnsLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load DNS zones", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("DNS zones loaded successfully", slog.Int("count", len(msg.dnsList)))
+
+		// Convert DNS to list items
+		items := make([]list.Item, len(msg.dnsList))
+		for i, dns := range msg.dnsList {
+			items[i] = dns
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case dnsDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load DNS detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.dnsDetail = msg.detail
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -564,6 +692,10 @@ func (m model) View() string {
 			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
 		} else if m.switchDetail != nil {
 			b.WriteString(renderSwitchDetail(m.switchDetail))
+			b.WriteString("\n")
+			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
+		} else if m.dnsDetail != nil {
+			b.WriteString(renderDNSDetail(m.dnsDetail))
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("Press ESC or q to go back"))
 		}
@@ -682,6 +814,43 @@ func renderSwitchDetail(detail *SwitchDetail) string {
 
 	if detail.CreatedAt != "" {
 		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
+
+func renderDNSDetail(detail *DNSDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("DNS: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Records:     %d\n", detail.RecordCount))
+
+	if len(detail.NameServers) > 0 {
+		b.WriteString("\nName Servers:\n")
+		for _, ns := range detail.NameServers {
+			b.WriteString(fmt.Sprintf("  - %s\n", ns))
+		}
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	if detail.ModifiedAt != "" {
+		b.WriteString(fmt.Sprintf("Modified:    %s\n", detail.ModifiedAt))
 	}
 
 	return b.String()
