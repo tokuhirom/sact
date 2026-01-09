@@ -24,6 +24,16 @@ const (
 	// Future: ResourceTypeAppRun
 )
 
+// AllResourceTypes returns all available resource types
+var AllResourceTypes = []ResourceType{
+	ResourceTypeServer,
+	ResourceTypeSwitch,
+	ResourceTypeDNS,
+	ResourceTypeELB,
+	ResourceTypeGSLB,
+	ResourceTypeDB,
+}
+
 func (r ResourceType) String() string {
 	switch r {
 	case ResourceTypeServer:
