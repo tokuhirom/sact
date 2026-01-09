@@ -203,6 +203,41 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				gslb.Name,
 				info))
 		}
+	} else if db, ok := item.(DB); ok {
+		// Handle DB
+		width := m.Width()
+
+		// Build info string based on available width
+		var info string
+		statusStyle := otherStatusStyle
+		switch db.InstanceStatus {
+		case "UP":
+			statusStyle = upStatusStyle
+		case "DOWN":
+			statusStyle = downStatusStyle
+		}
+
+		if width < 100 {
+			// Compact mode: just ID and Status
+			info = fmt.Sprintf("ID: %-20s Status: %s", db.ID, statusStyle.Render(db.InstanceStatus))
+		} else if width < 140 {
+			// Medium mode: ID + DBType + Status
+			info = fmt.Sprintf("ID: %-20s Type: %-10s Status: %s", db.ID, db.DBType, statusStyle.Render(db.InstanceStatus))
+		} else {
+			// Full mode: ID + DBType + Plan + Status
+			info = fmt.Sprintf("ID: %-20s Type: %-10s Plan: %-20s Status: %s",
+				db.ID, db.DBType, db.Plan, statusStyle.Render(db.InstanceStatus))
+		}
+
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+				db.Name,
+				info))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+				db.Name,
+				info))
+		}
 	} else {
 		return
 	}
@@ -233,6 +268,7 @@ type model struct {
 	dnsDetail     *DNSDetail
 	elbDetail     *ELBDetail
 	gslbDetail    *GSLBDetail
+	dbDetail      *DBDetail
 	detailLoading bool
 	resourceType  ResourceType
 	detailViewport viewport.Model
@@ -290,6 +326,16 @@ type gslbLoadedMsg struct {
 
 type gslbDetailLoadedMsg struct {
 	detail *GSLBDetail
+	err    error
+}
+
+type dbLoadedMsg struct {
+	dbList []DB
+	err    error
+}
+
+type dbDetailLoadedMsg struct {
+	detail *DBDetail
 	err    error
 }
 
@@ -411,6 +457,27 @@ func loadGSLBDetail(client *SakuraClient, gslbID string) tea.Cmd {
 	}
 }
 
+func loadDB(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		dbList, err := client.ListDB(ctx)
+		return dbLoadedMsg{dbList: dbList, err: err}
+	}
+}
+
+func loadDBDetail(client *SakuraClient, dbID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetDBDetail(ctx, dbID)
+		if err != nil {
+			slog.Error("Failed to load DB detail", slog.Any("error", err))
+			return dbDetailLoadedMsg{err: err}
+		}
+		slog.Info("DB detail loaded successfully", slog.String("dbID", dbID))
+		return dbDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -511,6 +578,16 @@ func (m *model) performSearch() {
 				strings.Contains(strings.ToLower(gslb.FQDN), query) {
 				m.searchMatches = append(m.searchMatches, i)
 			}
+			continue
+		}
+		// Handle DB
+		if db, ok := item.(DB); ok {
+			if strings.Contains(strings.ToLower(db.Name), query) ||
+				strings.Contains(strings.ToLower(db.ID), query) ||
+				strings.Contains(strings.ToLower(db.Desc), query) ||
+				strings.Contains(strings.ToLower(db.DBType), query) {
+				m.searchMatches = append(m.searchMatches, i)
+			}
 		}
 	}
 
@@ -579,6 +656,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.dnsDetail = nil
 				m.elbDetail = nil
 				m.gslbDetail = nil
+				m.dbDetail = nil
 				return m, nil
 			default:
 				// Pass other keys to viewport for scrolling
@@ -647,6 +725,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadGSLBDetail(m.client, gslb.ID)
 				}
+				if db, ok := selectedItem.(DB); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadDBDetail(m.client, db.ID)
+				}
 			}
 			return m, nil
 
@@ -665,7 +748,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "t":
-			// Cycle through resource types: Server -> Switch -> DNS -> ELB -> GSLB -> Server
+			// Cycle through resource types: Server -> Switch -> DNS -> ELB -> GSLB -> DB -> Server
 			switch m.resourceType {
 			case ResourceTypeServer:
 				m.resourceType = ResourceTypeSwitch
@@ -680,6 +763,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.resourceType = ResourceTypeGSLB
 				m.list.Title = "GSLB"
 			case ResourceTypeGSLB:
+				m.resourceType = ResourceTypeDB
+				m.list.Title = "DB"
+			case ResourceTypeDB:
 				m.resourceType = ResourceTypeServer
 				m.list.Title = "Servers"
 			}
@@ -702,6 +788,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadELB(m.client)
 			case ResourceTypeGSLB:
 				return m, loadGSLB(m.client)
+			case ResourceTypeDB:
+				return m, loadDB(m.client)
 			}
 			return m, nil
 
@@ -728,6 +816,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadServers(m.client)
 			case ResourceTypeSwitch:
 				return m, loadSwitches(m.client)
+			case ResourceTypeDB:
+				return m, loadDB(m.client)
 			}
 			return m, nil
 
@@ -746,6 +836,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadELB(m.client)
 			case ResourceTypeGSLB:
 				return m, loadGSLB(m.client)
+			case ResourceTypeDB:
+				return m, loadDB(m.client)
 			}
 			return m, nil
 		}
@@ -918,6 +1010,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case dbLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load DBs", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("DBs loaded successfully", slog.Int("count", len(msg.dbList)))
+
+		// Convert DBs to list items
+		items := make([]list.Item, len(msg.dbList))
+		for i, db := range msg.dbList {
+			items[i] = db
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case dbDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load DB detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.dbDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderDBDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -944,7 +1068,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
@@ -1274,6 +1398,55 @@ func renderGSLBDetail(detail *GSLBDetail) string {
 
 		b.WriteString(t.View())
 		b.WriteString("\n")
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
+
+func renderDBDetail(detail *DBDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("DB: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("DB Type:     %s\n", detail.DBType))
+	b.WriteString(fmt.Sprintf("Status:      %s\n", detail.InstanceStatus))
+	b.WriteString(fmt.Sprintf("Plan:        %s\n", detail.Plan))
+	b.WriteString(fmt.Sprintf("CPU:         %d Core(s)\n", detail.CPU))
+	b.WriteString(fmt.Sprintf("Memory:      %d GB\n", detail.MemoryGB))
+	b.WriteString(fmt.Sprintf("Disk Size:   %d GB\n", detail.DiskSizeGB))
+
+	if detail.IPAddress != "" {
+		b.WriteString(fmt.Sprintf("IP Address:  %s\n", detail.IPAddress))
+		if detail.NetworkMaskLen > 0 {
+			b.WriteString(fmt.Sprintf("Netmask:     /%d\n", detail.NetworkMaskLen))
+		}
+		if detail.DefaultRoute != "" {
+			b.WriteString(fmt.Sprintf("Gateway:     %s\n", detail.DefaultRoute))
+		}
+	}
+
+	if detail.Port > 0 {
+		b.WriteString(fmt.Sprintf("Port:        %d\n", detail.Port))
+	}
+
+	if detail.DefaultUser != "" {
+		b.WriteString(fmt.Sprintf("User:        %s\n", detail.DefaultUser))
 	}
 
 	if len(detail.Tags) > 0 {
