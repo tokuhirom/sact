@@ -272,6 +272,9 @@ type model struct {
 	detailLoading bool
 	resourceType  ResourceType
 	detailViewport viewport.Model
+	// Resource type selector
+	resourceSelectMode   bool
+	resourceSelectCursor int
 }
 
 type serversLoadedMsg struct {
@@ -685,6 +688,62 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 
+		// Handle resource select mode
+		if m.resourceSelectMode {
+			switch msg.String() {
+			case "j", "down":
+				if m.resourceSelectCursor < len(AllResourceTypes)-1 {
+					m.resourceSelectCursor++
+				}
+				return m, nil
+			case "k", "up":
+				if m.resourceSelectCursor > 0 {
+					m.resourceSelectCursor--
+				}
+				return m, nil
+			case "enter":
+				selectedType := AllResourceTypes[m.resourceSelectCursor]
+				if selectedType != m.resourceType {
+					m.resourceType = selectedType
+					m.list.Title = selectedType.String()
+					if m.resourceType == ResourceTypeServer {
+						m.list.Title = "Servers"
+					} else if m.resourceType == ResourceTypeSwitch {
+						m.list.Title = "Switches"
+					}
+					slog.Info("User switched resource type",
+						slog.String("type", m.resourceType.String()))
+					m.loading = true
+					// Clear search when switching resource types
+					m.searchQuery = ""
+					m.searchMatches = []int{}
+					m.currentMatch = -1
+					m.resourceSelectMode = false
+					// Load appropriate resources
+					switch m.resourceType {
+					case ResourceTypeServer:
+						return m, loadServers(m.client)
+					case ResourceTypeSwitch:
+						return m, loadSwitches(m.client)
+					case ResourceTypeDNS:
+						return m, loadDNS(m.client)
+					case ResourceTypeELB:
+						return m, loadELB(m.client)
+					case ResourceTypeGSLB:
+						return m, loadGSLB(m.client)
+					case ResourceTypeDB:
+						return m, loadDB(m.client)
+					}
+				}
+				m.resourceSelectMode = false
+				return m, nil
+			case "esc", "t", "q":
+				m.resourceSelectMode = false
+				return m, nil
+			}
+			return m, nil
+		}
+
 		// Normal mode
 		switch msg.String() {
 		case "ctrl+c", "q":
@@ -748,48 +807,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "t":
-			// Cycle through resource types: Server -> Switch -> DNS -> ELB -> GSLB -> DB -> Server
-			switch m.resourceType {
-			case ResourceTypeServer:
-				m.resourceType = ResourceTypeSwitch
-				m.list.Title = "Switches"
-			case ResourceTypeSwitch:
-				m.resourceType = ResourceTypeDNS
-				m.list.Title = "DNS"
-			case ResourceTypeDNS:
-				m.resourceType = ResourceTypeELB
-				m.list.Title = "ELB"
-			case ResourceTypeELB:
-				m.resourceType = ResourceTypeGSLB
-				m.list.Title = "GSLB"
-			case ResourceTypeGSLB:
-				m.resourceType = ResourceTypeDB
-				m.list.Title = "DB"
-			case ResourceTypeDB:
-				m.resourceType = ResourceTypeServer
-				m.list.Title = "Servers"
-			}
-			slog.Info("User switched resource type",
-				slog.String("type", m.resourceType.String()))
-			m.loading = true
-			// Clear search when switching resource types
-			m.searchQuery = ""
-			m.searchMatches = []int{}
-			m.currentMatch = -1
-			// Load appropriate resources
-			switch m.resourceType {
-			case ResourceTypeServer:
-				return m, loadServers(m.client)
-			case ResourceTypeSwitch:
-				return m, loadSwitches(m.client)
-			case ResourceTypeDNS:
-				return m, loadDNS(m.client)
-			case ResourceTypeELB:
-				return m, loadELB(m.client)
-			case ResourceTypeGSLB:
-				return m, loadGSLB(m.client)
-			case ResourceTypeDB:
-				return m, loadDB(m.client)
+			// Open resource type selector menu
+			m.resourceSelectMode = true
+			// Set cursor to current resource type
+			for i, rt := range AllResourceTypes {
+				if rt == m.resourceType {
+					m.resourceSelectCursor = i
+					break
+				}
 			}
 			return m, nil
 
@@ -1073,6 +1098,23 @@ func (m model) View() string {
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
 		}
+		return b.String()
+	}
+
+	// Resource type selector mode
+	if m.resourceSelectMode {
+		b.WriteString(titleStyle.Render("Select Resource Type"))
+		b.WriteString("\n")
+		for i, rt := range AllResourceTypes {
+			if i == m.resourceSelectCursor {
+				b.WriteString(selectedItemStyle.Render(fmt.Sprintf("▸ %s", rt.String())))
+			} else {
+				b.WriteString(itemStyle.Render(fmt.Sprintf("  %s", rt.String())))
+			}
+			b.WriteString("\n")
+		}
+		b.WriteString("\n")
+		b.WriteString(helpStyle.Render("↑/↓/j/k: move | Enter: select | Esc: cancel"))
 		return b.String()
 	}
 
