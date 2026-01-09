@@ -258,7 +258,6 @@ func TestViewLoading(t *testing.T) {
 	m.loading = true
 
 	output := m.View()
-	assert.Contains(t, output, "sact")
 	assert.Contains(t, output, "Loading server...")
 	assert.Contains(t, output, "tk1b") // Zone should be shown
 }

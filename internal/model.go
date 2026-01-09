@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
@@ -140,6 +141,68 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				dns.Name,
 				info))
 		}
+	} else if elb, ok := item.(ELB); ok {
+		// Handle ELB
+		width := m.Width()
+
+		// Build info string based on available width
+		var info string
+		if width < 100 {
+			// Compact mode: just ID and VIP
+			info = fmt.Sprintf("ID: %-20s VIP: %s", elb.ID, elb.VIP)
+		} else if width < 140 {
+			// Medium mode: ID + VIP + ServerCount
+			info = fmt.Sprintf("ID: %-20s VIP: %-15s Servers: %d", elb.ID, elb.VIP, elb.ServerCount)
+		} else {
+			// Full mode: ID + VIP + ServerCount + Plan
+			info = fmt.Sprintf("ID: %-20s VIP: %-15s Servers: %-2d Plan: %s",
+				elb.ID, elb.VIP, elb.ServerCount, elb.Plan)
+		}
+
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+				elb.Name,
+				info))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+				elb.Name,
+				info))
+		}
+	} else if gslb, ok := item.(GSLB); ok {
+		// Handle GSLB
+		width := m.Width()
+
+		// Build info string based on available width
+		var info string
+		if width < 100 {
+			// Compact mode: just ID
+			info = fmt.Sprintf("ID: %-20s", gslb.ID)
+		} else if width < 140 {
+			// Medium mode: ID + FQDN
+			fqdn := gslb.FQDN
+			if len(fqdn) > 30 {
+				fqdn = fqdn[:27] + "..."
+			}
+			info = fmt.Sprintf("ID: %-20s FQDN: %s", gslb.ID, fqdn)
+		} else {
+			// Full mode: ID + FQDN + ServerCount
+			fqdn := gslb.FQDN
+			if len(fqdn) > 40 {
+				fqdn = fqdn[:37] + "..."
+			}
+			info = fmt.Sprintf("ID: %-20s FQDN: %-40s Servers: %d",
+				gslb.ID, fqdn, gslb.ServerCount)
+		}
+
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+				gslb.Name,
+				info))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+				gslb.Name,
+				info))
+		}
 	} else {
 		return
 	}
@@ -168,6 +231,8 @@ type model struct {
 	serverDetail  *ServerDetail
 	switchDetail  *SwitchDetail
 	dnsDetail     *DNSDetail
+	elbDetail     *ELBDetail
+	gslbDetail    *GSLBDetail
 	detailLoading bool
 	resourceType  ResourceType
 	detailViewport viewport.Model
@@ -205,6 +270,26 @@ type dnsLoadedMsg struct {
 
 type dnsDetailLoadedMsg struct {
 	detail *DNSDetail
+	err    error
+}
+
+type elbLoadedMsg struct {
+	elbList []ELB
+	err     error
+}
+
+type elbDetailLoadedMsg struct {
+	detail *ELBDetail
+	err    error
+}
+
+type gslbLoadedMsg struct {
+	gslbList []GSLB
+	err      error
+}
+
+type gslbDetailLoadedMsg struct {
+	detail *GSLBDetail
 	err    error
 }
 
@@ -281,6 +366,48 @@ func loadDNSDetail(client *SakuraClient, dnsID string) tea.Cmd {
 		}
 		slog.Info("DNS detail loaded successfully", slog.String("dnsID", dnsID))
 		return dnsDetailLoadedMsg{detail: detail}
+	}
+}
+
+func loadELB(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		elbList, err := client.ListELB(ctx)
+		return elbLoadedMsg{elbList: elbList, err: err}
+	}
+}
+
+func loadELBDetail(client *SakuraClient, elbID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetELBDetail(ctx, elbID)
+		if err != nil {
+			slog.Error("Failed to load ELB detail", slog.Any("error", err))
+			return elbDetailLoadedMsg{err: err}
+		}
+		slog.Info("ELB detail loaded successfully", slog.String("elbID", elbID))
+		return elbDetailLoadedMsg{detail: detail}
+	}
+}
+
+func loadGSLB(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		gslbList, err := client.ListGSLB(ctx)
+		return gslbLoadedMsg{gslbList: gslbList, err: err}
+	}
+}
+
+func loadGSLBDetail(client *SakuraClient, gslbID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetGSLBDetail(ctx, gslbID)
+		if err != nil {
+			slog.Error("Failed to load GSLB detail", slog.Any("error", err))
+			return gslbDetailLoadedMsg{err: err}
+		}
+		slog.Info("GSLB detail loaded successfully", slog.String("gslbID", gslbID))
+		return gslbDetailLoadedMsg{detail: detail}
 	}
 }
 
@@ -364,6 +491,26 @@ func (m *model) performSearch() {
 				strings.Contains(strings.ToLower(dns.Desc), query) {
 				m.searchMatches = append(m.searchMatches, i)
 			}
+			continue
+		}
+		// Handle ELB
+		if elb, ok := item.(ELB); ok {
+			if strings.Contains(strings.ToLower(elb.Name), query) ||
+				strings.Contains(strings.ToLower(elb.ID), query) ||
+				strings.Contains(strings.ToLower(elb.Desc), query) ||
+				strings.Contains(strings.ToLower(elb.VIP), query) {
+				m.searchMatches = append(m.searchMatches, i)
+			}
+			continue
+		}
+		// Handle GSLB
+		if gslb, ok := item.(GSLB); ok {
+			if strings.Contains(strings.ToLower(gslb.Name), query) ||
+				strings.Contains(strings.ToLower(gslb.ID), query) ||
+				strings.Contains(strings.ToLower(gslb.Desc), query) ||
+				strings.Contains(strings.ToLower(gslb.FQDN), query) {
+				m.searchMatches = append(m.searchMatches, i)
+			}
 		}
 	}
 
@@ -430,6 +577,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.serverDetail = nil
 				m.switchDetail = nil
 				m.dnsDetail = nil
+				m.elbDetail = nil
+				m.gslbDetail = nil
 				return m, nil
 			default:
 				// Pass other keys to viewport for scrolling
@@ -488,6 +637,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadDNSDetail(m.client, dns.ID)
 				}
+				if elb, ok := selectedItem.(ELB); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadELBDetail(m.client, elb.ID)
+				}
+				if gslb, ok := selectedItem.(GSLB); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadGSLBDetail(m.client, gslb.ID)
+				}
 			}
 			return m, nil
 
@@ -506,7 +665,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "t":
-			// Cycle through resource types: Server -> Switch -> DNS -> Server
+			// Cycle through resource types: Server -> Switch -> DNS -> ELB -> GSLB -> Server
 			switch m.resourceType {
 			case ResourceTypeServer:
 				m.resourceType = ResourceTypeSwitch
@@ -515,6 +674,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.resourceType = ResourceTypeDNS
 				m.list.Title = "DNS"
 			case ResourceTypeDNS:
+				m.resourceType = ResourceTypeELB
+				m.list.Title = "ELB"
+			case ResourceTypeELB:
+				m.resourceType = ResourceTypeGSLB
+				m.list.Title = "GSLB"
+			case ResourceTypeGSLB:
 				m.resourceType = ResourceTypeServer
 				m.list.Title = "Servers"
 			}
@@ -533,12 +698,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadSwitches(m.client)
 			case ResourceTypeDNS:
 				return m, loadDNS(m.client)
+			case ResourceTypeELB:
+				return m, loadELB(m.client)
+			case ResourceTypeGSLB:
+				return m, loadGSLB(m.client)
 			}
 			return m, nil
 
 		case "z":
-			// Zone switching only affects Server and Switch (DNS is global)
-			if m.resourceType == ResourceTypeDNS {
+			// Zone switching only affects Server and Switch (DNS, ELB, and GSLB are global)
+			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB {
 				return m, nil
 			}
 			oldZone := m.currentZone
@@ -573,6 +742,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadSwitches(m.client)
 			case ResourceTypeDNS:
 				return m, loadDNS(m.client)
+			case ResourceTypeELB:
+				return m, loadELB(m.client)
+			case ResourceTypeGSLB:
+				return m, loadGSLB(m.client)
 			}
 			return m, nil
 		}
@@ -681,6 +854,70 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case elbLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load ELBs", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("ELBs loaded successfully", slog.Int("count", len(msg.elbList)))
+
+		// Convert ELBs to list items
+		items := make([]list.Item, len(msg.elbList))
+		for i, elb := range msg.elbList {
+			items[i] = elb
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case elbDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load ELB detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.elbDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderELBDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
+
+	case gslbLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load GSLBs", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("GSLBs loaded successfully", slog.Int("count", len(msg.gslbList)))
+
+		// Convert GSLBs to list items
+		items := make([]list.Item, len(msg.gslbList))
+		for i, gslb := range msg.gslbList {
+			items[i] = gslb
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case gslbDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load GSLB detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.gslbDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderGSLBDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -707,7 +944,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
@@ -716,18 +953,27 @@ func (m model) View() string {
 	}
 
 	// Zone selector and resource type
-	b.WriteString("Zone: ")
-	for i, zone := range m.zones {
-		if i == m.cursor {
-			b.WriteString(selectedStyle.Render(fmt.Sprintf("[%s]", zone)))
-		} else {
-			b.WriteString(zoneStyle.Render(fmt.Sprintf(" %s ", zone)))
+	// Show "global" for global resources (DNS, ELB, GSLB)
+	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB {
+		b.WriteString("Zone: ")
+		b.WriteString(zoneStyle.Render("global"))
+		b.WriteString(" | Type: ")
+		b.WriteString(selectedStyle.Render(m.resourceType.String()))
+		b.WriteString("\n")
+	} else {
+		b.WriteString("Zone: ")
+		for i, zone := range m.zones {
+			if i == m.cursor {
+				b.WriteString(selectedStyle.Render(fmt.Sprintf("[%s]", zone)))
+			} else {
+				b.WriteString(zoneStyle.Render(fmt.Sprintf(" %s ", zone)))
+			}
+			b.WriteString(" ")
 		}
-		b.WriteString(" ")
+		b.WriteString(" | Type: ")
+		b.WriteString(selectedStyle.Render(m.resourceType.String()))
+		b.WriteString("\n")
 	}
-	b.WriteString(" | Type: ")
-	b.WriteString(selectedStyle.Render(m.resourceType.String()))
-	b.WriteString("\n")
 
 	// Search mode or search status
 	if m.searchMode {
@@ -883,6 +1129,159 @@ func renderDNSDetail(detail *DNSDetail) string {
 
 	if detail.ModifiedAt != "" {
 		b.WriteString(fmt.Sprintf("Modified:    %s\n", detail.ModifiedAt))
+	}
+
+	return b.String()
+}
+
+func renderELBDetail(detail *ELBDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("ELB: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("VIP:         %s\n", detail.VIP))
+	b.WriteString(fmt.Sprintf("Plan:        %s\n", detail.Plan))
+
+	if detail.FQDN != "" {
+		b.WriteString(fmt.Sprintf("FQDN:        %s\n", detail.FQDN))
+	}
+
+	b.WriteString(fmt.Sprintf("Servers:     %d\n", detail.ServerCount))
+
+	// Display server list in table format
+	if len(detail.Servers) > 0 {
+		b.WriteString("\nServers:\n")
+		b.WriteString(fmt.Sprintf("  %-20s %-8s %s\n", "IP Address", "Port", "Status"))
+		b.WriteString(fmt.Sprintf("  %-20s %-8s %s\n", "----------", "----", "------"))
+		for _, server := range detail.Servers {
+			status := "Disabled"
+			if server.Enabled {
+				status = "Enabled"
+			}
+			b.WriteString(fmt.Sprintf("  %-20s %-8d %s\n",
+				server.IPAddress,
+				server.Port,
+				status))
+		}
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
+
+func renderGSLBDetail(detail *GSLBDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("GSLB: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("FQDN:        %s\n", detail.FQDN))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Servers:     %d\n", detail.ServerCount))
+
+	// Display health check settings
+	if detail.HealthPath != "" {
+		b.WriteString(fmt.Sprintf("Health Path: %s\n", detail.HealthPath))
+	}
+	b.WriteString(fmt.Sprintf("Delay Loop:  %d sec\n", detail.DelayLoop))
+	if detail.Weighted {
+		b.WriteString("Weighted:    Yes\n")
+	} else {
+		b.WriteString("Weighted:    No\n")
+	}
+
+	// Display server list in table format using bubbles table
+	if len(detail.Servers) > 0 {
+		b.WriteString("\nServers:\n")
+
+		var columns []table.Column
+		var rows []table.Row
+
+		if detail.Weighted {
+			columns = []table.Column{
+				{Title: "IP Address", Width: 20},
+				{Title: "Weight", Width: 8},
+				{Title: "Status", Width: 10},
+			}
+
+			for _, server := range detail.Servers {
+				status := "Disabled"
+				if server.Enabled {
+					status = "Enabled"
+				}
+				rows = append(rows, table.Row{
+					server.IPAddress,
+					fmt.Sprintf("%d", server.Weight),
+					status,
+				})
+			}
+		} else {
+			columns = []table.Column{
+				{Title: "IP Address", Width: 20},
+				{Title: "Status", Width: 10},
+			}
+
+			for _, server := range detail.Servers {
+				status := "Disabled"
+				if server.Enabled {
+					status = "Enabled"
+				}
+				rows = append(rows, table.Row{
+					server.IPAddress,
+					status,
+				})
+			}
+		}
+
+		t := table.New(
+			table.WithColumns(columns),
+			table.WithRows(rows),
+			table.WithFocused(false),
+			table.WithHeight(len(rows)),
+		)
+
+		s := table.DefaultStyles()
+		s.Header = s.Header.
+			BorderStyle(lipgloss.NormalBorder()).
+			BorderForeground(lipgloss.Color("240")).
+			BorderBottom(true).
+			Bold(false)
+		s.Selected = s.Selected.
+			Foreground(lipgloss.Color("229")).
+			Background(lipgloss.Color("57")).
+			Bold(false)
+		t.SetStyles(s)
+
+		b.WriteString(t.View())
+		b.WriteString("\n")
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
 	}
 
 	return b.String()

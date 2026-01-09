@@ -18,7 +18,9 @@ const (
 	ResourceTypeServer ResourceType = iota
 	ResourceTypeSwitch
 	ResourceTypeDNS
-	// Future: ResourceTypeDB, ResourceTypeELB, ResourceTypeAppRun
+	ResourceTypeELB
+	ResourceTypeGSLB
+	// Future: ResourceTypeDB, ResourceTypeAppRun
 )
 
 func (r ResourceType) String() string {
@@ -29,6 +31,10 @@ func (r ResourceType) String() string {
 		return "Switch"
 	case ResourceTypeDNS:
 		return "DNS"
+	case ResourceTypeELB:
+		return "ELB"
+	case ResourceTypeGSLB:
+		return "GSLB"
 	default:
 		return "Unknown"
 	}
@@ -123,13 +129,65 @@ type DNSRecord struct {
 
 type DNSDetail struct {
 	DNS
-	Tags         []string
-	RecordCount  int
-	Records      []DNSRecord
-	NameServers  []string
-	IconID       string
-	CreatedAt    string
-	ModifiedAt   string
+	Tags        []string
+	RecordCount int
+	Records     []DNSRecord
+	NameServers []string
+	IconID      string
+	CreatedAt   string
+	ModifiedAt  string
+}
+
+// ELB represents an Enhanced Load Balancer resource
+type ELB struct {
+	ID          string
+	Name        string
+	Desc        string
+	Zone        string
+	VIP         string
+	Plan        string
+	ServerCount int
+	CreatedAt   string
+}
+
+type ELBServer struct {
+	IPAddress string
+	Port      int
+	Enabled   bool
+}
+
+type ELBDetail struct {
+	ELB
+	Tags      []string
+	Servers   []ELBServer
+	FQDN      string
+	CreatedAt string
+}
+
+// GSLB represents a Global Server Load Balancer resource
+type GSLB struct {
+	ID          string
+	Name        string
+	Desc        string
+	FQDN        string
+	ServerCount int
+	CreatedAt   string
+}
+
+type GSLBServer struct {
+	IPAddress string
+	Enabled   bool
+	Weight    int
+}
+
+type GSLBDetail struct {
+	GSLB
+	Tags       []string
+	Servers    []GSLBServer
+	HealthPath string
+	DelayLoop  int
+	Weighted   bool
+	CreatedAt  string
 }
 
 // Implement list.Item interface for Server
@@ -175,6 +233,40 @@ func (d DNS) Description() string {
 	desc := fmt.Sprintf("ID: %s", d.ID)
 	if d.Desc != "" {
 		desc += " | " + d.Desc
+	}
+	return desc
+}
+
+// Implement list.Item interface for ELB
+func (e ELB) FilterValue() string {
+	return e.Name
+}
+
+func (e ELB) Title() string {
+	return e.Name
+}
+
+func (e ELB) Description() string {
+	desc := fmt.Sprintf("ID: %s", e.ID)
+	if e.Desc != "" {
+		desc += " | " + e.Desc
+	}
+	return desc
+}
+
+// Implement list.Item interface for GSLB
+func (g GSLB) FilterValue() string {
+	return g.Name
+}
+
+func (g GSLB) Title() string {
+	return g.Name
+}
+
+func (g GSLB) Description() string {
+	desc := fmt.Sprintf("ID: %s", g.ID)
+	if g.Desc != "" {
+		desc += " | " + g.Desc
 	}
 	return desc
 }
@@ -568,6 +660,239 @@ func (c *SakuraClient) GetDNSDetail(ctx context.Context, dnsID string) (*DNSDeta
 
 	slog.Info("Successfully fetched DNS detail",
 		slog.String("dnsID", dnsID))
+
+	return detail, nil
+}
+
+func (c *SakuraClient) ListELB(ctx context.Context) ([]ELB, error) {
+	slog.Info("Fetching ELBs from Sakura Cloud")
+
+	elbOp := iaas.NewProxyLBOp(c.caller)
+
+	searched, err := elbOp.Find(ctx, &iaas.FindCondition{
+		Sort: search.SortKeys{
+			search.SortKeyAsc("Name"),
+		},
+	})
+	if err != nil {
+		slog.Error("Failed to fetch ELBs",
+			slog.String("zone", c.zone),
+			slog.Any("error", err))
+		return nil, err
+	}
+
+	elbList := make([]ELB, 0, len(searched.ProxyLBs))
+	for _, elb := range searched.ProxyLBs {
+		// Get VIP
+		vip := ""
+		if elb.VirtualIPAddress != "" {
+			vip = elb.VirtualIPAddress
+		}
+
+		// Get plan
+		plan := elb.Plan.String()
+
+		// Count servers
+		serverCount := len(elb.Servers)
+
+		// Format created at
+		createdAt := ""
+		if !elb.CreatedAt.IsZero() {
+			createdAt = elb.CreatedAt.Format("2006-01-02")
+		}
+
+		elbList = append(elbList, ELB{
+			ID:          elb.ID.String(),
+			Name:        elb.Name,
+			Desc:        elb.Description,
+			Zone:        "global", // ELB is a global resource
+			VIP:         vip,
+			Plan:        plan,
+			ServerCount: serverCount,
+			CreatedAt:   createdAt,
+		})
+	}
+
+	slog.Info("Successfully fetched ELBs",
+		slog.String("zone", c.zone),
+		slog.Int("count", len(elbList)))
+
+	return elbList, nil
+}
+
+func (c *SakuraClient) GetELBDetail(ctx context.Context, elbID string) (*ELBDetail, error) {
+	slog.Info("Fetching ELB detail from Sakura Cloud",
+		slog.String("elbID", elbID))
+
+	elbOp := iaas.NewProxyLBOp(c.caller)
+
+	id := types.StringID(elbID)
+
+	elb, err := elbOp.Read(ctx, id)
+	if err != nil {
+		slog.Error("Failed to fetch ELB detail",
+			slog.String("elbID", elbID),
+			slog.Any("error", err))
+		return nil, err
+	}
+
+	// Get VIP
+	vip := ""
+	if elb.VirtualIPAddress != "" {
+		vip = elb.VirtualIPAddress
+	}
+
+	// Get plan
+	plan := elb.Plan.String()
+
+	// Format created at
+	createdAt := ""
+	if !elb.CreatedAt.IsZero() {
+		createdAt = elb.CreatedAt.Format("2006-01-02 15:04:05")
+	}
+
+	// Get servers
+	servers := []ELBServer{}
+	for _, srv := range elb.Servers {
+		servers = append(servers, ELBServer{
+			IPAddress: srv.IPAddress,
+			Port:      srv.Port,
+			Enabled:   srv.Enabled,
+		})
+	}
+
+	detail := &ELBDetail{
+		ELB: ELB{
+			ID:          elb.ID.String(),
+			Name:        elb.Name,
+			Desc:        elb.Description,
+			Zone:        "global",
+			VIP:         vip,
+			Plan:        plan,
+			ServerCount: len(elb.Servers),
+			CreatedAt:   createdAt,
+		},
+		Tags:      elb.Tags,
+		Servers:   servers,
+		FQDN:      elb.FQDN,
+		CreatedAt: createdAt,
+	}
+
+	slog.Info("Successfully fetched ELB detail",
+		slog.String("elbID", elbID))
+
+	return detail, nil
+}
+
+func (c *SakuraClient) ListGSLB(ctx context.Context) ([]GSLB, error) {
+	slog.Info("Fetching GSLBs from Sakura Cloud")
+
+	gslbOp := iaas.NewGSLBOp(c.caller)
+
+	searched, err := gslbOp.Find(ctx, &iaas.FindCondition{
+		Sort: search.SortKeys{
+			search.SortKeyAsc("Name"),
+		},
+	})
+	if err != nil {
+		slog.Error("Failed to fetch GSLBs",
+			slog.Any("error", err))
+		return nil, err
+	}
+
+	gslbList := make([]GSLB, 0, len(searched.GSLBs))
+	for _, gslb := range searched.GSLBs {
+		// Get FQDN
+		fqdn := gslb.FQDN
+
+		// Count servers
+		serverCount := len(gslb.DestinationServers)
+
+		// Format created at
+		createdAt := ""
+		if !gslb.CreatedAt.IsZero() {
+			createdAt = gslb.CreatedAt.Format("2006-01-02")
+		}
+
+		gslbList = append(gslbList, GSLB{
+			ID:          gslb.ID.String(),
+			Name:        gslb.Name,
+			Desc:        gslb.Description,
+			FQDN:        fqdn,
+			ServerCount: serverCount,
+			CreatedAt:   createdAt,
+		})
+	}
+
+	slog.Info("Successfully fetched GSLBs",
+		slog.Int("count", len(gslbList)))
+
+	return gslbList, nil
+}
+
+func (c *SakuraClient) GetGSLBDetail(ctx context.Context, gslbID string) (*GSLBDetail, error) {
+	slog.Info("Fetching GSLB detail from Sakura Cloud",
+		slog.String("gslbID", gslbID))
+
+	gslbOp := iaas.NewGSLBOp(c.caller)
+
+	id := types.StringID(gslbID)
+
+	gslb, err := gslbOp.Read(ctx, id)
+	if err != nil {
+		slog.Error("Failed to fetch GSLB detail",
+			slog.String("gslbID", gslbID),
+			slog.Any("error", err))
+		return nil, err
+	}
+
+	// Format created at
+	createdAt := ""
+	if !gslb.CreatedAt.IsZero() {
+		createdAt = gslb.CreatedAt.Format("2006-01-02 15:04:05")
+	}
+
+	// Get servers
+	servers := []GSLBServer{}
+	for _, srv := range gslb.DestinationServers {
+		servers = append(servers, GSLBServer{
+			IPAddress: srv.IPAddress,
+			Enabled:   srv.Enabled.Bool(),
+			Weight:    int(srv.Weight),
+		})
+	}
+
+	// Get health check path
+	healthPath := ""
+	if gslb.HealthCheck.Path != "" {
+		healthPath = gslb.HealthCheck.Path
+	}
+
+	// Get delay loop
+	delayLoop := gslb.DelayLoop
+
+	// Check if weighted
+	weighted := gslb.Weighted.Bool()
+
+	detail := &GSLBDetail{
+		GSLB: GSLB{
+			ID:          gslb.ID.String(),
+			Name:        gslb.Name,
+			Desc:        gslb.Description,
+			FQDN:        gslb.FQDN,
+			ServerCount: len(gslb.DestinationServers),
+			CreatedAt:   createdAt,
+		},
+		Tags:       gslb.Tags,
+		Servers:    servers,
+		HealthPath: healthPath,
+		DelayLoop:  delayLoop,
+		Weighted:   weighted,
+		CreatedAt:  createdAt,
+	}
+
+	slog.Info("Successfully fetched GSLB detail",
+		slog.String("gslbID", gslbID))
 
 	return detail, nil
 }
