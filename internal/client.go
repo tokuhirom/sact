@@ -205,14 +205,14 @@ type GSLBDetail struct {
 
 // DB represents a Database Appliance resource
 type DB struct {
-	ID          string
-	Name        string
-	Desc        string
-	Zone        string
-	DBType      string
-	Plan        string
+	ID             string
+	Name           string
+	Desc           string
+	Zone           string
+	DBType         string
+	Plan           string
 	InstanceStatus string
-	CreatedAt   string
+	CreatedAt      string
 }
 
 type DBDetail struct {
