@@ -3,11 +3,9 @@ package internal
 import (
 	"context"
 	"fmt"
-	"io"
 	"log/slog"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
@@ -43,211 +41,316 @@ var (
 	otherStatusStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("11"))
 )
 
-// Custom delegate for single-line resource display (handles Server and Switch)
-type resourceDelegate struct{}
+// Helper functions to create table columns for each resource type
+func getServerColumns(width int) []table.Column {
+	nameWidth := 35
+	idWidth := 20
+	statusWidth := 10
 
-func (d resourceDelegate) Height() int                             { return 1 }
-func (d resourceDelegate) Spacing() int                            { return 0 }
-func (d resourceDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
-func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list.Item) {
-	var str string
-
-	// Handle Server
-	if server, ok := item.(Server); ok {
-		statusStyle := otherStatusStyle
-		switch server.InstanceStatus {
-		case "UP":
-			statusStyle = upStatusStyle
-		case "DOWN":
-			statusStyle = downStatusStyle
-		}
-
-		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s ID: %-20s Status: %s",
-				server.Name,
-				server.ID,
-				statusStyle.Render(server.InstanceStatus)))
-		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s ID: %-20s Status: %s",
-				server.Name,
-				server.ID,
-				statusStyle.Render(server.InstanceStatus)))
-		}
-	} else if sw, ok := item.(Switch); ok {
-		// Handle Switch
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		if width < 100 {
-			// Compact mode: just ID
-			info = fmt.Sprintf("ID: %-20s", sw.ID)
-		} else if width < 140 {
-			// Medium mode: ID + ServerCount
-			info = fmt.Sprintf("ID: %-20s Servers: %d", sw.ID, sw.ServerCount)
-		} else {
-			// Full mode: ID + ServerCount + DefaultRoute + CreatedAt
-			routeInfo := ""
-			if sw.DefaultRoute != "" {
-				routeInfo = fmt.Sprintf("Route: %-15s", sw.DefaultRoute)
-			}
-			dateInfo := ""
-			if sw.CreatedAt != "" {
-				dateInfo = fmt.Sprintf("Created: %s", sw.CreatedAt)
-			}
-
-			info = fmt.Sprintf("ID: %-20s Servers: %-2d %s %s",
-				sw.ID, sw.ServerCount, routeInfo, dateInfo)
-		}
-
-		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
-				sw.Name,
-				info))
-		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
-				sw.Name,
-				info))
-		}
-	} else if dns, ok := item.(DNS); ok {
-		// Handle DNS
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		if width < 100 {
-			// Compact mode: just ID
-			info = fmt.Sprintf("ID: %-20s", dns.ID)
-		} else if width < 140 {
-			// Medium mode: ID + RecordCount
-			info = fmt.Sprintf("ID: %-20s Records: %d", dns.ID, dns.RecordCount)
-		} else {
-			// Full mode: ID + RecordCount + CreatedAt
-			dateInfo := ""
-			if dns.CreatedAt != "" {
-				dateInfo = fmt.Sprintf("Created: %s", dns.CreatedAt)
-			}
-
-			info = fmt.Sprintf("ID: %-20s Records: %-3d %s",
-				dns.ID, dns.RecordCount, dateInfo)
-		}
-
-		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
-				dns.Name,
-				info))
-		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
-				dns.Name,
-				info))
-		}
-	} else if elb, ok := item.(ELB); ok {
-		// Handle ELB
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		if width < 100 {
-			// Compact mode: just ID and VIP
-			info = fmt.Sprintf("ID: %-20s VIP: %s", elb.ID, elb.VIP)
-		} else if width < 140 {
-			// Medium mode: ID + VIP + ServerCount
-			info = fmt.Sprintf("ID: %-20s VIP: %-15s Servers: %d", elb.ID, elb.VIP, elb.ServerCount)
-		} else {
-			// Full mode: ID + VIP + ServerCount + Plan
-			info = fmt.Sprintf("ID: %-20s VIP: %-15s Servers: %-2d Plan: %s",
-				elb.ID, elb.VIP, elb.ServerCount, elb.Plan)
-		}
-
-		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
-				elb.Name,
-				info))
-		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
-				elb.Name,
-				info))
-		}
-	} else if gslb, ok := item.(GSLB); ok {
-		// Handle GSLB
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		if width < 100 {
-			// Compact mode: just ID
-			info = fmt.Sprintf("ID: %-20s", gslb.ID)
-		} else if width < 140 {
-			// Medium mode: ID + FQDN
-			fqdn := gslb.FQDN
-			if len(fqdn) > 30 {
-				fqdn = fqdn[:27] + "..."
-			}
-			info = fmt.Sprintf("ID: %-20s FQDN: %s", gslb.ID, fqdn)
-		} else {
-			// Full mode: ID + FQDN + ServerCount
-			fqdn := gslb.FQDN
-			if len(fqdn) > 40 {
-				fqdn = fqdn[:37] + "..."
-			}
-			info = fmt.Sprintf("ID: %-20s FQDN: %-40s Servers: %d",
-				gslb.ID, fqdn, gslb.ServerCount)
-		}
-
-		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
-				gslb.Name,
-				info))
-		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
-				gslb.Name,
-				info))
-		}
-	} else if db, ok := item.(DB); ok {
-		// Handle DB
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		statusStyle := otherStatusStyle
-		switch db.InstanceStatus {
-		case "UP":
-			statusStyle = upStatusStyle
-		case "DOWN":
-			statusStyle = downStatusStyle
-		}
-
-		if width < 100 {
-			// Compact mode: just ID and Status
-			info = fmt.Sprintf("ID: %-20s Status: %s", db.ID, statusStyle.Render(db.InstanceStatus))
-		} else if width < 140 {
-			// Medium mode: ID + DBType + Status
-			info = fmt.Sprintf("ID: %-20s Type: %-10s Status: %s", db.ID, db.DBType, statusStyle.Render(db.InstanceStatus))
-		} else {
-			// Full mode: ID + DBType + Plan + Status
-			info = fmt.Sprintf("ID: %-20s Type: %-10s Plan: %-20s Status: %s",
-				db.ID, db.DBType, db.Plan, statusStyle.Render(db.InstanceStatus))
-		}
-
-		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
-				db.Name,
-				info))
-		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
-				db.Name,
-				info))
-		}
-	} else {
-		return
+	if width < 100 {
+		nameWidth = 30
+		idWidth = 15
+	} else if width > 140 {
+		nameWidth = 45
 	}
 
-	fmt.Fprint(w, str)
+	return []table.Column{
+		{Title: "Name", Width: nameWidth},
+		{Title: "ID", Width: idWidth},
+		{Title: "Status", Width: statusWidth},
+	}
+}
+
+func getSwitchColumns(width int) []table.Column {
+	nameWidth := 35
+	idWidth := 20
+	serversWidth := 10
+
+	if width < 100 {
+		return []table.Column{
+			{Title: "Name", Width: 30},
+			{Title: "ID", Width: 20},
+		}
+	} else if width < 140 {
+		return []table.Column{
+			{Title: "Name", Width: nameWidth},
+			{Title: "ID", Width: idWidth},
+			{Title: "Servers", Width: serversWidth},
+		}
+	} else {
+		return []table.Column{
+			{Title: "Name", Width: 40},
+			{Title: "ID", Width: idWidth},
+			{Title: "Servers", Width: serversWidth},
+			{Title: "Route", Width: 15},
+			{Title: "Created", Width: 12},
+		}
+	}
+}
+
+func getDNSColumns(width int) []table.Column {
+	nameWidth := 35
+	idWidth := 20
+	recordsWidth := 10
+
+	if width < 100 {
+		return []table.Column{
+			{Title: "Name", Width: 30},
+			{Title: "ID", Width: 20},
+		}
+	} else if width < 140 {
+		return []table.Column{
+			{Title: "Name", Width: nameWidth},
+			{Title: "ID", Width: idWidth},
+			{Title: "Records", Width: recordsWidth},
+		}
+	} else {
+		return []table.Column{
+			{Title: "Name", Width: 40},
+			{Title: "ID", Width: idWidth},
+			{Title: "Records", Width: recordsWidth},
+			{Title: "Created", Width: 12},
+		}
+	}
+}
+
+func getELBColumns(width int) []table.Column {
+	if width < 100 {
+		return []table.Column{
+			{Title: "Name", Width: 30},
+			{Title: "ID", Width: 20},
+			{Title: "VIP", Width: 15},
+		}
+	} else if width < 140 {
+		return []table.Column{
+			{Title: "Name", Width: 35},
+			{Title: "ID", Width: 20},
+			{Title: "VIP", Width: 15},
+			{Title: "Servers", Width: 10},
+		}
+	} else {
+		return []table.Column{
+			{Title: "Name", Width: 40},
+			{Title: "ID", Width: 20},
+			{Title: "VIP", Width: 15},
+			{Title: "Servers", Width: 10},
+			{Title: "Plan", Width: 15},
+		}
+	}
+}
+
+func getGSLBColumns(width int) []table.Column {
+	if width < 100 {
+		return []table.Column{
+			{Title: "Name", Width: 30},
+			{Title: "ID", Width: 20},
+		}
+	} else if width < 140 {
+		return []table.Column{
+			{Title: "Name", Width: 35},
+			{Title: "ID", Width: 20},
+			{Title: "FQDN", Width: 30},
+		}
+	} else {
+		return []table.Column{
+			{Title: "Name", Width: 40},
+			{Title: "ID", Width: 20},
+			{Title: "FQDN", Width: 40},
+			{Title: "Servers", Width: 10},
+		}
+	}
+}
+
+func getDBColumns(width int) []table.Column {
+	if width < 100 {
+		return []table.Column{
+			{Title: "Name", Width: 30},
+			{Title: "ID", Width: 20},
+			{Title: "Status", Width: 10},
+		}
+	} else if width < 140 {
+		return []table.Column{
+			{Title: "Name", Width: 35},
+			{Title: "ID", Width: 20},
+			{Title: "Type", Width: 10},
+			{Title: "Status", Width: 10},
+		}
+	} else {
+		return []table.Column{
+			{Title: "Name", Width: 40},
+			{Title: "ID", Width: 20},
+			{Title: "Type", Width: 10},
+			{Title: "Plan", Width: 20},
+			{Title: "Status", Width: 10},
+		}
+	}
+}
+
+// Helper functions to convert resources to table rows
+func serverToRow(server Server, width int) table.Row {
+	statusStr := server.InstanceStatus
+	switch server.InstanceStatus {
+	case "UP":
+		statusStr = upStatusStyle.Render(server.InstanceStatus)
+	case "DOWN":
+		statusStr = downStatusStyle.Render(server.InstanceStatus)
+	default:
+		statusStr = otherStatusStyle.Render(server.InstanceStatus)
+	}
+
+	return table.Row{
+		server.Name,
+		server.ID,
+		statusStr,
+	}
+}
+
+func switchToRow(sw Switch, width int) table.Row {
+	if width < 100 {
+		return table.Row{
+			sw.Name,
+			sw.ID,
+		}
+	} else if width < 140 {
+		return table.Row{
+			sw.Name,
+			sw.ID,
+			fmt.Sprintf("%d", sw.ServerCount),
+		}
+	} else {
+		createdAt := ""
+		if sw.CreatedAt != "" && len(sw.CreatedAt) >= 10 {
+			createdAt = sw.CreatedAt[:10]
+		}
+		return table.Row{
+			sw.Name,
+			sw.ID,
+			fmt.Sprintf("%d", sw.ServerCount),
+			sw.DefaultRoute,
+			createdAt,
+		}
+	}
+}
+
+func dnsToRow(dns DNS, width int) table.Row {
+	if width < 100 {
+		return table.Row{
+			dns.Name,
+			dns.ID,
+		}
+	} else if width < 140 {
+		return table.Row{
+			dns.Name,
+			dns.ID,
+			fmt.Sprintf("%d", dns.RecordCount),
+		}
+	} else {
+		createdAt := ""
+		if dns.CreatedAt != "" && len(dns.CreatedAt) >= 10 {
+			createdAt = dns.CreatedAt[:10]
+		}
+		return table.Row{
+			dns.Name,
+			dns.ID,
+			fmt.Sprintf("%d", dns.RecordCount),
+			createdAt,
+		}
+	}
+}
+
+func elbToRow(elb ELB, width int) table.Row {
+	if width < 100 {
+		return table.Row{
+			elb.Name,
+			elb.ID,
+			elb.VIP,
+		}
+	} else if width < 140 {
+		return table.Row{
+			elb.Name,
+			elb.ID,
+			elb.VIP,
+			fmt.Sprintf("%d", elb.ServerCount),
+		}
+	} else {
+		return table.Row{
+			elb.Name,
+			elb.ID,
+			elb.VIP,
+			fmt.Sprintf("%d", elb.ServerCount),
+			elb.Plan,
+		}
+	}
+}
+
+func gslbToRow(gslb GSLB, width int) table.Row {
+	if width < 100 {
+		return table.Row{
+			gslb.Name,
+			gslb.ID,
+		}
+	} else if width < 140 {
+		fqdn := gslb.FQDN
+		if len(fqdn) > 30 {
+			fqdn = fqdn[:27] + "..."
+		}
+		return table.Row{
+			gslb.Name,
+			gslb.ID,
+			fqdn,
+		}
+	} else {
+		fqdn := gslb.FQDN
+		if len(fqdn) > 40 {
+			fqdn = fqdn[:37] + "..."
+		}
+		return table.Row{
+			gslb.Name,
+			gslb.ID,
+			fqdn,
+			fmt.Sprintf("%d", gslb.ServerCount),
+		}
+	}
+}
+
+func dbToRow(db DB, width int) table.Row {
+	statusStr := db.InstanceStatus
+	switch db.InstanceStatus {
+	case "UP":
+		statusStr = upStatusStyle.Render(db.InstanceStatus)
+	case "DOWN":
+		statusStr = downStatusStyle.Render(db.InstanceStatus)
+	default:
+		statusStr = otherStatusStyle.Render(db.InstanceStatus)
+	}
+
+	if width < 100 {
+		return table.Row{
+			db.Name,
+			db.ID,
+			statusStr,
+		}
+	} else if width < 140 {
+		return table.Row{
+			db.Name,
+			db.ID,
+			db.DBType,
+			statusStr,
+		}
+	} else {
+		return table.Row{
+			db.Name,
+			db.ID,
+			db.DBType,
+			db.Plan,
+			statusStr,
+		}
+	}
 }
 
 type model struct {
 	client         *SakuraClient
-	list           list.Model
+	resourceTable  table.Model
 	zones          []string
 	currentZone    string
 	cursor         int
@@ -275,6 +378,13 @@ type model struct {
 	// Resource type selector
 	resourceSelectMode   bool
 	resourceSelectCursor int
+	// Raw resource data (for search and detail view)
+	servers  []Server
+	switches []Switch
+	dnsList  []DNS
+	elbList  []ELB
+	gslbList []GSLB
+	dbList   []DB
 }
 
 type serversLoadedMsg struct {
@@ -492,13 +602,27 @@ func InitialModel(client *SakuraClient, defaultZone string) model {
 		}
 	}
 
-	// Create list with custom delegate
-	delegate := resourceDelegate{}
-	resourceList := list.New([]list.Item{}, delegate, 0, 0)
-	resourceList.Title = "Servers"
-	resourceList.SetShowStatusBar(false)
-	resourceList.SetFilteringEnabled(false) // Disable built-in filtering
-	resourceList.Styles.Title = titleStyle
+	// Create table with server columns
+	columns := getServerColumns(100) // Default width
+	t := table.New(
+		table.WithColumns(columns),
+		table.WithRows([]table.Row{}),
+		table.WithFocused(true),
+		table.WithHeight(10),
+	)
+
+	// Style the table
+	s := table.DefaultStyles()
+	s.Header = s.Header.
+		BorderStyle(lipgloss.NormalBorder()).
+		BorderForeground(lipgloss.Color("240")).
+		BorderBottom(true).
+		Bold(true)
+	s.Selected = s.Selected.
+		Foreground(lipgloss.Color("229")).
+		Background(lipgloss.Color("57")).
+		Bold(false)
+	t.SetStyles(s)
 
 	// Initialize search input
 	ti := textinput.New()
@@ -506,15 +630,90 @@ func InitialModel(client *SakuraClient, defaultZone string) model {
 	ti.CharLimit = 50
 
 	return model{
-		client:       client,
-		list:         resourceList,
-		zones:        zones,
-		currentZone:  defaultZone,
-		cursor:       cursor,
-		loading:      true,
-		searchInput:  ti,
-		resourceType: ResourceTypeServer,
+		client:        client,
+		resourceTable: t,
+		zones:         zones,
+		currentZone:   defaultZone,
+		cursor:        cursor,
+		loading:       true,
+		searchInput:   ti,
+		resourceType:  ResourceTypeServer,
 	}
+}
+
+// Rebuild table from current resource data
+func (m *model) rebuildTable() {
+	var rows []table.Row
+	var columns []table.Column
+
+	switch m.resourceType {
+	case ResourceTypeServer:
+		columns = getServerColumns(m.windowWidth)
+		for _, server := range m.servers {
+			rows = append(rows, serverToRow(server, m.windowWidth))
+		}
+	case ResourceTypeSwitch:
+		columns = getSwitchColumns(m.windowWidth)
+		for _, sw := range m.switches {
+			rows = append(rows, switchToRow(sw, m.windowWidth))
+		}
+	case ResourceTypeDNS:
+		columns = getDNSColumns(m.windowWidth)
+		for _, dns := range m.dnsList {
+			rows = append(rows, dnsToRow(dns, m.windowWidth))
+		}
+	case ResourceTypeELB:
+		columns = getELBColumns(m.windowWidth)
+		for _, elb := range m.elbList {
+			rows = append(rows, elbToRow(elb, m.windowWidth))
+		}
+	case ResourceTypeGSLB:
+		columns = getGSLBColumns(m.windowWidth)
+		for _, gslb := range m.gslbList {
+			rows = append(rows, gslbToRow(gslb, m.windowWidth))
+		}
+	case ResourceTypeDB:
+		columns = getDBColumns(m.windowWidth)
+		for _, db := range m.dbList {
+			rows = append(rows, dbToRow(db, m.windowWidth))
+		}
+	}
+
+	m.resourceTable.SetColumns(columns)
+	m.resourceTable.SetRows(rows)
+}
+
+// Get the currently selected resource ID (for detail view)
+func (m model) getSelectedResourceID() string {
+	selectedIdx := m.resourceTable.Cursor()
+
+	switch m.resourceType {
+	case ResourceTypeServer:
+		if selectedIdx >= 0 && selectedIdx < len(m.servers) {
+			return m.servers[selectedIdx].ID
+		}
+	case ResourceTypeSwitch:
+		if selectedIdx >= 0 && selectedIdx < len(m.switches) {
+			return m.switches[selectedIdx].ID
+		}
+	case ResourceTypeDNS:
+		if selectedIdx >= 0 && selectedIdx < len(m.dnsList) {
+			return m.dnsList[selectedIdx].ID
+		}
+	case ResourceTypeELB:
+		if selectedIdx >= 0 && selectedIdx < len(m.elbList) {
+			return m.elbList[selectedIdx].ID
+		}
+	case ResourceTypeGSLB:
+		if selectedIdx >= 0 && selectedIdx < len(m.gslbList) {
+			return m.gslbList[selectedIdx].ID
+		}
+	case ResourceTypeDB:
+		if selectedIdx >= 0 && selectedIdx < len(m.dbList) {
+			return m.dbList[selectedIdx].ID
+		}
+	}
+	return ""
 }
 
 func (m model) Init() tea.Cmd {
@@ -534,57 +733,51 @@ func (m *model) performSearch() {
 		return
 	}
 
-	items := m.list.Items()
-	for i, item := range items {
-		// Handle Server
-		if server, ok := item.(Server); ok {
+	switch m.resourceType {
+	case ResourceTypeServer:
+		for i, server := range m.servers {
 			if strings.Contains(strings.ToLower(server.Name), query) ||
 				strings.Contains(strings.ToLower(server.ID), query) {
 				m.searchMatches = append(m.searchMatches, i)
 			}
-			continue
 		}
-		// Handle Switch
-		if sw, ok := item.(Switch); ok {
+	case ResourceTypeSwitch:
+		for i, sw := range m.switches {
 			if strings.Contains(strings.ToLower(sw.Name), query) ||
 				strings.Contains(strings.ToLower(sw.ID), query) ||
 				strings.Contains(strings.ToLower(sw.Desc), query) ||
 				strings.Contains(strings.ToLower(sw.DefaultRoute), query) {
 				m.searchMatches = append(m.searchMatches, i)
 			}
-			continue
 		}
-		// Handle DNS
-		if dns, ok := item.(DNS); ok {
+	case ResourceTypeDNS:
+		for i, dns := range m.dnsList {
 			if strings.Contains(strings.ToLower(dns.Name), query) ||
 				strings.Contains(strings.ToLower(dns.ID), query) ||
 				strings.Contains(strings.ToLower(dns.Desc), query) {
 				m.searchMatches = append(m.searchMatches, i)
 			}
-			continue
 		}
-		// Handle ELB
-		if elb, ok := item.(ELB); ok {
+	case ResourceTypeELB:
+		for i, elb := range m.elbList {
 			if strings.Contains(strings.ToLower(elb.Name), query) ||
 				strings.Contains(strings.ToLower(elb.ID), query) ||
 				strings.Contains(strings.ToLower(elb.Desc), query) ||
 				strings.Contains(strings.ToLower(elb.VIP), query) {
 				m.searchMatches = append(m.searchMatches, i)
 			}
-			continue
 		}
-		// Handle GSLB
-		if gslb, ok := item.(GSLB); ok {
+	case ResourceTypeGSLB:
+		for i, gslb := range m.gslbList {
 			if strings.Contains(strings.ToLower(gslb.Name), query) ||
 				strings.Contains(strings.ToLower(gslb.ID), query) ||
 				strings.Contains(strings.ToLower(gslb.Desc), query) ||
 				strings.Contains(strings.ToLower(gslb.FQDN), query) {
 				m.searchMatches = append(m.searchMatches, i)
 			}
-			continue
 		}
-		// Handle DB
-		if db, ok := item.(DB); ok {
+	case ResourceTypeDB:
+		for i, db := range m.dbList {
 			if strings.Contains(strings.ToLower(db.Name), query) ||
 				strings.Contains(strings.ToLower(db.ID), query) ||
 				strings.Contains(strings.ToLower(db.Desc), query) ||
@@ -599,7 +792,7 @@ func (m *model) performSearch() {
 	// Jump to first match
 	if len(m.searchMatches) > 0 {
 		m.currentMatch = 0
-		m.list.Select(m.searchMatches[0])
+		m.resourceTable.SetCursor(m.searchMatches[0])
 	}
 }
 
@@ -608,7 +801,7 @@ func (m *model) nextMatch() {
 		return
 	}
 	m.currentMatch = (m.currentMatch + 1) % len(m.searchMatches)
-	m.list.Select(m.searchMatches[m.currentMatch])
+	m.resourceTable.SetCursor(m.searchMatches[m.currentMatch])
 	slog.Info("Next match", slog.Int("match", m.currentMatch+1), slog.Int("total", len(m.searchMatches)))
 }
 
@@ -620,7 +813,7 @@ func (m *model) prevMatch() {
 	if m.currentMatch < 0 {
 		m.currentMatch = len(m.searchMatches) - 1
 	}
-	m.list.Select(m.searchMatches[m.currentMatch])
+	m.resourceTable.SetCursor(m.searchMatches[m.currentMatch])
 	slog.Info("Previous match", slog.Int("match", m.currentMatch+1), slog.Int("total", len(m.searchMatches)))
 }
 
@@ -631,7 +824,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.windowWidth = msg.Width
 		slog.Debug("Window size updated", slog.Int("height", msg.Height), slog.Int("width", msg.Width))
 
-		// Update list size - account for header area
+		// Update table size - account for header area
 		headerHeight := 8 // Title + Account + Zone + spacing
 		if m.accountName == "" {
 			headerHeight--
@@ -639,7 +832,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.searchMode {
 			headerHeight++ // Add line for search input
 		}
-		m.list.SetSize(msg.Width, msg.Height-headerHeight)
+		m.resourceTable.SetHeight(msg.Height - headerHeight)
+		// Rebuild table with new width-dependent columns
+		m.rebuildTable()
 
 		// Update detail viewport size if in detail mode
 		if m.detailMode {
@@ -757,37 +952,23 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "enter":
 			// Show detail based on resource type
-			if len(m.list.Items()) > 0 {
-				selectedItem := m.list.SelectedItem()
-				if server, ok := selectedItem.(Server); ok {
-					m.detailMode = true
-					m.detailLoading = true
-					return m, loadServerDetail(m.client, server.ID)
-				}
-				if sw, ok := selectedItem.(Switch); ok {
-					m.detailMode = true
-					m.detailLoading = true
-					return m, loadSwitchDetail(m.client, sw.ID)
-				}
-				if dns, ok := selectedItem.(DNS); ok {
-					m.detailMode = true
-					m.detailLoading = true
-					return m, loadDNSDetail(m.client, dns.ID)
-				}
-				if elb, ok := selectedItem.(ELB); ok {
-					m.detailMode = true
-					m.detailLoading = true
-					return m, loadELBDetail(m.client, elb.ID)
-				}
-				if gslb, ok := selectedItem.(GSLB); ok {
-					m.detailMode = true
-					m.detailLoading = true
-					return m, loadGSLBDetail(m.client, gslb.ID)
-				}
-				if db, ok := selectedItem.(DB); ok {
-					m.detailMode = true
-					m.detailLoading = true
-					return m, loadDBDetail(m.client, db.ID)
+			resourceID := m.getSelectedResourceID()
+			if resourceID != "" {
+				m.detailMode = true
+				m.detailLoading = true
+				switch m.resourceType {
+				case ResourceTypeServer:
+					return m, loadServerDetail(m.client, resourceID)
+				case ResourceTypeSwitch:
+					return m, loadSwitchDetail(m.client, resourceID)
+				case ResourceTypeDNS:
+					return m, loadDNSDetail(m.client, resourceID)
+				case ResourceTypeELB:
+					return m, loadELBDetail(m.client, resourceID)
+				case ResourceTypeGSLB:
+					return m, loadGSLBDetail(m.client, resourceID)
+				case ResourceTypeDB:
+					return m, loadDBDetail(m.client, resourceID)
 				}
 			}
 			return m, nil
@@ -876,12 +1057,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		slog.Info("Servers loaded successfully", slog.Int("count", len(msg.servers)))
 
-		// Convert servers to list items
-		items := make([]list.Item, len(msg.servers))
-		for i, server := range msg.servers {
-			items[i] = server
-		}
-		m.list.SetItems(items)
+		// Store server data and rebuild table
+		m.servers = msg.servers
+		m.rebuildTable()
 		return m, nil
 
 	case switchesLoadedMsg:
@@ -893,12 +1071,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		slog.Info("Switches loaded successfully", slog.Int("count", len(msg.switches)))
 
-		// Convert switches to list items
-		items := make([]list.Item, len(msg.switches))
-		for i, sw := range msg.switches {
-			items[i] = sw
-		}
-		m.list.SetItems(items)
+		// Store switch data and rebuild table
+		m.switches = msg.switches
+		m.rebuildTable()
 		return m, nil
 
 	case authStatusLoadedMsg:
@@ -949,12 +1124,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		slog.Info("DNS zones loaded successfully", slog.Int("count", len(msg.dnsList)))
 
-		// Convert DNS to list items
-		items := make([]list.Item, len(msg.dnsList))
-		for i, dns := range msg.dnsList {
-			items[i] = dns
-		}
-		m.list.SetItems(items)
+		// Store DNS data and rebuild table
+		m.dnsList = msg.dnsList
+		m.rebuildTable()
 		return m, nil
 
 	case dnsDetailLoadedMsg:
@@ -981,12 +1153,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		slog.Info("ELBs loaded successfully", slog.Int("count", len(msg.elbList)))
 
-		// Convert ELBs to list items
-		items := make([]list.Item, len(msg.elbList))
-		for i, elb := range msg.elbList {
-			items[i] = elb
-		}
-		m.list.SetItems(items)
+		// Store ELB data and rebuild table
+		m.elbList = msg.elbList
+		m.rebuildTable()
 		return m, nil
 
 	case elbDetailLoadedMsg:
@@ -1013,12 +1182,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		slog.Info("GSLBs loaded successfully", slog.Int("count", len(msg.gslbList)))
 
-		// Convert GSLBs to list items
-		items := make([]list.Item, len(msg.gslbList))
-		for i, gslb := range msg.gslbList {
-			items[i] = gslb
-		}
-		m.list.SetItems(items)
+		// Store GSLB data and rebuild table
+		m.gslbList = msg.gslbList
+		m.rebuildTable()
 		return m, nil
 
 	case gslbDetailLoadedMsg:
@@ -1045,12 +1211,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		slog.Info("DBs loaded successfully", slog.Int("count", len(msg.dbList)))
 
-		// Convert DBs to list items
-		items := make([]list.Item, len(msg.dbList))
-		for i, db := range msg.dbList {
-			items[i] = db
-		}
-		m.list.SetItems(items)
+		// Store DB data and rebuild table
+		m.dbList = msg.dbList
+		m.rebuildTable()
 		return m, nil
 
 	case dbDetailLoadedMsg:
@@ -1069,9 +1232,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	// Delegate to list for navigation
+	// Delegate to table for navigation
 	var cmd tea.Cmd
-	m.list, cmd = m.list.Update(msg)
+	m.resourceTable, cmd = m.resourceTable.Update(msg)
 	return m, cmd
 }
 
@@ -1156,13 +1319,31 @@ func (m model) View() string {
 		b.WriteString("\n")
 	}
 
-	// Resource list or loading/error
+	// Resource table or loading/error
 	if m.loading {
 		b.WriteString(fmt.Sprintf("Loading %s...\n", strings.ToLower(m.resourceType.String())))
 	} else if m.err != nil {
 		b.WriteString(fmt.Sprintf("Error: %v\n", m.err))
 	} else {
-		b.WriteString(m.list.View())
+		// Add title above the table
+		var title string
+		switch m.resourceType {
+		case ResourceTypeServer:
+			title = "Servers"
+		case ResourceTypeSwitch:
+			title = "Switches"
+		case ResourceTypeDNS:
+			title = "DNS Zones"
+		case ResourceTypeELB:
+			title = "Load Balancers"
+		case ResourceTypeGSLB:
+			title = "GSLB"
+		case ResourceTypeDB:
+			title = "Databases"
+		}
+		b.WriteString(titleStyle.Render(title))
+		b.WriteString("\n")
+		b.WriteString(m.resourceTable.View())
 		b.WriteString("\n")
 		b.WriteString(helpStyle.Render("Enter: details | /: search | n/N: next/prev | t: type | z: zone | r: refresh | q: quit"))
 	}
