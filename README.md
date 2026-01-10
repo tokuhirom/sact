@@ -11,14 +11,22 @@
 
 ## 使い方
 
-### 環境変数
+### クレデンシャル
 
-クレデンシャル情報は環境変数から取得します:
+usacloud のプロファイルから自動的に読み込みます。事前に usacloud で認証設定を行ってください:
 
 ```bash
-export SAKURA_ACCESS_TOKEN=your_token
-export SAKURA_ACCESS_TOKEN_SECRET=your_secret
+usacloud config
 ```
+
+環境変数での指定も可能です:
+
+```bash
+export SAKURACLOUD_ACCESS_TOKEN=your_token
+export SAKURACLOUD_ACCESS_TOKEN_SECRET=your_secret
+```
+
+詳細は [usacloud のドキュメント](https://docs.usacloud.jp/usacloud/installation/start_guide/#configuration) を参照してください。
 
 ### 実行
 
@@ -32,8 +40,13 @@ export SAKURA_ACCESS_TOKEN_SECRET=your_secret
 
 ### 操作
 
+- `t`: リソースタイプ切り替え (Server, Switch, DNS, ELB, GSLB, DB)
 - `z`: ゾーン切り替え (tk1a, tk1b, is1a, is1b, is1c)
-- `r`: サーバー一覧の再読み込み
+- `r`: 一覧の再読み込み
+- `Enter`: 詳細表示
+- `/`: 検索
+- `n`/`N`: 次/前の検索結果
+- `j`/`k` または `↑`/`↓`: カーソル移動
 - `q` または `Ctrl+C`: 終了
 
 ### 設定ファイル
