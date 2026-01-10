@@ -3,7 +3,6 @@ package internal
 import (
 	"testing"
 
-	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/stretchr/testify/assert"
@@ -118,18 +117,15 @@ func TestSearchModeEnter(t *testing.T) {
 	m := InitialModel(client, "tk1b")
 	m.searchMode = true
 	m.searchInput.SetValue("web")
+	m.windowWidth = 100
 
 	// Add some test servers
-	servers := []Server{
+	m.servers = []Server{
 		{ID: "1", Name: "web-server-1", InstanceStatus: "UP"},
 		{ID: "2", Name: "db-server-1", InstanceStatus: "UP"},
 		{ID: "3", Name: "web-server-2", InstanceStatus: "DOWN"},
 	}
-	items := make([]list.Item, len(servers))
-	for i, s := range servers {
-		items[i] = s
-	}
-	m.list.SetItems(items)
+	m.rebuildTable()
 
 	msg := tea.KeyMsg{Type: tea.KeyEnter}
 	updated, _ := m.Update(msg)
@@ -139,23 +135,20 @@ func TestSearchModeEnter(t *testing.T) {
 	assert.Equal(t, "web", m.searchQuery)
 	assert.Equal(t, 2, len(m.searchMatches)) // Should find 2 web servers
 	assert.Equal(t, 0, m.currentMatch)
-	assert.Equal(t, 0, m.list.Index()) // Should jump to first match
+	assert.Equal(t, 0, m.resourceTable.Cursor()) // Should jump to first match
 }
 
 func TestNextMatch(t *testing.T) {
 	client, _ := NewSakuraClient("tk1b")
 	m := InitialModel(client, "tk1b")
+	m.windowWidth = 100
 
-	servers := []Server{
+	m.servers = []Server{
 		{ID: "1", Name: "web-server-1", InstanceStatus: "UP"},
 		{ID: "2", Name: "db-server-1", InstanceStatus: "UP"},
 		{ID: "3", Name: "web-server-2", InstanceStatus: "DOWN"},
 	}
-	items := make([]list.Item, len(servers))
-	for i, s := range servers {
-		items[i] = s
-	}
-	m.list.SetItems(items)
+	m.rebuildTable()
 
 	m.searchQuery = "web"
 	m.searchMatches = []int{0, 2}
@@ -166,29 +159,26 @@ func TestNextMatch(t *testing.T) {
 	m = updated.(model)
 
 	assert.Equal(t, 1, m.currentMatch)
-	assert.Equal(t, 2, m.list.Index()) // Should jump to second match
+	assert.Equal(t, 2, m.resourceTable.Cursor()) // Should jump to second match
 
 	// Test wrapping
 	updated, _ = m.Update(msg)
 	m = updated.(model)
 	assert.Equal(t, 0, m.currentMatch) // Should wrap to first
-	assert.Equal(t, 0, m.list.Index())
+	assert.Equal(t, 0, m.resourceTable.Cursor())
 }
 
 func TestPrevMatch(t *testing.T) {
 	client, _ := NewSakuraClient("tk1b")
 	m := InitialModel(client, "tk1b")
+	m.windowWidth = 100
 
-	servers := []Server{
+	m.servers = []Server{
 		{ID: "1", Name: "web-server-1", InstanceStatus: "UP"},
 		{ID: "2", Name: "db-server-1", InstanceStatus: "UP"},
 		{ID: "3", Name: "web-server-2", InstanceStatus: "DOWN"},
 	}
-	items := make([]list.Item, len(servers))
-	for i, s := range servers {
-		items[i] = s
-	}
-	m.list.SetItems(items)
+	m.rebuildTable()
 
 	m.searchQuery = "web"
 	m.searchMatches = []int{0, 2}
@@ -199,30 +189,27 @@ func TestPrevMatch(t *testing.T) {
 	m = updated.(model)
 
 	assert.Equal(t, 0, m.currentMatch)
-	assert.Equal(t, 0, m.list.Index())
+	assert.Equal(t, 0, m.resourceTable.Cursor())
 
 	// Test wrapping backwards
 	updated, _ = m.Update(msg)
 	m = updated.(model)
 	assert.Equal(t, 1, m.currentMatch) // Should wrap to last
-	assert.Equal(t, 2, m.list.Index())
+	assert.Equal(t, 2, m.resourceTable.Cursor())
 }
 
 func TestPerformSearch(t *testing.T) {
 	client, _ := NewSakuraClient("tk1b")
 	m := InitialModel(client, "tk1b")
+	m.windowWidth = 100
 
-	servers := []Server{
+	m.servers = []Server{
 		{ID: "123", Name: "web-server-1", InstanceStatus: "UP"},
 		{ID: "456", Name: "db-server-1", InstanceStatus: "UP"},
 		{ID: "789", Name: "web-server-2", InstanceStatus: "DOWN"},
 		{ID: "999", Name: "api-server", InstanceStatus: "UP"},
 	}
-	items := make([]list.Item, len(servers))
-	for i, s := range servers {
-		items[i] = s
-	}
-	m.list.SetItems(items)
+	m.rebuildTable()
 
 	// Search by name
 	m.searchQuery = "web"
@@ -326,7 +313,7 @@ func TestServersLoadedMsg(t *testing.T) {
 	m = updated.(model)
 
 	assert.False(t, m.loading)
-	assert.Equal(t, 2, len(m.list.Items()))
+	assert.Equal(t, 2, len(m.servers))
 }
 
 func TestServersLoadedMsgWithError(t *testing.T) {
@@ -352,13 +339,7 @@ func TestAuthStatusLoadedMsg(t *testing.T) {
 	assert.Equal(t, "my-account", m.accountName)
 }
 
-func TestResourceDelegateRender(t *testing.T) {
-	// Test that delegate renders properly
-	delegate := resourceDelegate{}
-
-	assert.Equal(t, 1, delegate.Height())
-	assert.Equal(t, 0, delegate.Spacing())
-}
+// TestResourceDelegateRender removed - no longer using delegate pattern
 
 func TestServerListItem(t *testing.T) {
 	server := Server{
@@ -378,31 +359,27 @@ func TestServerListItem(t *testing.T) {
 func TestNavigationKeysWork(t *testing.T) {
 	client, _ := NewSakuraClient("tk1b")
 	m := InitialModel(client, "tk1b")
+	m.windowWidth = 100
 
-	servers := []Server{
+	m.servers = []Server{
 		{ID: "1", Name: "server-1", InstanceStatus: "UP"},
 		{ID: "2", Name: "server-2", InstanceStatus: "UP"},
 		{ID: "3", Name: "server-3", InstanceStatus: "UP"},
 	}
-	items := make([]list.Item, len(servers))
-	for i, s := range servers {
-		items[i] = s
-	}
-	m.list.SetItems(items)
+	m.rebuildTable()
 	m.loading = false
 
-	// Test that j/k keys are delegated to list
-	// The list component should handle navigation
-	initialIndex := m.list.Index()
+	// Test that j/k keys are delegated to table
+	// The table component should handle navigation
+	initialIndex := m.resourceTable.Cursor()
 
 	// Simulate down key
 	msg := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'j'}}
 	updated, _ := m.Update(msg)
 	m = updated.(model)
 
-	// List should still be functional (index might change depending on list implementation)
-	assert.NotNil(t, m.list)
-	assert.GreaterOrEqual(t, m.list.Index(), initialIndex)
+	// Table should still be functional (index might change depending on table implementation)
+	assert.GreaterOrEqual(t, m.resourceTable.Cursor(), initialIndex)
 }
 
 func TestRefreshKey(t *testing.T) {
@@ -459,9 +436,11 @@ func TestEmptyServerList(t *testing.T) {
 	client, _ := NewSakuraClient("tk1b")
 	m := InitialModel(client, "tk1b")
 	m.loading = false
+	m.windowWidth = 100
 
 	// Set empty server list
-	m.list.SetItems([]list.Item{})
+	m.servers = []Server{}
+	m.rebuildTable()
 
 	// Should not panic
 	assert.NotPanics(t, func() { m.View() })
@@ -476,16 +455,13 @@ func TestEnterDetailMode(t *testing.T) {
 	client, _ := NewSakuraClient("tk1b")
 	m := InitialModel(client, "tk1b")
 	m.loading = false
+	m.windowWidth = 100
 
 	// Add a test server
-	servers := []Server{
+	m.servers = []Server{
 		{ID: "123", Name: "test-server", InstanceStatus: "UP", Zone: "tk1b"},
 	}
-	items := make([]list.Item, len(servers))
-	for i, s := range servers {
-		items[i] = s
-	}
-	m.list.SetItems(items)
+	m.rebuildTable()
 
 	// Press Enter to show details
 	msg := tea.KeyMsg{Type: tea.KeyEnter}
