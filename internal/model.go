@@ -246,31 +246,31 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 }
 
 type model struct {
-	client        *SakuraClient
-	list          list.Model
-	zones         []string
-	currentZone   string
-	cursor        int
-	err           error
-	loading       bool
-	quitting      bool
-	accountName   string
-	windowHeight  int
-	windowWidth   int
-	searchMode    bool
-	searchInput   textinput.Model
-	searchQuery   string
-	searchMatches []int // Indices of matching items
-	currentMatch  int   // Current match index in searchMatches
-	detailMode    bool
-	serverDetail  *ServerDetail
-	switchDetail  *SwitchDetail
-	dnsDetail     *DNSDetail
-	elbDetail     *ELBDetail
-	gslbDetail    *GSLBDetail
-	dbDetail      *DBDetail
-	detailLoading bool
-	resourceType  ResourceType
+	client         *SakuraClient
+	list           list.Model
+	zones          []string
+	currentZone    string
+	cursor         int
+	err            error
+	loading        bool
+	quitting       bool
+	accountName    string
+	windowHeight   int
+	windowWidth    int
+	searchMode     bool
+	searchInput    textinput.Model
+	searchQuery    string
+	searchMatches  []int // Indices of matching items
+	currentMatch   int   // Current match index in searchMatches
+	detailMode     bool
+	serverDetail   *ServerDetail
+	switchDetail   *SwitchDetail
+	dnsDetail      *DNSDetail
+	elbDetail      *ELBDetail
+	gslbDetail     *GSLBDetail
+	dbDetail       *DBDetail
+	detailLoading  bool
+	resourceType   ResourceType
 	detailViewport viewport.Model
 }
 
