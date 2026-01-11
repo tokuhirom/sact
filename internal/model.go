@@ -63,152 +63,76 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 		}
 
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s ID: %-20s Status: %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %s",
 				server.Name,
 				server.ID,
 				statusStyle.Render(server.InstanceStatus)))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s ID: %-20s Status: %s",
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %s",
 				server.Name,
 				server.ID,
 				statusStyle.Render(server.InstanceStatus)))
 		}
 	} else if sw, ok := item.(Switch); ok {
 		// Handle Switch
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		if width < 100 {
-			// Compact mode: just ID
-			info = fmt.Sprintf("ID: %-20s", sw.ID)
-		} else if width < 140 {
-			// Medium mode: ID + ServerCount
-			info = fmt.Sprintf("ID: %-20s Servers: %d", sw.ID, sw.ServerCount)
-		} else {
-			// Full mode: ID + ServerCount + DefaultRoute + CreatedAt
-			routeInfo := ""
-			if sw.DefaultRoute != "" {
-				routeInfo = fmt.Sprintf("Route: %-15s", sw.DefaultRoute)
-			}
-			dateInfo := ""
-			if sw.CreatedAt != "" {
-				dateInfo = fmt.Sprintf("Created: %s", sw.CreatedAt)
-			}
-
-			info = fmt.Sprintf("ID: %-20s Servers: %-2d %s %s",
-				sw.ID, sw.ServerCount, routeInfo, dateInfo)
-		}
-
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %d",
 				sw.Name,
-				info))
+				sw.ID,
+				sw.ServerCount))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %d",
 				sw.Name,
-				info))
+				sw.ID,
+				sw.ServerCount))
 		}
 	} else if dns, ok := item.(DNS); ok {
 		// Handle DNS
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		if width < 100 {
-			// Compact mode: just ID
-			info = fmt.Sprintf("ID: %-20s", dns.ID)
-		} else if width < 140 {
-			// Medium mode: ID + RecordCount
-			info = fmt.Sprintf("ID: %-20s Records: %d", dns.ID, dns.RecordCount)
-		} else {
-			// Full mode: ID + RecordCount + CreatedAt
-			dateInfo := ""
-			if dns.CreatedAt != "" {
-				dateInfo = fmt.Sprintf("Created: %s", dns.CreatedAt)
-			}
-
-			info = fmt.Sprintf("ID: %-20s Records: %-3d %s",
-				dns.ID, dns.RecordCount, dateInfo)
-		}
-
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %d",
 				dns.Name,
-				info))
+				dns.ID,
+				dns.RecordCount))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %d",
 				dns.Name,
-				info))
+				dns.ID,
+				dns.RecordCount))
 		}
 	} else if elb, ok := item.(ELB); ok {
 		// Handle ELB
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		if width < 100 {
-			// Compact mode: just ID and VIP
-			info = fmt.Sprintf("ID: %-20s VIP: %s", elb.ID, elb.VIP)
-		} else if width < 140 {
-			// Medium mode: ID + VIP + ServerCount
-			info = fmt.Sprintf("ID: %-20s VIP: %-15s Servers: %d", elb.ID, elb.VIP, elb.ServerCount)
-		} else {
-			// Full mode: ID + VIP + ServerCount + Plan
-			info = fmt.Sprintf("ID: %-20s VIP: %-15s Servers: %-2d Plan: %s",
-				elb.ID, elb.VIP, elb.ServerCount, elb.Plan)
-		}
-
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %-15s %d",
 				elb.Name,
-				info))
+				elb.ID,
+				elb.VIP,
+				elb.ServerCount))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %-15s %d",
 				elb.Name,
-				info))
+				elb.ID,
+				elb.VIP,
+				elb.ServerCount))
 		}
 	} else if gslb, ok := item.(GSLB); ok {
 		// Handle GSLB
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
-		if width < 100 {
-			// Compact mode: just ID
-			info = fmt.Sprintf("ID: %-20s", gslb.ID)
-		} else if width < 140 {
-			// Medium mode: ID + FQDN
-			fqdn := gslb.FQDN
-			if len(fqdn) > 30 {
-				fqdn = fqdn[:27] + "..."
-			}
-			info = fmt.Sprintf("ID: %-20s FQDN: %s", gslb.ID, fqdn)
-		} else {
-			// Full mode: ID + FQDN + ServerCount
-			fqdn := gslb.FQDN
-			if len(fqdn) > 40 {
-				fqdn = fqdn[:37] + "..."
-			}
-			info = fmt.Sprintf("ID: %-20s FQDN: %-40s Servers: %d",
-				gslb.ID, fqdn, gslb.ServerCount)
+		fqdn := gslb.FQDN
+		if len(fqdn) > 30 {
+			fqdn = fqdn[:27] + "..."
 		}
-
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %s",
 				gslb.Name,
-				info))
+				gslb.ID,
+				fqdn))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %s",
 				gslb.Name,
-				info))
+				gslb.ID,
+				fqdn))
 		}
 	} else if db, ok := item.(DB); ok {
 		// Handle DB
-		width := m.Width()
-
-		// Build info string based on available width
-		var info string
 		statusStyle := otherStatusStyle
 		switch db.InstanceStatus {
 		case "UP":
@@ -217,26 +141,18 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 			statusStyle = downStatusStyle
 		}
 
-		if width < 100 {
-			// Compact mode: just ID and Status
-			info = fmt.Sprintf("ID: %-20s Status: %s", db.ID, statusStyle.Render(db.InstanceStatus))
-		} else if width < 140 {
-			// Medium mode: ID + DBType + Status
-			info = fmt.Sprintf("ID: %-20s Type: %-10s Status: %s", db.ID, db.DBType, statusStyle.Render(db.InstanceStatus))
-		} else {
-			// Full mode: ID + DBType + Plan + Status
-			info = fmt.Sprintf("ID: %-20s Type: %-10s Plan: %-20s Status: %s",
-				db.ID, db.DBType, db.Plan, statusStyle.Render(db.InstanceStatus))
-		}
-
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %-10s %s",
 				db.Name,
-				info))
+				db.ID,
+				db.DBType,
+				statusStyle.Render(db.InstanceStatus)))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %s",
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %-10s %s",
 				db.Name,
-				info))
+				db.ID,
+				db.DBType,
+				statusStyle.Render(db.InstanceStatus)))
 		}
 	} else {
 		return
@@ -495,10 +411,9 @@ func InitialModel(client *SakuraClient, defaultZone string) model {
 	// Create list with custom delegate
 	delegate := resourceDelegate{}
 	resourceList := list.New([]list.Item{}, delegate, 0, 0)
-	resourceList.Title = "Servers"
+	resourceList.SetShowTitle(false)
 	resourceList.SetShowStatusBar(false)
 	resourceList.SetFilteringEnabled(false) // Disable built-in filtering
-	resourceList.Styles.Title = titleStyle
 
 	// Initialize search input
 	ti := textinput.New()
@@ -624,6 +539,25 @@ func (m *model) prevMatch() {
 	slog.Info("Previous match", slog.Int("match", m.currentMatch+1), slog.Int("total", len(m.searchMatches)))
 }
 
+func (m model) getTableHeader() string {
+	switch m.resourceType {
+	case ResourceTypeServer:
+		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "Status")
+	case ResourceTypeSwitch:
+		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "Servers")
+	case ResourceTypeDNS:
+		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "Records")
+	case ResourceTypeELB:
+		return fmt.Sprintf("  %-40s %-20s %-15s %s", "Name", "ID", "VIP", "Servers")
+	case ResourceTypeGSLB:
+		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "FQDN")
+	case ResourceTypeDB:
+		return fmt.Sprintf("  %-40s %-20s %-10s %s", "Name", "ID", "Type", "Status")
+	default:
+		return ""
+	}
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
@@ -705,12 +639,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				selectedType := AllResourceTypes[m.resourceSelectCursor]
 				if selectedType != m.resourceType {
 					m.resourceType = selectedType
-					m.list.Title = selectedType.String()
-					if m.resourceType == ResourceTypeServer {
-						m.list.Title = "Servers"
-					} else if m.resourceType == ResourceTypeSwitch {
-						m.list.Title = "Switches"
-					}
 					slog.Info("User switched resource type",
 						slog.String("type", m.resourceType.String()))
 					m.loading = true
@@ -1162,6 +1090,12 @@ func (m model) View() string {
 	} else if m.err != nil {
 		b.WriteString(fmt.Sprintf("Error: %v\n", m.err))
 	} else {
+		// Render table header based on resource type
+		header := m.getTableHeader()
+		if header != "" {
+			b.WriteString(zoneStyle.Render(header))
+			b.WriteString("\n")
+		}
 		b.WriteString(m.list.View())
 		b.WriteString("\n")
 		b.WriteString(helpStyle.Render("Enter: details | /: search | n/N: next/prev | t: type | z: zone | r: refresh | q: quit"))
