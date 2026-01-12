@@ -63,7 +63,7 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 		}
 
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %s",
 				server.Name,
 				server.ID,
 				statusStyle.Render(server.InstanceStatus)))
@@ -76,7 +76,7 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 	} else if sw, ok := item.(Switch); ok {
 		// Handle Switch
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %d",
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %d",
 				sw.Name,
 				sw.ID,
 				sw.ServerCount))
@@ -89,7 +89,7 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 	} else if dns, ok := item.(DNS); ok {
 		// Handle DNS
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %d",
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %d",
 				dns.Name,
 				dns.ID,
 				dns.RecordCount))
@@ -102,7 +102,7 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 	} else if elb, ok := item.(ELB); ok {
 		// Handle ELB
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %-15s %d",
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %-15s %d",
 				elb.Name,
 				elb.ID,
 				elb.VIP,
@@ -121,7 +121,7 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 			fqdn = fqdn[:27] + "..."
 		}
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %s",
 				gslb.Name,
 				gslb.ID,
 				fqdn))
@@ -142,7 +142,7 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 		}
 
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("▸ %-40s %-20s %-10s %s",
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %-10s %s",
 				db.Name,
 				db.ID,
 				db.DBType,
@@ -1035,7 +1035,7 @@ func (m model) View() string {
 		b.WriteString("\n")
 		for i, rt := range AllResourceTypes {
 			if i == m.resourceSelectCursor {
-				b.WriteString(selectedItemStyle.Render(fmt.Sprintf("▸ %s", rt.String())))
+				b.WriteString(selectedItemStyle.Render(fmt.Sprintf("> %s", rt.String())))
 			} else {
 				b.WriteString(itemStyle.Render(fmt.Sprintf("  %s", rt.String())))
 			}
