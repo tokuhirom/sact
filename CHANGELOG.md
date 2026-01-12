@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.3](https://github.com/tokuhirom/sact/compare/v0.0.2...v0.0.3) - 2026-01-12
+- Refactor: split client.go and model.go into resource-specific files by @tokuhirom in https://github.com/tokuhirom/sact/pull/13
+
 ## [v0.0.2](https://github.com/tokuhirom/sact/compare/v0.0.1...v0.0.2) - 2026-01-12
 - Add Disk resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/10
 - Add go fmt instruction to CLAUDE.md by @tokuhirom in https://github.com/tokuhirom/sact/pull/12
