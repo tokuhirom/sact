@@ -6,6 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `sact` is a TUI (Terminal User Interface) application for managing Sakura Cloud servers. The name comes from さくっと (sakutto - "quickly/easily"). The primary use case is operational tasks like starting/stopping servers, with the assumption that server provisioning is handled by Terraform.
 
+## Git Workflow
+
+- The `main` branch is protected. Never commit directly to main.
+- Always create a feature branch and submit a pull request.
+
 ## Architecture
 
 ### Application Structure
