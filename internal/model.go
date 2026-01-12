@@ -174,6 +174,25 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				disk.Connection,
 				serverInfo))
 		}
+	} else if internet, ok := item.(Internet); ok {
+		// Handle Internet
+		switchID := "-"
+		if internet.SwitchID != "" {
+			switchID = internet.SwitchID
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %6dMbps %s",
+				internet.Name,
+				internet.ID,
+				internet.BandWidthMbps,
+				switchID))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %6dMbps %s",
+				internet.Name,
+				internet.ID,
+				internet.BandWidthMbps,
+				switchID))
+		}
 	} else {
 		return
 	}
@@ -206,6 +225,7 @@ type model struct {
 	gslbDetail     *GSLBDetail
 	dbDetail       *DBDetail
 	diskDetail     *DiskDetail
+	internetDetail *InternetDetail
 	detailLoading  bool
 	resourceType   ResourceType
 	detailViewport viewport.Model
@@ -286,6 +306,16 @@ type disksLoadedMsg struct {
 
 type diskDetailLoadedMsg struct {
 	detail *DiskDetail
+	err    error
+}
+
+type internetLoadedMsg struct {
+	internet []Internet
+	err      error
+}
+
+type internetDetailLoadedMsg struct {
+	detail *InternetDetail
 	err    error
 }
 
@@ -449,6 +479,27 @@ func loadDiskDetail(client *SakuraClient, diskID string) tea.Cmd {
 	}
 }
 
+func loadInternet(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		internet, err := client.ListInternet(ctx)
+		return internetLoadedMsg{internet: internet, err: err}
+	}
+}
+
+func loadInternetDetail(client *SakuraClient, internetID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetInternetDetail(ctx, internetID)
+		if err != nil {
+			slog.Error("Failed to load internet detail", slog.Any("error", err))
+			return internetDetailLoadedMsg{err: err}
+		}
+		slog.Info("Internet detail loaded successfully", slog.String("internetID", internetID))
+		return internetDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -607,6 +658,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %-10s %s", "Name", "ID", "Type", "Status")
 	case ResourceTypeDisk:
 		return fmt.Sprintf("  %-40s %-20s %6s %-10s %s", "Name", "ID", "Size", "Connection", "Server")
+	case ResourceTypeInternet:
+		return fmt.Sprintf("  %-40s %-20s %10s %s", "Name", "ID", "Bandwidth", "Switch ID")
 	default:
 		return ""
 	}
@@ -717,6 +770,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadDB(m.client)
 					case ResourceTypeDisk:
 						return m, loadDisks(m.client)
+					case ResourceTypeInternet:
+						return m, loadInternet(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -778,6 +833,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadDiskDetail(m.client, disk.ID)
 				}
+				if internet, ok := selectedItem.(Internet); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadInternetDetail(m.client, internet.ID)
+				}
 			}
 			return m, nil
 
@@ -834,6 +894,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadDB(m.client)
 			case ResourceTypeDisk:
 				return m, loadDisks(m.client)
+			case ResourceTypeInternet:
+				return m, loadInternet(m.client)
 			}
 			return m, nil
 
@@ -856,6 +918,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadDB(m.client)
 			case ResourceTypeDisk:
 				return m, loadDisks(m.client)
+			case ResourceTypeInternet:
+				return m, loadInternet(m.client)
 			}
 			return m, nil
 		}
@@ -1089,6 +1153,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.diskDetail = msg.detail
 		// Setup viewport for detail view
 		content := renderDiskDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
+
+	case internetLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load internet", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Internet loaded successfully", slog.Int("count", len(msg.internet)))
+
+		// Convert internet to list items
+		items := make([]list.Item, len(msg.internet))
+		for i, internet := range msg.internet {
+			items[i] = internet
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case internetDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load internet detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.internetDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderInternetDetail(msg.detail)
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil

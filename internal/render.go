@@ -389,3 +389,34 @@ func renderDiskDetail(detail *DiskDetail) string {
 
 	return b.String()
 }
+
+func renderInternetDetail(detail *InternetDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Internet: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Bandwidth:   %d Mbps\n", detail.BandWidthMbps))
+	b.WriteString(fmt.Sprintf("Netmask:     /%d\n", detail.NetworkMaskLen))
+
+	if detail.SwitchID != "" {
+		b.WriteString(fmt.Sprintf("Switch ID:   %s\n", detail.SwitchID))
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
