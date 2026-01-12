@@ -154,6 +154,27 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				db.DBType,
 				statusStyle.Render(db.InstanceStatus)))
 		}
+	} else if disk, ok := item.(Disk); ok {
+		// Handle Disk
+		serverInfo := "-"
+		if disk.ServerName != "" {
+			serverInfo = disk.ServerName
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %4dGB %-10s %s",
+				disk.Name,
+				disk.ID,
+				disk.SizeGB,
+				disk.Connection,
+				serverInfo))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %4dGB %-10s %s",
+				disk.Name,
+				disk.ID,
+				disk.SizeGB,
+				disk.Connection,
+				serverInfo))
+		}
 	} else {
 		return
 	}
@@ -185,6 +206,7 @@ type model struct {
 	elbDetail      *ELBDetail
 	gslbDetail     *GSLBDetail
 	dbDetail       *DBDetail
+	diskDetail     *DiskDetail
 	detailLoading  bool
 	resourceType   ResourceType
 	detailViewport viewport.Model
@@ -255,6 +277,16 @@ type dbLoadedMsg struct {
 
 type dbDetailLoadedMsg struct {
 	detail *DBDetail
+	err    error
+}
+
+type disksLoadedMsg struct {
+	disks []Disk
+	err   error
+}
+
+type diskDetailLoadedMsg struct {
+	detail *DiskDetail
 	err    error
 }
 
@@ -394,6 +426,27 @@ func loadDBDetail(client *SakuraClient, dbID string) tea.Cmd {
 		}
 		slog.Info("DB detail loaded successfully", slog.String("dbID", dbID))
 		return dbDetailLoadedMsg{detail: detail}
+	}
+}
+
+func loadDisks(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		disks, err := client.ListDisks(ctx)
+		return disksLoadedMsg{disks: disks, err: err}
+	}
+}
+
+func loadDiskDetail(client *SakuraClient, diskID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetDiskDetail(ctx, diskID)
+		if err != nil {
+			slog.Error("Failed to load disk detail", slog.Any("error", err))
+			return diskDetailLoadedMsg{err: err}
+		}
+		slog.Info("Disk detail loaded successfully", slog.String("diskID", diskID))
+		return diskDetailLoadedMsg{detail: detail}
 	}
 }
 
@@ -553,6 +606,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "FQDN")
 	case ResourceTypeDB:
 		return fmt.Sprintf("  %-40s %-20s %-10s %s", "Name", "ID", "Type", "Status")
+	case ResourceTypeDisk:
+		return fmt.Sprintf("  %-40s %-20s %6s %-10s %s", "Name", "ID", "Size", "Connection", "Server")
 	default:
 		return ""
 	}
@@ -661,6 +716,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadGSLB(m.client)
 					case ResourceTypeDB:
 						return m, loadDB(m.client)
+					case ResourceTypeDisk:
+						return m, loadDisks(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -717,6 +774,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadDBDetail(m.client, db.ID)
 				}
+				if disk, ok := selectedItem.(Disk); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadDiskDetail(m.client, disk.ID)
+				}
 			}
 			return m, nil
 
@@ -771,6 +833,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadSwitches(m.client)
 			case ResourceTypeDB:
 				return m, loadDB(m.client)
+			case ResourceTypeDisk:
+				return m, loadDisks(m.client)
 			}
 			return m, nil
 
@@ -791,6 +855,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadGSLB(m.client)
 			case ResourceTypeDB:
 				return m, loadDB(m.client)
+			case ResourceTypeDisk:
+				return m, loadDisks(m.client)
 			}
 			return m, nil
 		}
@@ -992,6 +1058,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.dbDetail = msg.detail
 		// Setup viewport for detail view
 		content := renderDBDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
+
+	case disksLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load disks", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Disks loaded successfully", slog.Int("count", len(msg.disks)))
+
+		// Convert disks to list items
+		items := make([]list.Item, len(msg.disks))
+		for i, disk := range msg.disks {
+			items[i] = disk
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case diskDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load disk detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.diskDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderDiskDetail(msg.detail)
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
@@ -1431,6 +1529,56 @@ func renderDBDetail(detail *DBDetail) string {
 
 	if detail.CreatedAt != "" {
 		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
+
+func renderDiskDetail(detail *DiskDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Disk: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Size:        %d GB\n", detail.SizeGB))
+	b.WriteString(fmt.Sprintf("Connection:  %s\n", detail.Connection))
+	b.WriteString(fmt.Sprintf("Plan:        %s\n", detail.DiskPlanName))
+	b.WriteString(fmt.Sprintf("Availability: %s\n", detail.Availability))
+
+	if detail.EncryptionAlgo != "" {
+		b.WriteString(fmt.Sprintf("Encryption:  %s\n", detail.EncryptionAlgo))
+	}
+
+	if detail.ServerID != "" {
+		b.WriteString(fmt.Sprintf("\nServer ID:   %s\n", detail.ServerID))
+		b.WriteString(fmt.Sprintf("Server Name: %s\n", detail.ServerName))
+	} else {
+		b.WriteString("\nServer:      (not attached)\n")
+	}
+
+	if detail.SourceDiskID != "" {
+		b.WriteString(fmt.Sprintf("\nSource Disk: %s\n", detail.SourceDiskID))
+	}
+	if detail.SourceArchiveID != "" {
+		b.WriteString(fmt.Sprintf("Source Archive: %s\n", detail.SourceArchiveID))
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+	if detail.ModifiedAt != "" {
+		b.WriteString(fmt.Sprintf("Modified:    %s\n", detail.ModifiedAt))
 	}
 
 	return b.String()
