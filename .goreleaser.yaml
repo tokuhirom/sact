@@ -1,0 +1,60 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - main: ./cmd/sact
+    binary: sact
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+dockers:
+  - image_templates:
+      - "ghcr.io/tokuhirom/sact:{{ .Version }}-amd64"
+    use: buildx
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/amd64"
+    goos: linux
+    goarch: amd64
+  - image_templates:
+      - "ghcr.io/tokuhirom/sact:{{ .Version }}-arm64"
+    use: buildx
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/arm64"
+    goos: linux
+    goarch: arm64
+
+docker_manifests:
+  - name_template: "ghcr.io/tokuhirom/sact:{{ .Version }}"
+    image_templates:
+      - "ghcr.io/tokuhirom/sact:{{ .Version }}-amd64"
+      - "ghcr.io/tokuhirom/sact:{{ .Version }}-arm64"
+  - name_template: "ghcr.io/tokuhirom/sact:latest"
+    image_templates:
+      - "ghcr.io/tokuhirom/sact:{{ .Version }}-amd64"
+      - "ghcr.io/tokuhirom/sact:{{ .Version }}-arm64"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^Merge"
