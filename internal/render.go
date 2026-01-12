@@ -389,3 +389,45 @@ func renderDiskDetail(detail *DiskDetail) string {
 
 	return b.String()
 }
+
+func renderArchiveDetail(detail *ArchiveDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Archive: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Size:        %d GB\n", detail.SizeGB))
+	b.WriteString(fmt.Sprintf("Scope:       %s\n", detail.Scope))
+	b.WriteString(fmt.Sprintf("Availability: %s\n", detail.Availability))
+
+	if detail.BundleInfo != "" {
+		b.WriteString(fmt.Sprintf("Bundle:      %s\n", detail.BundleInfo))
+	}
+
+	if detail.SourceDiskID != "" {
+		b.WriteString(fmt.Sprintf("\nSource Disk: %s\n", detail.SourceDiskID))
+	}
+	if detail.SourceArchiveID != "" {
+		b.WriteString(fmt.Sprintf("Source Archive: %s\n", detail.SourceArchiveID))
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+	if detail.ModifiedAt != "" {
+		b.WriteString(fmt.Sprintf("Modified:    %s\n", detail.ModifiedAt))
+	}
+
+	return b.String()
+}
