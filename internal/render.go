@@ -431,3 +431,44 @@ func renderArchiveDetail(detail *ArchiveDetail) string {
 
 	return b.String()
 }
+
+func renderVPCRouterDetail(detail *VPCRouterDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("VPC Router: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Plan:        %s\n", detail.Plan))
+	b.WriteString(fmt.Sprintf("Version:     %d\n", detail.Version))
+	b.WriteString(fmt.Sprintf("Status:      %s\n", detail.InstanceStatus))
+
+	if len(detail.PublicIPAddresses) > 0 {
+		b.WriteString(fmt.Sprintf("Public IPs:  %s\n", strings.Join(detail.PublicIPAddresses, ", ")))
+	}
+
+	if len(detail.NICs) > 0 {
+		b.WriteString("\nNetwork Interfaces:\n")
+		for _, nic := range detail.NICs {
+			if nic.SwitchID != "" || nic.IPAddress != "" {
+				b.WriteString(fmt.Sprintf("  NIC%d: Switch=%s, IP=%s\n", nic.Index, nic.SwitchID, nic.IPAddress))
+			}
+		}
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
