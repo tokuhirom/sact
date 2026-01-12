@@ -191,6 +191,23 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				archive.Scope,
 				archive.Availability))
 		}
+	} else if vpcRouter, ok := item.(VPCRouter); ok {
+		// Handle VPCRouter
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %-10s v%-7d %s",
+				vpcRouter.Name,
+				vpcRouter.ID,
+				vpcRouter.Plan,
+				vpcRouter.Version,
+				vpcRouter.InstanceStatus))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %-10s v%-7d %s",
+				vpcRouter.Name,
+				vpcRouter.ID,
+				vpcRouter.Plan,
+				vpcRouter.Version,
+				vpcRouter.InstanceStatus))
+		}
 	} else {
 		return
 	}
@@ -199,34 +216,35 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 }
 
 type model struct {
-	client         *SakuraClient
-	list           list.Model
-	zones          []string
-	currentZone    string
-	cursor         int
-	err            error
-	loading        bool
-	quitting       bool
-	accountName    string
-	windowHeight   int
-	windowWidth    int
-	searchMode     bool
-	searchInput    textinput.Model
-	searchQuery    string
-	searchMatches  []int // Indices of matching items
-	currentMatch   int   // Current match index in searchMatches
-	detailMode     bool
-	serverDetail   *ServerDetail
-	switchDetail   *SwitchDetail
-	dnsDetail      *DNSDetail
-	elbDetail      *ELBDetail
-	gslbDetail     *GSLBDetail
-	dbDetail       *DBDetail
-	diskDetail     *DiskDetail
-	archiveDetail  *ArchiveDetail
-	detailLoading  bool
-	resourceType   ResourceType
-	detailViewport viewport.Model
+	client          *SakuraClient
+	list            list.Model
+	zones           []string
+	currentZone     string
+	cursor          int
+	err             error
+	loading         bool
+	quitting        bool
+	accountName     string
+	windowHeight    int
+	windowWidth     int
+	searchMode      bool
+	searchInput     textinput.Model
+	searchQuery     string
+	searchMatches   []int // Indices of matching items
+	currentMatch    int   // Current match index in searchMatches
+	detailMode      bool
+	serverDetail    *ServerDetail
+	switchDetail    *SwitchDetail
+	dnsDetail       *DNSDetail
+	elbDetail       *ELBDetail
+	gslbDetail      *GSLBDetail
+	dbDetail        *DBDetail
+	diskDetail      *DiskDetail
+	archiveDetail   *ArchiveDetail
+	vpcRouterDetail *VPCRouterDetail
+	detailLoading   bool
+	resourceType    ResourceType
+	detailViewport  viewport.Model
 	// Resource type selector
 	resourceSelectMode   bool
 	resourceSelectCursor int
@@ -314,6 +332,16 @@ type archivesLoadedMsg struct {
 
 type archiveDetailLoadedMsg struct {
 	detail *ArchiveDetail
+	err    error
+}
+
+type vpcRoutersLoadedMsg struct {
+	vpcRouters []VPCRouter
+	err        error
+}
+
+type vpcRouterDetailLoadedMsg struct {
+	detail *VPCRouterDetail
 	err    error
 }
 
@@ -498,6 +526,27 @@ func loadArchiveDetail(client *SakuraClient, archiveID string) tea.Cmd {
 	}
 }
 
+func loadVPCRouters(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		vpcRouters, err := client.ListVPCRouters(ctx)
+		return vpcRoutersLoadedMsg{vpcRouters: vpcRouters, err: err}
+	}
+}
+
+func loadVPCRouterDetail(client *SakuraClient, vpcRouterID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetVPCRouterDetail(ctx, vpcRouterID)
+		if err != nil {
+			slog.Error("Failed to load VPC router detail", slog.Any("error", err))
+			return vpcRouterDetailLoadedMsg{err: err}
+		}
+		slog.Info("VPC router detail loaded successfully", slog.String("vpcRouterID", vpcRouterID))
+		return vpcRouterDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -658,6 +707,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %6s %-10s %s", "Name", "ID", "Size", "Connection", "Server")
 	case ResourceTypeArchive:
 		return fmt.Sprintf("  %-40s %-20s %6s %-10s %s", "Name", "ID", "Size", "Scope", "Availability")
+	case ResourceTypeVPCRouter:
+		return fmt.Sprintf("  %-40s %-20s %-10s %-8s %s", "Name", "ID", "Plan", "Version", "Status")
 	default:
 		return ""
 	}
@@ -770,6 +821,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadDisks(m.client)
 					case ResourceTypeArchive:
 						return m, loadArchives(m.client)
+					case ResourceTypeVPCRouter:
+						return m, loadVPCRouters(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -836,6 +889,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadArchiveDetail(m.client, archive.ID)
 				}
+				if vpcRouter, ok := selectedItem.(VPCRouter); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadVPCRouterDetail(m.client, vpcRouter.ID)
+				}
 			}
 			return m, nil
 
@@ -894,6 +952,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadDisks(m.client)
 			case ResourceTypeArchive:
 				return m, loadArchives(m.client)
+			case ResourceTypeVPCRouter:
+				return m, loadVPCRouters(m.client)
 			}
 			return m, nil
 
@@ -918,6 +978,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadDisks(m.client)
 			case ResourceTypeArchive:
 				return m, loadArchives(m.client)
+			case ResourceTypeVPCRouter:
+				return m, loadVPCRouters(m.client)
 			}
 			return m, nil
 		}
@@ -1183,6 +1245,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.archiveDetail = msg.detail
 		// Setup viewport for detail view
 		content := renderArchiveDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
+
+	case vpcRoutersLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load VPC routers", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("VPC routers loaded successfully", slog.Int("count", len(msg.vpcRouters)))
+
+		// Convert VPC routers to list items
+		items := make([]list.Item, len(msg.vpcRouters))
+		for i, vpcRouter := range msg.vpcRouters {
+			items[i] = vpcRouter
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case vpcRouterDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load VPC router detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.vpcRouterDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderVPCRouterDetail(msg.detail)
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
