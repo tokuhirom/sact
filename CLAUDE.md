@@ -10,6 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - The `main` branch is protected. Never commit directly to main.
 - Always create a feature branch and submit a pull request.
+- Before committing, always run `go fmt ./...` to format the code.
 
 ## Architecture
 
