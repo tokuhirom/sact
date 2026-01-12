@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.4](https://github.com/tokuhirom/sact/compare/v0.0.3...v0.0.4) - 2026-01-12
+- Add Archive resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/15
+- Add VPCRouter resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/19
+
 ## [v0.0.3](https://github.com/tokuhirom/sact/compare/v0.0.2...v0.0.3) - 2026-01-12
 - Refactor: split client.go and model.go into resource-specific files by @tokuhirom in https://github.com/tokuhirom/sact/pull/13
 
