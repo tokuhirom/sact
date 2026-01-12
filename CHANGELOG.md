@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.2](https://github.com/tokuhirom/sact/compare/v0.0.1...v0.0.2) - 2026-01-12
+- Add Disk resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/10
+- Add go fmt instruction to CLAUDE.md by @tokuhirom in https://github.com/tokuhirom/sact/pull/12
+
 ## [v0.0.1](https://github.com/tokuhirom/sact/commits/v0.0.1) - 2026-01-12
 - Add resource type selector menu by @tokuhirom in https://github.com/tokuhirom/sact/pull/1
 - Update README: credential info and key bindings by @tokuhirom in https://github.com/tokuhirom/sact/pull/3
