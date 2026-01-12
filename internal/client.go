@@ -247,14 +247,14 @@ type Disk struct {
 
 type DiskDetail struct {
 	Disk
-	Tags             []string
-	DiskPlanName     string
-	SourceDiskID     string
-	SourceArchiveID  string
-	Availability     string
-	EncryptionAlgo   string
-	CreatedAt        string
-	ModifiedAt       string
+	Tags            []string
+	DiskPlanName    string
+	SourceDiskID    string
+	SourceArchiveID string
+	Availability    string
+	EncryptionAlgo  string
+	CreatedAt       string
+	ModifiedAt      string
 }
 
 // Implement list.Item interface for Server
