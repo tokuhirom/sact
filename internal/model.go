@@ -174,6 +174,23 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				disk.Connection,
 				serverInfo))
 		}
+	} else if archive, ok := item.(Archive); ok {
+		// Handle Archive
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %4dGB %-10s %s",
+				archive.Name,
+				archive.ID,
+				archive.SizeGB,
+				archive.Scope,
+				archive.Availability))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %4dGB %-10s %s",
+				archive.Name,
+				archive.ID,
+				archive.SizeGB,
+				archive.Scope,
+				archive.Availability))
+		}
 	} else {
 		return
 	}
@@ -206,6 +223,7 @@ type model struct {
 	gslbDetail     *GSLBDetail
 	dbDetail       *DBDetail
 	diskDetail     *DiskDetail
+	archiveDetail  *ArchiveDetail
 	detailLoading  bool
 	resourceType   ResourceType
 	detailViewport viewport.Model
@@ -286,6 +304,16 @@ type disksLoadedMsg struct {
 
 type diskDetailLoadedMsg struct {
 	detail *DiskDetail
+	err    error
+}
+
+type archivesLoadedMsg struct {
+	archives []Archive
+	err      error
+}
+
+type archiveDetailLoadedMsg struct {
+	detail *ArchiveDetail
 	err    error
 }
 
@@ -449,6 +477,27 @@ func loadDiskDetail(client *SakuraClient, diskID string) tea.Cmd {
 	}
 }
 
+func loadArchives(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		archives, err := client.ListArchives(ctx)
+		return archivesLoadedMsg{archives: archives, err: err}
+	}
+}
+
+func loadArchiveDetail(client *SakuraClient, archiveID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetArchiveDetail(ctx, archiveID)
+		if err != nil {
+			slog.Error("Failed to load archive detail", slog.Any("error", err))
+			return archiveDetailLoadedMsg{err: err}
+		}
+		slog.Info("Archive detail loaded successfully", slog.String("archiveID", archiveID))
+		return archiveDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -607,6 +656,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %-10s %s", "Name", "ID", "Type", "Status")
 	case ResourceTypeDisk:
 		return fmt.Sprintf("  %-40s %-20s %6s %-10s %s", "Name", "ID", "Size", "Connection", "Server")
+	case ResourceTypeArchive:
+		return fmt.Sprintf("  %-40s %-20s %6s %-10s %s", "Name", "ID", "Size", "Scope", "Availability")
 	default:
 		return ""
 	}
@@ -717,6 +768,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadDB(m.client)
 					case ResourceTypeDisk:
 						return m, loadDisks(m.client)
+					case ResourceTypeArchive:
+						return m, loadArchives(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -778,6 +831,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadDiskDetail(m.client, disk.ID)
 				}
+				if archive, ok := selectedItem.(Archive); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadArchiveDetail(m.client, archive.ID)
+				}
 			}
 			return m, nil
 
@@ -834,6 +892,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadDB(m.client)
 			case ResourceTypeDisk:
 				return m, loadDisks(m.client)
+			case ResourceTypeArchive:
+				return m, loadArchives(m.client)
 			}
 			return m, nil
 
@@ -856,6 +916,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadDB(m.client)
 			case ResourceTypeDisk:
 				return m, loadDisks(m.client)
+			case ResourceTypeArchive:
+				return m, loadArchives(m.client)
 			}
 			return m, nil
 		}
@@ -1089,6 +1151,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.diskDetail = msg.detail
 		// Setup viewport for detail view
 		content := renderDiskDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
+
+	case archivesLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load archives", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Archives loaded successfully", slog.Int("count", len(msg.archives)))
+
+		// Convert archives to list items
+		items := make([]list.Item, len(msg.archives))
+		for i, archive := range msg.archives {
+			items[i] = archive
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case archiveDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load archive detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.archiveDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderArchiveDetail(msg.detail)
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
