@@ -312,6 +312,25 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				ab.MaxBackups,
 				ab.Weekdays))
 		}
+	} else if sm, ok := item.(SimpleMonitor); ok {
+		// Handle SimpleMonitor
+		enabledStr := "OFF"
+		if sm.Enabled {
+			enabledStr = "ON"
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %-10s %s",
+				sm.Name,
+				sm.ID,
+				sm.Protocol,
+				enabledStr))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %-10s %s",
+				sm.Name,
+				sm.ID,
+				sm.Protocol,
+				enabledStr))
+		}
 	} else {
 		return
 	}
@@ -320,41 +339,42 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 }
 
 type model struct {
-	client             *SakuraClient
-	list               list.Model
-	zones              []string
-	currentZone        string
-	cursor             int
-	err                error
-	loading            bool
-	quitting           bool
-	accountName        string
-	windowHeight       int
-	windowWidth        int
-	searchMode         bool
-	searchInput        textinput.Model
-	searchQuery        string
-	searchMatches      []int // Indices of matching items
-	currentMatch       int   // Current match index in searchMatches
-	detailMode         bool
-	serverDetail       *ServerDetail
-	switchDetail       *SwitchDetail
-	dnsDetail          *DNSDetail
-	elbDetail          *ELBDetail
-	gslbDetail         *GSLBDetail
-	dbDetail           *DBDetail
-	diskDetail         *DiskDetail
-	archiveDetail      *ArchiveDetail
-	internetDetail     *InternetDetail
-	vpcRouterDetail    *VPCRouterDetail
-	packetFilterDetail *PacketFilterDetail
-	loadBalancerDetail *LoadBalancerDetail
-	nfsDetail          *NFSDetail
-	sshKeyDetail       *SSHKeyDetail
-	autoBackupDetail   *AutoBackupDetail
-	detailLoading      bool
-	resourceType       ResourceType
-	detailViewport     viewport.Model
+	client              *SakuraClient
+	list                list.Model
+	zones               []string
+	currentZone         string
+	cursor              int
+	err                 error
+	loading             bool
+	quitting            bool
+	accountName         string
+	windowHeight        int
+	windowWidth         int
+	searchMode          bool
+	searchInput         textinput.Model
+	searchQuery         string
+	searchMatches       []int // Indices of matching items
+	currentMatch        int   // Current match index in searchMatches
+	detailMode          bool
+	serverDetail        *ServerDetail
+	switchDetail        *SwitchDetail
+	dnsDetail           *DNSDetail
+	elbDetail           *ELBDetail
+	gslbDetail          *GSLBDetail
+	dbDetail            *DBDetail
+	diskDetail          *DiskDetail
+	archiveDetail       *ArchiveDetail
+	internetDetail      *InternetDetail
+	vpcRouterDetail     *VPCRouterDetail
+	packetFilterDetail  *PacketFilterDetail
+	loadBalancerDetail  *LoadBalancerDetail
+	nfsDetail           *NFSDetail
+	sshKeyDetail        *SSHKeyDetail
+	autoBackupDetail    *AutoBackupDetail
+	simpleMonitorDetail *SimpleMonitorDetail
+	detailLoading       bool
+	resourceType        ResourceType
+	detailViewport      viewport.Model
 	// Resource type selector
 	resourceSelectMode   bool
 	resourceSelectCursor int
@@ -512,6 +532,16 @@ type autoBackupsLoadedMsg struct {
 
 type autoBackupDetailLoadedMsg struct {
 	detail *AutoBackupDetail
+	err    error
+}
+
+type simpleMonitorsLoadedMsg struct {
+	simpleMonitors []SimpleMonitor
+	err            error
+}
+
+type simpleMonitorDetailLoadedMsg struct {
+	detail *SimpleMonitorDetail
 	err    error
 }
 
@@ -843,6 +873,27 @@ func loadAutoBackupDetail(client *SakuraClient, autoBackupID string) tea.Cmd {
 	}
 }
 
+func loadSimpleMonitors(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		simpleMonitors, err := client.ListSimpleMonitors(ctx)
+		return simpleMonitorsLoadedMsg{simpleMonitors: simpleMonitors, err: err}
+	}
+}
+
+func loadSimpleMonitorDetail(client *SakuraClient, simpleMonitorID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetSimpleMonitorDetail(ctx, simpleMonitorID)
+		if err != nil {
+			slog.Error("Failed to load simple monitor detail", slog.Any("error", err))
+			return simpleMonitorDetailLoadedMsg{err: err}
+		}
+		slog.Info("Simple monitor detail loaded successfully", slog.String("simpleMonitorID", simpleMonitorID))
+		return simpleMonitorDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -1017,6 +1068,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "Fingerprint")
 	case ResourceTypeAutoBackup:
 		return fmt.Sprintf("  %-40s %-20s %s  %s", "Name", "ID", "Max", "Weekdays")
+	case ResourceTypeSimpleMonitor:
+		return fmt.Sprintf("  %-40s %-20s %-10s %s", "Name", "ID", "Protocol", "Enabled")
 	default:
 		return ""
 	}
@@ -1143,6 +1196,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadSSHKeys(m.client)
 					case ResourceTypeAutoBackup:
 						return m, loadAutoBackups(m.client)
+					case ResourceTypeSimpleMonitor:
+						return m, loadSimpleMonitors(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1244,6 +1299,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadAutoBackupDetail(m.client, ab.ID)
 				}
+				if sm, ok := selectedItem.(SimpleMonitor); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadSimpleMonitorDetail(m.client, sm.ID)
+				}
 			}
 			return m, nil
 
@@ -1274,8 +1334,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "z":
-			// Zone switching only affects zone-dependent resources (DNS, ELB, GSLB, SSHKey are global)
-			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey {
+			// Zone switching only affects zone-dependent resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor are global)
+			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor {
 				return m, nil
 			}
 			oldZone := m.currentZone
@@ -1352,6 +1412,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadSSHKeys(m.client)
 			case ResourceTypeAutoBackup:
 				return m, loadAutoBackups(m.client)
+			case ResourceTypeSimpleMonitor:
+				return m, loadSimpleMonitors(m.client)
 			}
 			return m, nil
 		}
@@ -1844,6 +1906,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case simpleMonitorsLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load simple monitors", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Simple monitors loaded successfully", slog.Int("count", len(msg.simpleMonitors)))
+
+		// Convert simple monitors to list items
+		items := make([]list.Item, len(msg.simpleMonitors))
+		for i, sm := range msg.simpleMonitors {
+			items[i] = sm
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case simpleMonitorDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load simple monitor detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.simpleMonitorDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderSimpleMonitorDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -1870,7 +1964,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
@@ -1896,8 +1990,8 @@ func (m model) View() string {
 	}
 
 	// Zone selector and resource type
-	// Show "global" for global resources (DNS, ELB, GSLB, SSHKey)
-	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey {
+	// Show "global" for global resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor)
+	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor {
 		b.WriteString("Zone: ")
 		b.WriteString(zoneStyle.Render("global"))
 		b.WriteString(" | Type: ")
