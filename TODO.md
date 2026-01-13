@@ -2,7 +2,7 @@
 
 iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 
-## 実装済み (12リソース)
+## 実装済み (15リソース)
 
 | リソース | ファイル | 説明 |
 |---------|---------|------|
@@ -18,14 +18,14 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 | VPCRouter | `internal/vpcrouter.go` | VPCルーター |
 | PacketFilter | `internal/packetfilter.go` | パケットフィルタ |
 | LoadBalancer | `internal/loadbalancer.go` | 標準ロードバランサ |
+| NFS | `internal/nfs.go` | NFSアプライアンス |
+| SSHKey | `internal/sshkey.go` | SSH公開鍵 |
+| AutoBackup | `internal/autobackup.go` | 自動バックアップ |
 
 ## 未実装 - 高優先度 (運用管理で頻繁に使うリソース)
 
 | リソース | API名 | 説明 | ゾーン依存 |
 |---------|------|------|-----------|
-| NFS | NFSAPI | NFSアプライアンス | Yes |
-| SSHKey | SSHKeyAPI | SSH公開鍵 | No |
-| AutoBackup | AutoBackupAPI | 自動バックアップ | Yes |
 | SimpleMonitor | SimpleMonitorAPI | シンプル監視 | No |
 
 ## 未実装 - 中優先度 (特定用途で使うリソース)
@@ -64,10 +64,10 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 ## 次のステップ
 
 1. [x] LoadBalancer - 標準ロードバランサの対応
-2. [ ] NFS - NFSアプライアンスの対応
+2. [x] NFS - NFSアプライアンスの対応
 3. [x] PacketFilter - パケットフィルタの対応
-4. [ ] SSHKey - SSH公開鍵の対応
-5. [ ] AutoBackup - 自動バックアップの対応
+4. [x] SSHKey - SSH公開鍵の対応
+5. [x] AutoBackup - 自動バックアップの対応
 6. [ ] SimpleMonitor - シンプル監視の対応
 
 ## 実装パターン

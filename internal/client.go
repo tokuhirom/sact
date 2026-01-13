@@ -27,6 +27,7 @@ const (
 	ResourceTypeLoadBalancer
 	ResourceTypeNFS
 	ResourceTypeSSHKey
+	ResourceTypeAutoBackup
 )
 
 // AllResourceTypes returns all available resource types
@@ -45,6 +46,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypeLoadBalancer,
 	ResourceTypeNFS,
 	ResourceTypeSSHKey,
+	ResourceTypeAutoBackup,
 }
 
 func (r ResourceType) String() string {
@@ -77,6 +79,8 @@ func (r ResourceType) String() string {
 		return "NFS"
 	case ResourceTypeSSHKey:
 		return "SSHKey"
+	case ResourceTypeAutoBackup:
+		return "AutoBackup"
 	default:
 		return "Unknown"
 	}
