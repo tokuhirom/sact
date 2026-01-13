@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.5](https://github.com/tokuhirom/sact/compare/v0.0.4...v0.0.5) - 2026-01-13
+- Add Internet resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/18
+- Add PacketFilter resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/21
+
 ## [v0.0.4](https://github.com/tokuhirom/sact/compare/v0.0.3...v0.0.4) - 2026-01-12
 - Add Archive resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/15
 - Add VPCRouter resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/19
