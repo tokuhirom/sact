@@ -284,6 +284,19 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				nfs.SwitchName,
 				statusStyle.Render(nfs.InstanceStatus)))
 		}
+	} else if sshKey, ok := item.(SSHKey); ok {
+		// Handle SSHKey
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %s",
+				sshKey.Name,
+				sshKey.ID,
+				sshKey.Fingerprint))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %s",
+				sshKey.Name,
+				sshKey.ID,
+				sshKey.Fingerprint))
+		}
 	} else {
 		return
 	}
@@ -322,6 +335,7 @@ type model struct {
 	packetFilterDetail *PacketFilterDetail
 	loadBalancerDetail *LoadBalancerDetail
 	nfsDetail          *NFSDetail
+	sshKeyDetail       *SSHKeyDetail
 	detailLoading      bool
 	resourceType       ResourceType
 	detailViewport     viewport.Model
@@ -462,6 +476,16 @@ type nfsLoadedMsg struct {
 
 type nfsDetailLoadedMsg struct {
 	detail *NFSDetail
+	err    error
+}
+
+type sshKeysLoadedMsg struct {
+	sshKeys []SSHKey
+	err     error
+}
+
+type sshKeyDetailLoadedMsg struct {
+	detail *SSHKeyDetail
 	err    error
 }
 
@@ -751,6 +775,27 @@ func loadNFSDetail(client *SakuraClient, nfsID string) tea.Cmd {
 	}
 }
 
+func loadSSHKeys(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		sshKeys, err := client.ListSSHKeys(ctx)
+		return sshKeysLoadedMsg{sshKeys: sshKeys, err: err}
+	}
+}
+
+func loadSSHKeyDetail(client *SakuraClient, sshKeyID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetSSHKeyDetail(ctx, sshKeyID)
+		if err != nil {
+			slog.Error("Failed to load SSH key detail", slog.Any("error", err))
+			return sshKeyDetailLoadedMsg{err: err}
+		}
+		slog.Info("SSH key detail loaded successfully", slog.String("sshKeyID", sshKeyID))
+		return sshKeyDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -921,6 +966,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %s  %s", "Name", "ID", "VIPs", "Status")
 	case ResourceTypeNFS:
 		return fmt.Sprintf("  %-40s %-20s %-15s %s", "Name", "ID", "Switch", "Status")
+	case ResourceTypeSSHKey:
+		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "Fingerprint")
 	default:
 		return ""
 	}
@@ -1043,6 +1090,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadLoadBalancers(m.client)
 					case ResourceTypeNFS:
 						return m, loadNFS(m.client)
+					case ResourceTypeSSHKey:
+						return m, loadSSHKeys(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1134,6 +1183,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadNFSDetail(m.client, nfs.ID)
 				}
+				if sshKey, ok := selectedItem.(SSHKey); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadSSHKeyDetail(m.client, sshKey.ID)
+				}
 			}
 			return m, nil
 
@@ -1164,8 +1218,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "z":
-			// Zone switching only affects Server and Switch (DNS, ELB, and GSLB are global)
-			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB {
+			// Zone switching only affects zone-dependent resources (DNS, ELB, GSLB, SSHKey are global)
+			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey {
 				return m, nil
 			}
 			oldZone := m.currentZone
@@ -1236,6 +1290,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadLoadBalancers(m.client)
 			case ResourceTypeNFS:
 				return m, loadNFS(m.client)
+			case ResourceTypeSSHKey:
+				return m, loadSSHKeys(m.client)
 			}
 			return m, nil
 		}
@@ -1664,6 +1720,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case sshKeysLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load SSH keys", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("SSH keys loaded successfully", slog.Int("count", len(msg.sshKeys)))
+
+		// Convert SSH keys to list items
+		items := make([]list.Item, len(msg.sshKeys))
+		for i, sshKey := range msg.sshKeys {
+			items[i] = sshKey
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case sshKeyDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load SSH key detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.sshKeyDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderSSHKeyDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -1690,7 +1778,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
@@ -1716,8 +1804,8 @@ func (m model) View() string {
 	}
 
 	// Zone selector and resource type
-	// Show "global" for global resources (DNS, ELB, GSLB)
-	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB {
+	// Show "global" for global resources (DNS, ELB, GSLB, SSHKey)
+	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey {
 		b.WriteString("Zone: ")
 		b.WriteString(zoneStyle.Render("global"))
 		b.WriteString(" | Type: ")
