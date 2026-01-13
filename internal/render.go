@@ -623,3 +623,53 @@ func renderLoadBalancerDetail(detail *LoadBalancerDetail) string {
 
 	return b.String()
 }
+
+func renderNFSDetail(detail *NFSDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("NFS: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Status:      %s\n", detail.InstanceStatus))
+
+	if detail.PlanID != "" && detail.PlanID != "0" {
+		b.WriteString(fmt.Sprintf("Plan ID:     %s\n", detail.PlanID))
+	}
+
+	if len(detail.IPAddresses) > 0 {
+		b.WriteString(fmt.Sprintf("IP Addresses: %s\n", strings.Join(detail.IPAddresses, ", ")))
+	}
+
+	if detail.NetworkMaskLen > 0 {
+		b.WriteString(fmt.Sprintf("Network:     /%d\n", detail.NetworkMaskLen))
+	}
+
+	if detail.DefaultRoute != "" {
+		b.WriteString(fmt.Sprintf("Gateway:     %s\n", detail.DefaultRoute))
+	}
+
+	if detail.SwitchID != "" && detail.SwitchID != "0" {
+		b.WriteString(fmt.Sprintf("Switch ID:   %s\n", detail.SwitchID))
+	}
+
+	if detail.SwitchName != "" {
+		b.WriteString(fmt.Sprintf("Switch Name: %s\n", detail.SwitchName))
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
