@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.6](https://github.com/tokuhirom/sact/compare/v0.0.5...v0.0.6) - 2026-01-13
+- Add LoadBalancer resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/22
+- Add NFS appliance resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/24
+
 ## [v0.0.5](https://github.com/tokuhirom/sact/compare/v0.0.4...v0.0.5) - 2026-01-13
 - Add Internet resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/18
 
