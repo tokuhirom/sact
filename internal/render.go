@@ -711,3 +711,51 @@ func renderSSHKeyDetail(detail *SSHKeyDetail) string {
 
 	return b.String()
 }
+
+func renderAutoBackupDetail(detail *AutoBackupDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Auto Backup: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Availability: %s\n", detail.Availability))
+
+	if detail.DiskID != "" && detail.DiskID != "0" {
+		b.WriteString(fmt.Sprintf("Disk ID:     %s\n", detail.DiskID))
+	}
+
+	b.WriteString(fmt.Sprintf("Max Backups: %d\n", detail.MaxBackups))
+
+	if len(detail.BackupWeekdays) > 0 {
+		b.WriteString(fmt.Sprintf("Weekdays:    %s\n", strings.Join(detail.BackupWeekdays, ", ")))
+	}
+
+	if detail.ZoneName != "" {
+		b.WriteString(fmt.Sprintf("Zone Name:   %s\n", detail.ZoneName))
+	}
+
+	if detail.AccountID != "" && detail.AccountID != "0" {
+		b.WriteString(fmt.Sprintf("Account ID:  %s\n", detail.AccountID))
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	if detail.ModifiedAt != "" {
+		b.WriteString(fmt.Sprintf("Modified:    %s\n", detail.ModifiedAt))
+	}
+
+	return b.String()
+}

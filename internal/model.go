@@ -297,6 +297,21 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				sshKey.ID,
 				sshKey.Fingerprint))
 		}
+	} else if ab, ok := item.(AutoBackup); ok {
+		// Handle AutoBackup
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %d backups  %s",
+				ab.Name,
+				ab.ID,
+				ab.MaxBackups,
+				ab.Weekdays))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %d backups  %s",
+				ab.Name,
+				ab.ID,
+				ab.MaxBackups,
+				ab.Weekdays))
+		}
 	} else {
 		return
 	}
@@ -336,6 +351,7 @@ type model struct {
 	loadBalancerDetail *LoadBalancerDetail
 	nfsDetail          *NFSDetail
 	sshKeyDetail       *SSHKeyDetail
+	autoBackupDetail   *AutoBackupDetail
 	detailLoading      bool
 	resourceType       ResourceType
 	detailViewport     viewport.Model
@@ -486,6 +502,16 @@ type sshKeysLoadedMsg struct {
 
 type sshKeyDetailLoadedMsg struct {
 	detail *SSHKeyDetail
+	err    error
+}
+
+type autoBackupsLoadedMsg struct {
+	autoBackups []AutoBackup
+	err         error
+}
+
+type autoBackupDetailLoadedMsg struct {
+	detail *AutoBackupDetail
 	err    error
 }
 
@@ -796,6 +822,27 @@ func loadSSHKeyDetail(client *SakuraClient, sshKeyID string) tea.Cmd {
 	}
 }
 
+func loadAutoBackups(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		autoBackups, err := client.ListAutoBackups(ctx)
+		return autoBackupsLoadedMsg{autoBackups: autoBackups, err: err}
+	}
+}
+
+func loadAutoBackupDetail(client *SakuraClient, autoBackupID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetAutoBackupDetail(ctx, autoBackupID)
+		if err != nil {
+			slog.Error("Failed to load auto backup detail", slog.Any("error", err))
+			return autoBackupDetailLoadedMsg{err: err}
+		}
+		slog.Info("Auto backup detail loaded successfully", slog.String("autoBackupID", autoBackupID))
+		return autoBackupDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -968,6 +1015,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %-15s %s", "Name", "ID", "Switch", "Status")
 	case ResourceTypeSSHKey:
 		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "Fingerprint")
+	case ResourceTypeAutoBackup:
+		return fmt.Sprintf("  %-40s %-20s %s  %s", "Name", "ID", "Max", "Weekdays")
 	default:
 		return ""
 	}
@@ -1092,6 +1141,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadNFS(m.client)
 					case ResourceTypeSSHKey:
 						return m, loadSSHKeys(m.client)
+					case ResourceTypeAutoBackup:
+						return m, loadAutoBackups(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1188,6 +1239,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadSSHKeyDetail(m.client, sshKey.ID)
 				}
+				if ab, ok := selectedItem.(AutoBackup); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadAutoBackupDetail(m.client, ab.ID)
+				}
 			}
 			return m, nil
 
@@ -1256,6 +1312,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadLoadBalancers(m.client)
 			case ResourceTypeNFS:
 				return m, loadNFS(m.client)
+			case ResourceTypeAutoBackup:
+				return m, loadAutoBackups(m.client)
 			}
 			return m, nil
 
@@ -1292,6 +1350,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadNFS(m.client)
 			case ResourceTypeSSHKey:
 				return m, loadSSHKeys(m.client)
+			case ResourceTypeAutoBackup:
+				return m, loadAutoBackups(m.client)
 			}
 			return m, nil
 		}
@@ -1752,6 +1812,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case autoBackupsLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load auto backups", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Auto backups loaded successfully", slog.Int("count", len(msg.autoBackups)))
+
+		// Convert auto backups to list items
+		items := make([]list.Item, len(msg.autoBackups))
+		for i, ab := range msg.autoBackups {
+			items[i] = ab
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case autoBackupDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load auto backup detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.autoBackupDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderAutoBackupDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -1778,7 +1870,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
