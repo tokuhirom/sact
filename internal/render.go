@@ -503,3 +503,59 @@ func renderVPCRouterDetail(detail *VPCRouterDetail) string {
 
 	return b.String()
 }
+
+func renderPacketFilterDetail(detail *PacketFilterDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Packet Filter: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Rules:       %d\n", detail.RuleCount))
+
+	if detail.ExpressionHash != "" {
+		b.WriteString(fmt.Sprintf("Hash:        %s\n", detail.ExpressionHash))
+	}
+
+	// Display rules in table format
+	if len(detail.Rules) > 0 {
+		b.WriteString("\nFilter Rules:\n")
+		b.WriteString(fmt.Sprintf("  %-8s %-18s %-12s %-12s %-8s %s\n",
+			"Protocol", "Source", "SrcPort", "DstPort", "Action", "Description"))
+		b.WriteString(fmt.Sprintf("  %-8s %-18s %-12s %-12s %-8s %s\n",
+			"--------", "------", "-------", "-------", "------", "-----------"))
+		for _, rule := range detail.Rules {
+			srcNet := rule.SourceNetwork
+			if srcNet == "" {
+				srcNet = "*"
+			}
+			srcPort := rule.SourcePort
+			if srcPort == "" {
+				srcPort = "*"
+			}
+			dstPort := rule.DestinationPort
+			if dstPort == "" {
+				dstPort = "*"
+			}
+			b.WriteString(fmt.Sprintf("  %-8s %-18s %-12s %-12s %-8s %s\n",
+				rule.Protocol,
+				srcNet,
+				srcPort,
+				dstPort,
+				rule.Action,
+				rule.Description))
+		}
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
