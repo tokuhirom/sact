@@ -759,3 +759,87 @@ func renderAutoBackupDetail(detail *AutoBackupDetail) string {
 
 	return b.String()
 }
+
+func renderSimpleMonitorDetail(detail *SimpleMonitorDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Simple Monitor: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Target:      %s\n", detail.Target))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Protocol:    %s\n", detail.Protocol))
+	if detail.Port > 0 {
+		b.WriteString(fmt.Sprintf("Port:        %d\n", detail.Port))
+	}
+	if detail.Path != "" {
+		b.WriteString(fmt.Sprintf("Path:        %s\n", detail.Path))
+	}
+	if detail.Host != "" {
+		b.WriteString(fmt.Sprintf("Host:        %s\n", detail.Host))
+	}
+
+	enabledStr := "No"
+	if detail.Enabled {
+		enabledStr = "Yes"
+	}
+	b.WriteString(fmt.Sprintf("Enabled:     %s\n", enabledStr))
+
+	if detail.Health != "" {
+		b.WriteString(fmt.Sprintf("Health:      %s\n", detail.Health))
+	}
+
+	b.WriteString(fmt.Sprintf("\nMonitoring Settings:\n"))
+	b.WriteString(fmt.Sprintf("  Delay Loop:       %d sec\n", detail.DelayLoop))
+	b.WriteString(fmt.Sprintf("  Max Check Attempts: %d\n", detail.MaxCheckAttempts))
+	b.WriteString(fmt.Sprintf("  Retry Interval:   %d sec\n", detail.RetryInterval))
+	b.WriteString(fmt.Sprintf("  Timeout:          %d sec\n", detail.Timeout))
+
+	b.WriteString(fmt.Sprintf("\nNotification Settings:\n"))
+	emailEnabled := "No"
+	if detail.NotifyEmailEnabled {
+		emailEnabled = "Yes"
+	}
+	b.WriteString(fmt.Sprintf("  Email:            %s\n", emailEnabled))
+	slackEnabled := "No"
+	if detail.NotifySlackEnabled {
+		slackEnabled = "Yes"
+	}
+	b.WriteString(fmt.Sprintf("  Slack:            %s\n", slackEnabled))
+	if detail.NotifyInterval > 0 {
+		b.WriteString(fmt.Sprintf("  Notify Interval:  %d hours\n", detail.NotifyInterval))
+	}
+
+	if detail.LastCheckedAt != "" {
+		b.WriteString(fmt.Sprintf("\nLast Checked:   %s\n", detail.LastCheckedAt))
+	}
+	if detail.LastHealthChangedAt != "" {
+		b.WriteString(fmt.Sprintf("Health Changed: %s\n", detail.LastHealthChangedAt))
+	}
+
+	if len(detail.LatestLogs) > 0 {
+		b.WriteString("\nLatest Logs:\n")
+		for _, log := range detail.LatestLogs {
+			b.WriteString(fmt.Sprintf("  %s\n", log))
+		}
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	if detail.ModifiedAt != "" {
+		b.WriteString(fmt.Sprintf("Modified:    %s\n", detail.ModifiedAt))
+	}
+
+	return b.String()
+}

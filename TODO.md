@@ -2,7 +2,7 @@
 
 iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 
-## 実装済み (15リソース)
+## 実装済み (16リソース)
 
 | リソース | ファイル | 説明 |
 |---------|---------|------|
@@ -21,12 +21,7 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 | NFS | `internal/nfs.go` | NFSアプライアンス |
 | SSHKey | `internal/sshkey.go` | SSH公開鍵 |
 | AutoBackup | `internal/autobackup.go` | 自動バックアップ |
-
-## 未実装 - 高優先度 (運用管理で頻繁に使うリソース)
-
-| リソース | API名 | 説明 | ゾーン依存 |
-|---------|------|------|-----------|
-| SimpleMonitor | SimpleMonitorAPI | シンプル監視 | No |
+| SimpleMonitor | `internal/simplemonitor.go` | シンプル監視 |
 
 ## 未実装 - 中優先度 (特定用途で使うリソース)
 
@@ -68,7 +63,7 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 3. [x] PacketFilter - パケットフィルタの対応
 4. [x] SSHKey - SSH公開鍵の対応
 5. [x] AutoBackup - 自動バックアップの対応
-6. [ ] SimpleMonitor - シンプル監視の対応
+6. [x] SimpleMonitor - シンプル監視の対応
 
 ## 実装パターン
 
