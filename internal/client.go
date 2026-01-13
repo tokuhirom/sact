@@ -29,6 +29,7 @@ const (
 	ResourceTypeSSHKey
 	ResourceTypeAutoBackup
 	ResourceTypeSimpleMonitor
+	ResourceTypeBridge
 )
 
 // AllResourceTypes returns all available resource types
@@ -49,6 +50,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypeSSHKey,
 	ResourceTypeAutoBackup,
 	ResourceTypeSimpleMonitor,
+	ResourceTypeBridge,
 }
 
 func (r ResourceType) String() string {
@@ -85,6 +87,8 @@ func (r ResourceType) String() string {
 		return "AutoBackup"
 	case ResourceTypeSimpleMonitor:
 		return "SimpleMonitor"
+	case ResourceTypeBridge:
+		return "Bridge"
 	default:
 		return "Unknown"
 	}

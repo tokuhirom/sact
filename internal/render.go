@@ -843,3 +843,49 @@ func renderSimpleMonitorDetail(detail *SimpleMonitorDetail) string {
 
 	return b.String()
 }
+
+func renderBridgeDetail(detail *BridgeDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Bridge: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	if detail.Region != "" {
+		b.WriteString(fmt.Sprintf("Region:      %s\n", detail.Region))
+	}
+
+	b.WriteString(fmt.Sprintf("Switches:    %d connected\n", detail.SwitchCount))
+
+	// Display switch in zone info
+	if detail.SwitchInZone != nil {
+		b.WriteString("\nSwitch in Zone:\n")
+		b.WriteString(fmt.Sprintf("  ID:             %s\n", detail.SwitchInZone.ID))
+		b.WriteString(fmt.Sprintf("  Name:           %s\n", detail.SwitchInZone.Name))
+		if detail.SwitchInZone.Scope != "" {
+			b.WriteString(fmt.Sprintf("  Scope:          %s\n", detail.SwitchInZone.Scope))
+		}
+		b.WriteString(fmt.Sprintf("  Servers:        %d\n", detail.SwitchInZone.ServerCount))
+		b.WriteString(fmt.Sprintf("  Appliances:     %d\n", detail.SwitchInZone.ApplianceCount))
+	}
+
+	// Display connected switches
+	if len(detail.Switches) > 0 {
+		b.WriteString("\nConnected Switches:\n")
+		for _, sw := range detail.Switches {
+			b.WriteString(fmt.Sprintf("  - %s (ID: %s, Zone: %s)\n", sw.Name, sw.ID, sw.ZoneName))
+		}
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
