@@ -2,7 +2,7 @@
 
 iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 
-## 実装済み (16リソース)
+## 実装済み (17リソース)
 
 | リソース | ファイル | 説明 |
 |---------|---------|------|
@@ -22,12 +22,12 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 | SSHKey | `internal/sshkey.go` | SSH公開鍵 |
 | AutoBackup | `internal/autobackup.go` | 自動バックアップ |
 | SimpleMonitor | `internal/simplemonitor.go` | シンプル監視 |
+| Bridge | `internal/bridge.go` | ブリッジ接続 |
 
 ## 未実装 - 中優先度 (特定用途で使うリソース)
 
 | リソース | API名 | 説明 | ゾーン依存 |
 |---------|------|------|-----------|
-| Bridge | BridgeAPI | ブリッジ接続 | Yes |
 | CDROM | CDROMAPI | ISOイメージ | Yes |
 | LocalRouter | LocalRouterAPI | ローカルルーター | No |
 | MobileGateway | MobileGatewayAPI | モバイルゲートウェイ | Yes |
@@ -64,6 +64,7 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 4. [x] SSHKey - SSH公開鍵の対応
 5. [x] AutoBackup - 自動バックアップの対応
 6. [x] SimpleMonitor - シンプル監視の対応
+7. [x] Bridge - ブリッジ接続の対応
 
 ## 実装パターン
 

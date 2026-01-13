@@ -331,6 +331,21 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				sm.Protocol,
 				enabledStr))
 		}
+	} else if br, ok := item.(Bridge); ok {
+		// Handle Bridge
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %-10s %d",
+				br.Name,
+				br.ID,
+				br.Region,
+				br.SwitchCount))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %-10s %d",
+				br.Name,
+				br.ID,
+				br.Region,
+				br.SwitchCount))
+		}
 	} else {
 		return
 	}
@@ -372,6 +387,7 @@ type model struct {
 	sshKeyDetail        *SSHKeyDetail
 	autoBackupDetail    *AutoBackupDetail
 	simpleMonitorDetail *SimpleMonitorDetail
+	bridgeDetail        *BridgeDetail
 	detailLoading       bool
 	resourceType        ResourceType
 	detailViewport      viewport.Model
@@ -542,6 +558,16 @@ type simpleMonitorsLoadedMsg struct {
 
 type simpleMonitorDetailLoadedMsg struct {
 	detail *SimpleMonitorDetail
+	err    error
+}
+
+type bridgesLoadedMsg struct {
+	bridges []Bridge
+	err     error
+}
+
+type bridgeDetailLoadedMsg struct {
+	detail *BridgeDetail
 	err    error
 }
 
@@ -894,6 +920,27 @@ func loadSimpleMonitorDetail(client *SakuraClient, simpleMonitorID string) tea.C
 	}
 }
 
+func loadBridges(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		bridges, err := client.ListBridges(ctx)
+		return bridgesLoadedMsg{bridges: bridges, err: err}
+	}
+}
+
+func loadBridgeDetail(client *SakuraClient, bridgeID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetBridgeDetail(ctx, bridgeID)
+		if err != nil {
+			slog.Error("Failed to load bridge detail", slog.Any("error", err))
+			return bridgeDetailLoadedMsg{err: err}
+		}
+		slog.Info("Bridge detail loaded successfully", slog.String("bridgeID", bridgeID))
+		return bridgeDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -1070,6 +1117,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %s  %s", "Name", "ID", "Max", "Weekdays")
 	case ResourceTypeSimpleMonitor:
 		return fmt.Sprintf("  %-40s %-20s %-10s %s", "Name", "ID", "Protocol", "Enabled")
+	case ResourceTypeBridge:
+		return fmt.Sprintf("  %-40s %-20s %-10s %s", "Name", "ID", "Region", "Switches")
 	default:
 		return ""
 	}
@@ -1198,6 +1247,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadAutoBackups(m.client)
 					case ResourceTypeSimpleMonitor:
 						return m, loadSimpleMonitors(m.client)
+					case ResourceTypeBridge:
+						return m, loadBridges(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1304,6 +1355,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadSimpleMonitorDetail(m.client, sm.ID)
 				}
+				if br, ok := selectedItem.(Bridge); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadBridgeDetail(m.client, br.ID)
+				}
 			}
 			return m, nil
 
@@ -1374,6 +1430,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadNFS(m.client)
 			case ResourceTypeAutoBackup:
 				return m, loadAutoBackups(m.client)
+			case ResourceTypeBridge:
+				return m, loadBridges(m.client)
 			}
 			return m, nil
 
@@ -1414,6 +1472,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadAutoBackups(m.client)
 			case ResourceTypeSimpleMonitor:
 				return m, loadSimpleMonitors(m.client)
+			case ResourceTypeBridge:
+				return m, loadBridges(m.client)
 			}
 			return m, nil
 		}
@@ -1938,6 +1998,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case bridgesLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load bridges", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Bridges loaded successfully", slog.Int("count", len(msg.bridges)))
+
+		// Convert bridges to list items
+		items := make([]list.Item, len(msg.bridges))
+		for i, br := range msg.bridges {
+			items[i] = br
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case bridgeDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load bridge detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.bridgeDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderBridgeDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -1964,7 +2056,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
