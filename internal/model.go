@@ -262,6 +262,28 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				lb.VIPCount,
 				statusStyle.Render(lb.InstanceStatus)))
 		}
+	} else if nfs, ok := item.(NFS); ok {
+		// Handle NFS
+		statusStyle := otherStatusStyle
+		switch nfs.InstanceStatus {
+		case "up":
+			statusStyle = upStatusStyle
+		case "down":
+			statusStyle = downStatusStyle
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %-15s %s",
+				nfs.Name,
+				nfs.ID,
+				nfs.SwitchName,
+				statusStyle.Render(nfs.InstanceStatus)))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %-15s %s",
+				nfs.Name,
+				nfs.ID,
+				nfs.SwitchName,
+				statusStyle.Render(nfs.InstanceStatus)))
+		}
 	} else {
 		return
 	}
@@ -299,6 +321,7 @@ type model struct {
 	vpcRouterDetail    *VPCRouterDetail
 	packetFilterDetail *PacketFilterDetail
 	loadBalancerDetail *LoadBalancerDetail
+	nfsDetail          *NFSDetail
 	detailLoading      bool
 	resourceType       ResourceType
 	detailViewport     viewport.Model
@@ -429,6 +452,16 @@ type loadBalancersLoadedMsg struct {
 
 type loadBalancerDetailLoadedMsg struct {
 	detail *LoadBalancerDetail
+	err    error
+}
+
+type nfsLoadedMsg struct {
+	nfsList []NFS
+	err     error
+}
+
+type nfsDetailLoadedMsg struct {
+	detail *NFSDetail
 	err    error
 }
 
@@ -697,6 +730,27 @@ func loadLoadBalancerDetail(client *SakuraClient, loadBalancerID string) tea.Cmd
 	}
 }
 
+func loadNFS(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		nfsList, err := client.ListNFS(ctx)
+		return nfsLoadedMsg{nfsList: nfsList, err: err}
+	}
+}
+
+func loadNFSDetail(client *SakuraClient, nfsID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetNFSDetail(ctx, nfsID)
+		if err != nil {
+			slog.Error("Failed to load NFS detail", slog.Any("error", err))
+			return nfsDetailLoadedMsg{err: err}
+		}
+		slog.Info("NFS detail loaded successfully", slog.String("nfsID", nfsID))
+		return nfsDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -865,6 +919,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "Rules")
 	case ResourceTypeLoadBalancer:
 		return fmt.Sprintf("  %-40s %-20s %s  %s", "Name", "ID", "VIPs", "Status")
+	case ResourceTypeNFS:
+		return fmt.Sprintf("  %-40s %-20s %-15s %s", "Name", "ID", "Switch", "Status")
 	default:
 		return ""
 	}
@@ -985,6 +1041,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadPacketFilters(m.client)
 					case ResourceTypeLoadBalancer:
 						return m, loadLoadBalancers(m.client)
+					case ResourceTypeNFS:
+						return m, loadNFS(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1071,6 +1129,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadLoadBalancerDetail(m.client, lb.ID)
 				}
+				if nfs, ok := selectedItem.(NFS); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadNFSDetail(m.client, nfs.ID)
+				}
 			}
 			return m, nil
 
@@ -1137,6 +1200,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadPacketFilters(m.client)
 			case ResourceTypeLoadBalancer:
 				return m, loadLoadBalancers(m.client)
+			case ResourceTypeNFS:
+				return m, loadNFS(m.client)
 			}
 			return m, nil
 
@@ -1169,6 +1234,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadPacketFilters(m.client)
 			case ResourceTypeLoadBalancer:
 				return m, loadLoadBalancers(m.client)
+			case ResourceTypeNFS:
+				return m, loadNFS(m.client)
 			}
 			return m, nil
 		}
@@ -1565,6 +1632,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case nfsLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load NFS appliances", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("NFS appliances loaded successfully", slog.Int("count", len(msg.nfsList)))
+
+		// Convert NFS to list items
+		items := make([]list.Item, len(msg.nfsList))
+		for i, nfs := range msg.nfsList {
+			items[i] = nfs
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case nfsDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load NFS detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.nfsDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderNFSDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -1591,7 +1690,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
