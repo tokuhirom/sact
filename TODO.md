@@ -2,7 +2,7 @@
 
 iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 
-## 実装済み (11リソース)
+## 実装済み (12リソース)
 
 | リソース | ファイル | 説明 |
 |---------|---------|------|
@@ -17,12 +17,12 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 | Internet | `internal/internet.go` | ルーター |
 | VPCRouter | `internal/vpcrouter.go` | VPCルーター |
 | PacketFilter | `internal/packetfilter.go` | パケットフィルタ |
+| LoadBalancer | `internal/loadbalancer.go` | 標準ロードバランサ |
 
 ## 未実装 - 高優先度 (運用管理で頻繁に使うリソース)
 
 | リソース | API名 | 説明 | ゾーン依存 |
 |---------|------|------|-----------|
-| LoadBalancer | LoadBalancerAPI | 標準ロードバランサ | Yes |
 | NFS | NFSAPI | NFSアプライアンス | Yes |
 | SSHKey | SSHKeyAPI | SSH公開鍵 | No |
 | AutoBackup | AutoBackupAPI | 自動バックアップ | Yes |
@@ -63,7 +63,7 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 
 ## 次のステップ
 
-1. [ ] LoadBalancer - 標準ロードバランサの対応
+1. [x] LoadBalancer - 標準ロードバランサの対応
 2. [ ] NFS - NFSアプライアンスの対応
 3. [x] PacketFilter - パケットフィルタの対応
 4. [ ] SSHKey - SSH公開鍵の対応

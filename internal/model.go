@@ -240,6 +240,28 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				pf.ID,
 				pf.RuleCount))
 		}
+	} else if lb, ok := item.(LoadBalancer); ok {
+		// Handle LoadBalancer
+		statusStyle := otherStatusStyle
+		switch lb.InstanceStatus {
+		case "up":
+			statusStyle = upStatusStyle
+		case "down":
+			statusStyle = downStatusStyle
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %d VIPs  %s",
+				lb.Name,
+				lb.ID,
+				lb.VIPCount,
+				statusStyle.Render(lb.InstanceStatus)))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %d VIPs  %s",
+				lb.Name,
+				lb.ID,
+				lb.VIPCount,
+				statusStyle.Render(lb.InstanceStatus)))
+		}
 	} else {
 		return
 	}
@@ -276,6 +298,7 @@ type model struct {
 	internetDetail     *InternetDetail
 	vpcRouterDetail    *VPCRouterDetail
 	packetFilterDetail *PacketFilterDetail
+	loadBalancerDetail *LoadBalancerDetail
 	detailLoading      bool
 	resourceType       ResourceType
 	detailViewport     viewport.Model
@@ -396,6 +419,16 @@ type packetFiltersLoadedMsg struct {
 
 type packetFilterDetailLoadedMsg struct {
 	detail *PacketFilterDetail
+	err    error
+}
+
+type loadBalancersLoadedMsg struct {
+	loadBalancers []LoadBalancer
+	err           error
+}
+
+type loadBalancerDetailLoadedMsg struct {
+	detail *LoadBalancerDetail
 	err    error
 }
 
@@ -643,6 +676,27 @@ func loadPacketFilterDetail(client *SakuraClient, packetFilterID string) tea.Cmd
 	}
 }
 
+func loadLoadBalancers(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		loadBalancers, err := client.ListLoadBalancers(ctx)
+		return loadBalancersLoadedMsg{loadBalancers: loadBalancers, err: err}
+	}
+}
+
+func loadLoadBalancerDetail(client *SakuraClient, loadBalancerID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetLoadBalancerDetail(ctx, loadBalancerID)
+		if err != nil {
+			slog.Error("Failed to load load balancer detail", slog.Any("error", err))
+			return loadBalancerDetailLoadedMsg{err: err}
+		}
+		slog.Info("Load balancer detail loaded successfully", slog.String("loadBalancerID", loadBalancerID))
+		return loadBalancerDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -809,6 +863,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %-10s %-8s %s", "Name", "ID", "Plan", "Version", "Status")
 	case ResourceTypePacketFilter:
 		return fmt.Sprintf("  %-40s %-20s %s", "Name", "ID", "Rules")
+	case ResourceTypeLoadBalancer:
+		return fmt.Sprintf("  %-40s %-20s %s  %s", "Name", "ID", "VIPs", "Status")
 	default:
 		return ""
 	}
@@ -927,6 +983,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadVPCRouters(m.client)
 					case ResourceTypePacketFilter:
 						return m, loadPacketFilters(m.client)
+					case ResourceTypeLoadBalancer:
+						return m, loadLoadBalancers(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1008,6 +1066,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadPacketFilterDetail(m.client, pf.ID)
 				}
+				if lb, ok := selectedItem.(LoadBalancer); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadLoadBalancerDetail(m.client, lb.ID)
+				}
 			}
 			return m, nil
 
@@ -1072,6 +1135,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadVPCRouters(m.client)
 			case ResourceTypePacketFilter:
 				return m, loadPacketFilters(m.client)
+			case ResourceTypeLoadBalancer:
+				return m, loadLoadBalancers(m.client)
 			}
 			return m, nil
 
@@ -1102,6 +1167,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadVPCRouters(m.client)
 			case ResourceTypePacketFilter:
 				return m, loadPacketFilters(m.client)
+			case ResourceTypeLoadBalancer:
+				return m, loadLoadBalancers(m.client)
 			}
 			return m, nil
 		}
@@ -1466,6 +1533,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case loadBalancersLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load load balancers", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Load balancers loaded successfully", slog.Int("count", len(msg.loadBalancers)))
+
+		// Convert load balancers to list items
+		items := make([]list.Item, len(msg.loadBalancers))
+		for i, lb := range msg.loadBalancers {
+			items[i] = lb
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case loadBalancerDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load load balancer detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.loadBalancerDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderLoadBalancerDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -1492,7 +1591,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))

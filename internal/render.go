@@ -559,3 +559,67 @@ func renderPacketFilterDetail(detail *PacketFilterDetail) string {
 
 	return b.String()
 }
+
+func renderLoadBalancerDetail(detail *LoadBalancerDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Load Balancer: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:        %s\n", detail.Zone))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Status:      %s\n", detail.InstanceStatus))
+	b.WriteString(fmt.Sprintf("VRID:        %d\n", detail.VRID))
+
+	if len(detail.IPAddresses) > 0 {
+		b.WriteString(fmt.Sprintf("IP Addresses: %s\n", strings.Join(detail.IPAddresses, ", ")))
+	}
+
+	b.WriteString(fmt.Sprintf("Network:     /%d (Default Route: %s)\n", detail.NetworkMaskLen, detail.DefaultRoute))
+
+	if detail.SwitchID != "" && detail.SwitchID != "0" {
+		b.WriteString(fmt.Sprintf("Switch ID:   %s\n", detail.SwitchID))
+	}
+
+	// Display VIPs
+	if len(detail.VIPs) > 0 {
+		b.WriteString("\nVirtual IPs:\n")
+		for i, vip := range detail.VIPs {
+			b.WriteString(fmt.Sprintf("\n  VIP %d: %s:%d\n", i+1, vip.VirtualIPAddress, vip.Port))
+			if vip.Description != "" {
+				b.WriteString(fmt.Sprintf("    Description: %s\n", vip.Description))
+			}
+			b.WriteString(fmt.Sprintf("    Delay Loop:  %d sec\n", vip.DelayLoop))
+			if vip.SorryServer != "" {
+				b.WriteString(fmt.Sprintf("    Sorry Server: %s\n", vip.SorryServer))
+			}
+
+			// Display real servers
+			if len(vip.Servers) > 0 {
+				b.WriteString("    Real Servers:\n")
+				for _, srv := range vip.Servers {
+					enabled := "enabled"
+					if !srv.Enabled {
+						enabled = "disabled"
+					}
+					b.WriteString(fmt.Sprintf("      - %s:%d (%s)\n", srv.IPAddress, srv.Port, enabled))
+				}
+			}
+		}
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
