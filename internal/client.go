@@ -23,6 +23,7 @@ const (
 	ResourceTypeArchive
 	ResourceTypeInternet
 	ResourceTypeVPCRouter
+	ResourceTypePacketFilter
 )
 
 // AllResourceTypes returns all available resource types
@@ -37,6 +38,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypeArchive,
 	ResourceTypeInternet,
 	ResourceTypeVPCRouter,
+	ResourceTypePacketFilter,
 }
 
 func (r ResourceType) String() string {
@@ -61,6 +63,8 @@ func (r ResourceType) String() string {
 		return "Internet"
 	case ResourceTypeVPCRouter:
 		return "VPCRouter"
+	case ResourceTypePacketFilter:
+		return "PacketFilter"
 	default:
 		return "Unknown"
 	}
