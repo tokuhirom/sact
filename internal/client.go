@@ -24,6 +24,7 @@ const (
 	ResourceTypeInternet
 	ResourceTypeVPCRouter
 	ResourceTypePacketFilter
+	ResourceTypeLoadBalancer
 )
 
 // AllResourceTypes returns all available resource types
@@ -39,6 +40,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypeInternet,
 	ResourceTypeVPCRouter,
 	ResourceTypePacketFilter,
+	ResourceTypeLoadBalancer,
 }
 
 func (r ResourceType) String() string {
@@ -65,6 +67,8 @@ func (r ResourceType) String() string {
 		return "VPCRouter"
 	case ResourceTypePacketFilter:
 		return "PacketFilter"
+	case ResourceTypeLoadBalancer:
+		return "LoadBalancer"
 	default:
 		return "Unknown"
 	}
