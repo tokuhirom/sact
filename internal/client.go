@@ -21,6 +21,7 @@ const (
 	ResourceTypeDB
 	ResourceTypeDisk
 	ResourceTypeArchive
+	ResourceTypeInternet
 	ResourceTypeVPCRouter
 )
 
@@ -34,6 +35,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypeDB,
 	ResourceTypeDisk,
 	ResourceTypeArchive,
+	ResourceTypeInternet,
 	ResourceTypeVPCRouter,
 }
 
@@ -55,6 +57,8 @@ func (r ResourceType) String() string {
 		return "Disk"
 	case ResourceTypeArchive:
 		return "Archive"
+	case ResourceTypeInternet:
+		return "Internet"
 	case ResourceTypeVPCRouter:
 		return "VPCRouter"
 	default:

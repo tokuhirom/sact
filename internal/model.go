@@ -191,6 +191,25 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				archive.Scope,
 				archive.Availability))
 		}
+	} else if internet, ok := item.(Internet); ok {
+		// Handle Internet
+		switchID := "-"
+		if internet.SwitchID != "" {
+			switchID = internet.SwitchID
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-20s %6dMbps %s",
+				internet.Name,
+				internet.ID,
+				internet.BandWidthMbps,
+				switchID))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-20s %6dMbps %s",
+				internet.Name,
+				internet.ID,
+				internet.BandWidthMbps,
+				switchID))
+		}
 	} else if vpcRouter, ok := item.(VPCRouter); ok {
 		// Handle VPCRouter
 		if index == m.Index() {
@@ -241,6 +260,7 @@ type model struct {
 	dbDetail        *DBDetail
 	diskDetail      *DiskDetail
 	archiveDetail   *ArchiveDetail
+	internetDetail  *InternetDetail
 	vpcRouterDetail *VPCRouterDetail
 	detailLoading   bool
 	resourceType    ResourceType
@@ -332,6 +352,16 @@ type archivesLoadedMsg struct {
 
 type archiveDetailLoadedMsg struct {
 	detail *ArchiveDetail
+	err    error
+}
+
+type internetLoadedMsg struct {
+	internet []Internet
+	err      error
+}
+
+type internetDetailLoadedMsg struct {
+	detail *InternetDetail
 	err    error
 }
 
@@ -526,6 +556,27 @@ func loadArchiveDetail(client *SakuraClient, archiveID string) tea.Cmd {
 	}
 }
 
+func loadInternet(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		internet, err := client.ListInternet(ctx)
+		return internetLoadedMsg{internet: internet, err: err}
+	}
+}
+
+func loadInternetDetail(client *SakuraClient, internetID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetInternetDetail(ctx, internetID)
+		if err != nil {
+			slog.Error("Failed to load internet detail", slog.Any("error", err))
+			return internetDetailLoadedMsg{err: err}
+		}
+		slog.Info("Internet detail loaded successfully", slog.String("internetID", internetID))
+		return internetDetailLoadedMsg{detail: detail}
+	}
+}
+
 func loadVPCRouters(client *SakuraClient) tea.Cmd {
 	return func() tea.Msg {
 		ctx := context.Background()
@@ -707,6 +758,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %6s %-10s %s", "Name", "ID", "Size", "Connection", "Server")
 	case ResourceTypeArchive:
 		return fmt.Sprintf("  %-40s %-20s %6s %-10s %s", "Name", "ID", "Size", "Scope", "Availability")
+	case ResourceTypeInternet:
+		return fmt.Sprintf("  %-40s %-20s %10s %s", "Name", "ID", "Bandwidth", "Switch ID")
 	case ResourceTypeVPCRouter:
 		return fmt.Sprintf("  %-40s %-20s %-10s %-8s %s", "Name", "ID", "Plan", "Version", "Status")
 	default:
@@ -821,6 +874,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadDisks(m.client)
 					case ResourceTypeArchive:
 						return m, loadArchives(m.client)
+					case ResourceTypeInternet:
+						return m, loadInternet(m.client)
 					case ResourceTypeVPCRouter:
 						return m, loadVPCRouters(m.client)
 					}
@@ -889,6 +944,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadArchiveDetail(m.client, archive.ID)
 				}
+				if internet, ok := selectedItem.(Internet); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadInternetDetail(m.client, internet.ID)
+				}
 				if vpcRouter, ok := selectedItem.(VPCRouter); ok {
 					m.detailMode = true
 					m.detailLoading = true
@@ -952,6 +1012,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadDisks(m.client)
 			case ResourceTypeArchive:
 				return m, loadArchives(m.client)
+			case ResourceTypeInternet:
+				return m, loadInternet(m.client)
 			case ResourceTypeVPCRouter:
 				return m, loadVPCRouters(m.client)
 			}
@@ -978,6 +1040,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadDisks(m.client)
 			case ResourceTypeArchive:
 				return m, loadArchives(m.client)
+			case ResourceTypeInternet:
+				return m, loadInternet(m.client)
 			case ResourceTypeVPCRouter:
 				return m, loadVPCRouters(m.client)
 			}
@@ -1245,6 +1309,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.archiveDetail = msg.detail
 		// Setup viewport for detail view
 		content := renderArchiveDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
+
+	case internetLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load internet", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Internet loaded successfully", slog.Int("count", len(msg.internet)))
+
+		// Convert internet to list items
+		items := make([]list.Item, len(msg.internet))
+		for i, internet := range msg.internet {
+			items[i] = internet
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case internetDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load internet detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.internetDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderInternetDetail(msg.detail)
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
