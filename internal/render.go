@@ -673,3 +673,41 @@ func renderNFSDetail(detail *NFSDetail) string {
 
 	return b.String()
 }
+
+func renderSSHKeyDetail(detail *SSHKeyDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("SSH Key: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:          %s\n", detail.ID))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Fingerprint: %s\n", detail.Fingerprint))
+
+	if detail.PublicKey != "" {
+		b.WriteString("\nPublic Key:\n")
+		// Split long public key for better display
+		pubKey := detail.PublicKey
+		if len(pubKey) > 80 {
+			for i := 0; i < len(pubKey); i += 80 {
+				end := i + 80
+				if end > len(pubKey) {
+					end = len(pubKey)
+				}
+				b.WriteString(fmt.Sprintf("  %s\n", pubKey[i:end]))
+			}
+		} else {
+			b.WriteString(fmt.Sprintf("  %s\n", pubKey))
+		}
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}

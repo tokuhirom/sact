@@ -26,6 +26,7 @@ const (
 	ResourceTypePacketFilter
 	ResourceTypeLoadBalancer
 	ResourceTypeNFS
+	ResourceTypeSSHKey
 )
 
 // AllResourceTypes returns all available resource types
@@ -43,6 +44,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypePacketFilter,
 	ResourceTypeLoadBalancer,
 	ResourceTypeNFS,
+	ResourceTypeSSHKey,
 }
 
 func (r ResourceType) String() string {
@@ -73,6 +75,8 @@ func (r ResourceType) String() string {
 		return "LoadBalancer"
 	case ResourceTypeNFS:
 		return "NFS"
+	case ResourceTypeSSHKey:
+		return "SSHKey"
 	default:
 		return "Unknown"
 	}
