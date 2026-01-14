@@ -30,6 +30,7 @@ const (
 	ResourceTypeAutoBackup
 	ResourceTypeSimpleMonitor
 	ResourceTypeBridge
+	ResourceTypeContainerRegistry
 )
 
 // AllResourceTypes returns all available resource types
@@ -51,6 +52,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypeAutoBackup,
 	ResourceTypeSimpleMonitor,
 	ResourceTypeBridge,
+	ResourceTypeContainerRegistry,
 }
 
 func (r ResourceType) String() string {
@@ -89,6 +91,8 @@ func (r ResourceType) String() string {
 		return "SimpleMonitor"
 	case ResourceTypeBridge:
 		return "Bridge"
+	case ResourceTypeContainerRegistry:
+		return "ContainerRegistry"
 	default:
 		return "Unknown"
 	}

@@ -2,7 +2,7 @@
 
 iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 
-## 実装済み (17リソース)
+## 実装済み (18リソース)
 
 | リソース | ファイル | 説明 |
 |---------|---------|------|
@@ -23,6 +23,7 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 | AutoBackup | `internal/autobackup.go` | 自動バックアップ |
 | SimpleMonitor | `internal/simplemonitor.go` | シンプル監視 |
 | Bridge | `internal/bridge.go` | ブリッジ接続 |
+| ContainerRegistry | `internal/containerregistry.go` | コンテナレジストリ |
 
 ## 未実装 - 中優先度 (特定用途で使うリソース)
 
@@ -37,7 +38,6 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 | Interface | InterfaceAPI | NIC | Yes |
 | EnhancedDB | EnhancedDBAPI | エンハンスドデータベース (TiDB) | No |
 | AutoScale | AutoScaleAPI | オートスケール | No |
-| ContainerRegistry | ContainerRegistryAPI | コンテナレジストリ | No |
 | CertificateAuthority | CertificateAuthorityAPI | マネージドPKI | No |
 | ESME | ESMEAPI | 2要素認証 (SMS) | No |
 
@@ -65,6 +65,7 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 5. [x] AutoBackup - 自動バックアップの対応
 6. [x] SimpleMonitor - シンプル監視の対応
 7. [x] Bridge - ブリッジ接続の対応
+8. [x] ContainerRegistry - コンテナレジストリの対応
 
 ## 実装パターン
 
