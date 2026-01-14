@@ -1067,3 +1067,81 @@ func renderAppRunLBDetail(detail *AppRunLBDetail) string {
 
 	return b.String()
 }
+
+func renderAppRunASGDetail(detail *AppRunASGDetail, workerNodes []AppRunWorkerNode) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("AppRun ASG: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:            %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Zone:          %s\n", detail.Zone))
+	b.WriteString(fmt.Sprintf("Service Class: %s\n", detail.ServiceClass))
+	b.WriteString(fmt.Sprintf("Nodes:         %d (min: %d, max: %d)\n", detail.WorkerNodeCount, detail.MinNodes, detail.MaxNodes))
+
+	if detail.Deleting {
+		b.WriteString("\n** DELETING **\n")
+	}
+
+	// Display name servers
+	if len(detail.NameServers) > 0 {
+		b.WriteString(fmt.Sprintf("\nName Servers: %s\n", strings.Join(detail.NameServers, ", ")))
+	}
+
+	// Display network interfaces
+	if len(detail.Interfaces) > 0 {
+		b.WriteString(fmt.Sprintf("\nNetwork Interfaces: %d\n", len(detail.Interfaces)))
+		for _, iface := range detail.Interfaces {
+			lbMark := ""
+			if iface.ConnectsToLB {
+				lbMark = " [LB]"
+			}
+			b.WriteString(fmt.Sprintf("\n  [eth%d]%s\n", iface.Index, lbMark))
+			b.WriteString(fmt.Sprintf("    Upstream:        %s\n", iface.Upstream))
+			if iface.DefaultGateway != "" {
+				b.WriteString(fmt.Sprintf("    Default Gateway: %s\n", iface.DefaultGateway))
+			}
+			if iface.NetmaskLen > 0 {
+				b.WriteString(fmt.Sprintf("    Netmask:         /%d\n", iface.NetmaskLen))
+			}
+			if iface.PacketFilterID != "" {
+				b.WriteString(fmt.Sprintf("    Packet Filter:   %s\n", iface.PacketFilterID))
+			}
+			if len(iface.IPPool) > 0 {
+				b.WriteString(fmt.Sprintf("    IP Pool:         %s\n", strings.Join(iface.IPPool, ", ")))
+			}
+		}
+	}
+
+	// Display worker nodes
+	if len(workerNodes) > 0 {
+		b.WriteString(fmt.Sprintf("\nWorker Nodes: %d\n", len(workerNodes)))
+		b.WriteString(fmt.Sprintf("  %-24s %-10s %-8s %-15s %s\n", "Resource ID", "Status", "Drain", "Archive", "IPs"))
+		b.WriteString(fmt.Sprintf("  %-24s %-10s %-8s %-15s %s\n", "-----------", "------", "-----", "-------", "---"))
+		for _, node := range workerNodes {
+			drainStr := "-"
+			if node.Draining {
+				drainStr = "Yes"
+			}
+			resourceID := node.ResourceID
+			if resourceID == "" {
+				resourceID = "(creating)"
+			}
+			ips := strings.Join(node.IPAddresses, ", ")
+			if ips == "" {
+				ips = "-"
+			}
+			b.WriteString(fmt.Sprintf("  %-24s %-10s %-8s %-15s %s\n",
+				resourceID,
+				node.Status,
+				drainStr,
+				node.ArchiveVersion,
+				ips))
+			if node.ErrorMessage != "" {
+				b.WriteString(fmt.Sprintf("    Error: %s\n", node.ErrorMessage))
+			}
+		}
+	}
+
+	return b.String()
+}

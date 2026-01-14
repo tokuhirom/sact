@@ -491,6 +491,8 @@ type model struct {
 	containerRegistryDetail *ContainerRegistryDetail
 	appRunClusterDetail     *AppRunClusterDetail
 	appRunLBDetail          *AppRunLBDetail
+	appRunASGDetail         *AppRunASGDetail
+	appRunWorkerNodes       []AppRunWorkerNode
 	// AppRun Dedicated drilldown state
 	appRunDrilldownLevel    int    // 0: Cluster, 1: ASG+App, 2: LB (from ASG) or Version (from App), 3: Version detail
 	appRunSelectedClusterID string // selected cluster ID for ASG/App list
@@ -731,6 +733,12 @@ type appRunVersionsLoadedMsg struct {
 type appRunLBDetailLoadedMsg struct {
 	detail *AppRunLBDetail
 	err    error
+}
+
+type appRunASGDetailLoadedMsg struct {
+	detail      *AppRunASGDetail
+	workerNodes []AppRunWorkerNode
+	err         error
 }
 
 func loadServers(client *SakuraClient) tea.Cmd {
@@ -1197,6 +1205,25 @@ func loadAppRunLBDetail(client *SakuraClient, clusterID, asgID, lbID string) tea
 	}
 }
 
+func loadAppRunASGDetail(client *SakuraClient, clusterID, asgID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetAppRunASGDetail(ctx, clusterID, asgID)
+		if err != nil {
+			slog.Error("Failed to load AppRun ASG detail", slog.Any("error", err))
+			return appRunASGDetailLoadedMsg{err: err}
+		}
+		// Also load worker nodes
+		workerNodes, err := client.ListAppRunWorkerNodes(ctx, clusterID, asgID)
+		if err != nil {
+			slog.Error("Failed to load AppRun Worker Nodes", slog.Any("error", err))
+			return appRunASGDetailLoadedMsg{detail: detail, err: err}
+		}
+		slog.Info("AppRun ASG detail loaded successfully", slog.String("asgID", asgID))
+		return appRunASGDetailLoadedMsg{detail: detail, workerNodes: workerNodes}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -1447,6 +1474,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.containerRegistryDetail = nil
 				m.appRunClusterDetail = nil
 				m.appRunLBDetail = nil
+				m.appRunASGDetail = nil
+				m.appRunWorkerNodes = nil
 				return m, nil
 			default:
 				// Pass other keys to viewport for scrolling
@@ -1684,11 +1713,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, loadAppRunClusterContents(m.client, arc.ID)
 				}
 				if asg, ok := selectedItem.(AppRunASG); ok {
-					// Drilldown into LB list
-					m.loading = true
+					// Show ASG detail with worker nodes
+					m.detailMode = true
+					m.detailLoading = true
 					m.appRunSelectedASGID = asg.ID
-					m.appRunDrilldownLevel = 2
-					return m, loadAppRunLBs(m.client, asg.ClusterID, asg.ID)
+					return m, loadAppRunASGDetail(m.client, asg.ClusterID, asg.ID)
 				}
 				if lb, ok := selectedItem.(AppRunLB); ok {
 					// Show LB detail
@@ -2529,6 +2558,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case appRunASGDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load AppRun ASG detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.appRunASGDetail = msg.detail
+		m.appRunWorkerNodes = msg.workerNodes
+		// Setup viewport for detail view
+		content := renderAppRunASGDetail(msg.detail, msg.workerNodes)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -2555,7 +2600,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil || m.containerRegistryDetail != nil || m.appRunClusterDetail != nil || m.appRunLBDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil || m.containerRegistryDetail != nil || m.appRunClusterDetail != nil || m.appRunLBDetail != nil || m.appRunASGDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
