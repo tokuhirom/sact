@@ -889,3 +889,49 @@ func renderBridgeDetail(detail *BridgeDetail) string {
 
 	return b.String()
 }
+
+func renderContainerRegistryDetail(detail *ContainerRegistryDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Container Registry: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:            %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("FQDN:          %s\n", detail.FQDN))
+	b.WriteString(fmt.Sprintf("Access Level:  %s\n", detail.AccessLevel))
+	b.WriteString(fmt.Sprintf("Availability:  %s\n", detail.Availability))
+
+	if detail.SubDomainLabel != "" {
+		b.WriteString(fmt.Sprintf("Subdomain:     %s\n", detail.SubDomainLabel))
+	}
+
+	if detail.VirtualDomain != "" {
+		b.WriteString(fmt.Sprintf("Virtual Domain: %s\n", detail.VirtualDomain))
+	}
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description:   %s\n", detail.Desc))
+	}
+
+	// Display users
+	b.WriteString(fmt.Sprintf("\nUsers:         %d\n", detail.UserCount))
+	if len(detail.Users) > 0 {
+		for _, user := range detail.Users {
+			b.WriteString(fmt.Sprintf("  - %s (%s)\n", user.UserName, user.Permission))
+		}
+	}
+
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags:          %s\n", strings.Join(detail.Tags, ", ")))
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:       %s\n", detail.CreatedAt))
+	}
+
+	if detail.ModifiedAt != "" {
+		b.WriteString(fmt.Sprintf("Modified:      %s\n", detail.ModifiedAt))
+	}
+
+	return b.String()
+}
