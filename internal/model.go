@@ -361,6 +361,19 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				cr.AccessLevel,
 				cr.UserCount))
 		}
+	} else if arc, ok := item.(AppRunCluster); ok {
+		// Handle AppRunCluster
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-36s %d ASG",
+				arc.Name,
+				arc.ID,
+				arc.ASGCount))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-36s %d ASG",
+				arc.Name,
+				arc.ID,
+				arc.ASGCount))
+		}
 	} else {
 		return
 	}
@@ -404,6 +417,7 @@ type model struct {
 	simpleMonitorDetail     *SimpleMonitorDetail
 	bridgeDetail            *BridgeDetail
 	containerRegistryDetail *ContainerRegistryDetail
+	appRunClusterDetail     *AppRunClusterDetail
 	detailLoading           bool
 	resourceType            ResourceType
 	detailViewport          viewport.Model
@@ -594,6 +608,16 @@ type containerRegistriesLoadedMsg struct {
 
 type containerRegistryDetailLoadedMsg struct {
 	detail *ContainerRegistryDetail
+	err    error
+}
+
+type appRunClustersLoadedMsg struct {
+	clusters []AppRunCluster
+	err      error
+}
+
+type appRunClusterDetailLoadedMsg struct {
+	detail *AppRunClusterDetail
 	err    error
 }
 
@@ -988,6 +1012,27 @@ func loadContainerRegistryDetail(client *SakuraClient, containerRegistryID strin
 	}
 }
 
+func loadAppRunClusters(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		clusters, err := client.ListAppRunClusters(ctx)
+		return appRunClustersLoadedMsg{clusters: clusters, err: err}
+	}
+}
+
+func loadAppRunClusterDetail(client *SakuraClient, clusterID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetAppRunClusterDetail(ctx, clusterID)
+		if err != nil {
+			slog.Error("Failed to load AppRun cluster detail", slog.Any("error", err))
+			return appRunClusterDetailLoadedMsg{err: err}
+		}
+		slog.Info("AppRun cluster detail loaded successfully", slog.String("clusterID", clusterID))
+		return appRunClusterDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -1168,6 +1213,8 @@ func (m model) getTableHeader() string {
 		return fmt.Sprintf("  %-40s %-20s %-10s %s", "Name", "ID", "Region", "Switches")
 	case ResourceTypeContainerRegistry:
 		return fmt.Sprintf("  %-40s %-20s %-12s %s", "Name", "ID", "AccessLevel", "Users")
+	case ResourceTypeAppRunCluster:
+		return fmt.Sprintf("  %-40s %-36s %s", "Name", "ID", "ASG")
 	default:
 		return ""
 	}
@@ -1300,6 +1347,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadBridges(m.client)
 					case ResourceTypeContainerRegistry:
 						return m, loadContainerRegistries(m.client)
+					case ResourceTypeAppRunCluster:
+						return m, loadAppRunClusters(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1416,6 +1465,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadContainerRegistryDetail(m.client, cr.ID)
 				}
+				if arc, ok := selectedItem.(AppRunCluster); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadAppRunClusterDetail(m.client, arc.ID)
+				}
 			}
 			return m, nil
 
@@ -1446,8 +1500,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "z":
-			// Zone switching only affects zone-dependent resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry are global)
-			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry {
+			// Zone switching only affects zone-dependent resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry, AppRunCluster are global)
+			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunCluster {
 				return m, nil
 			}
 			oldZone := m.currentZone
@@ -1532,6 +1586,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, loadBridges(m.client)
 			case ResourceTypeContainerRegistry:
 				return m, loadContainerRegistries(m.client)
+			case ResourceTypeAppRunCluster:
+				return m, loadAppRunClusters(m.client)
 			}
 			return m, nil
 		}
@@ -2120,6 +2176,38 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case appRunClustersLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load AppRun clusters", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("AppRun clusters loaded successfully", slog.Int("count", len(msg.clusters)))
+
+		// Convert clusters to list items
+		items := make([]list.Item, len(msg.clusters))
+		for i, cluster := range msg.clusters {
+			items[i] = cluster
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case appRunClusterDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load AppRun cluster detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.appRunClusterDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderAppRunClusterDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -2146,7 +2234,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil || m.containerRegistryDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil || m.containerRegistryDetail != nil || m.appRunClusterDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
@@ -2172,8 +2260,8 @@ func (m model) View() string {
 	}
 
 	// Zone selector and resource type
-	// Show "global" for global resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry)
-	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry {
+	// Show "global" for global resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry, AppRunCluster)
+	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunCluster {
 		b.WriteString("Zone: ")
 		b.WriteString(zoneStyle.Render("global"))
 		b.WriteString(" | Type: ")

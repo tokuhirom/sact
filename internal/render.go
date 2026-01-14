@@ -935,3 +935,36 @@ func renderContainerRegistryDetail(detail *ContainerRegistryDetail) string {
 
 	return b.String()
 }
+
+func renderAppRunClusterDetail(detail *AppRunClusterDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("AppRun Cluster: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:                  %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Service Principal:   %s\n", detail.ServicePrincipal))
+	b.WriteString(fmt.Sprintf("Let's Encrypt Email: %v\n", detail.HasLetsEncrypt))
+
+	// Display ports
+	if len(detail.Ports) > 0 {
+		b.WriteString(fmt.Sprintf("\nLoad Balancer Ports: %d\n", len(detail.Ports)))
+		for _, port := range detail.Ports {
+			b.WriteString(fmt.Sprintf("  - %d/%s\n", port.Port, port.Protocol))
+		}
+	}
+
+	// Display ASGs
+	if len(detail.AutoScalingGroups) > 0 {
+		b.WriteString(fmt.Sprintf("\nAuto Scaling Groups: %d\n", len(detail.AutoScalingGroups)))
+		for _, asg := range detail.AutoScalingGroups {
+			b.WriteString(fmt.Sprintf("  - %s (ID: %s)\n", asg.Name, asg.ID))
+		}
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:             %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}

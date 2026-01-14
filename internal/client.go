@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"os"
 
 	"github.com/sacloud/iaas-api-go"
 	"github.com/sacloud/iaas-api-go/helper/api"
+
+	apprun "github.com/tokuhirom/sact/pkg/openapi/apprun_dedicated"
 )
 
 // ResourceType represents different cloud resource types
@@ -31,6 +34,7 @@ const (
 	ResourceTypeSimpleMonitor
 	ResourceTypeBridge
 	ResourceTypeContainerRegistry
+	ResourceTypeAppRunCluster
 )
 
 // AllResourceTypes returns all available resource types
@@ -53,6 +57,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypeSimpleMonitor,
 	ResourceTypeBridge,
 	ResourceTypeContainerRegistry,
+	ResourceTypeAppRunCluster,
 }
 
 func (r ResourceType) String() string {
@@ -93,14 +98,30 @@ func (r ResourceType) String() string {
 		return "Bridge"
 	case ResourceTypeContainerRegistry:
 		return "ContainerRegistry"
+	case ResourceTypeAppRunCluster:
+		return "AppRunCluster"
 	default:
 		return "Unknown"
 	}
 }
 
 type SakuraClient struct {
-	caller iaas.APICaller
-	zone   string
+	caller       iaas.APICaller
+	zone         string
+	apprunClient *apprun.Client
+}
+
+// apprunSecuritySource implements apprun.SecuritySource for BasicAuth
+type apprunSecuritySource struct {
+	username string
+	password string
+}
+
+func (s *apprunSecuritySource) BasicAuth(ctx context.Context, operationName apprun.OperationName) (apprun.BasicAuth, error) {
+	return apprun.BasicAuth{
+		Username: s.username,
+		Password: s.password,
+	}, nil
 }
 
 func NewSakuraClient(zone string) (*SakuraClient, error) {
@@ -138,4 +159,34 @@ func (c *SakuraClient) GetZone() string {
 func (c *SakuraClient) GetAuthStatus(ctx context.Context) (*iaas.AuthStatus, error) {
 	op := iaas.NewAuthStatusOp(c.caller)
 	return op.Read(ctx)
+}
+
+// GetAppRunClient returns the AppRun Dedicated API client (lazy initialization)
+func (c *SakuraClient) GetAppRunClient() (*apprun.Client, error) {
+	if c.apprunClient != nil {
+		return c.apprunClient, nil
+	}
+
+	token := os.Getenv("SAKURA_ACCESS_TOKEN")
+	secret := os.Getenv("SAKURA_ACCESS_TOKEN_SECRET")
+
+	if token == "" || secret == "" {
+		return nil, fmt.Errorf("SAKURA_ACCESS_TOKEN and SAKURA_ACCESS_TOKEN_SECRET environment variables are required")
+	}
+
+	secSource := &apprunSecuritySource{
+		username: token,
+		password: secret,
+	}
+
+	client, err := apprun.NewClient(
+		"https://secure.sakura.ad.jp/cloud/api/apprun-dedicated/1.0",
+		secSource,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create AppRun client: %w", err)
+	}
+
+	c.apprunClient = client
+	return c.apprunClient, nil
 }
