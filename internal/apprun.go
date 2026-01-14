@@ -60,9 +60,10 @@ type AppRunASGInterface struct {
 // AppRunASGDetail contains detailed information about an ASG
 type AppRunASGDetail struct {
 	AppRunASG
-	NameServers []string
-	Interfaces  []AppRunASGInterface
-	Deleting    bool
+	NameServers   []string
+	Interfaces    []AppRunASGInterface
+	Deleting      bool
+	LoadBalancers []AppRunLBDetail // LBs under this ASG
 }
 
 // AppRunWorkerNode represents a worker node
