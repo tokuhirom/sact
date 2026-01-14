@@ -968,3 +968,51 @@ func renderAppRunClusterDetail(detail *AppRunClusterDetail) string {
 
 	return b.String()
 }
+
+func renderAppRunLBDetail(detail *AppRunLBDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("AppRun Load Balancer: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("ID:            %s\n", detail.ID))
+	b.WriteString(fmt.Sprintf("Service Class: %s\n", detail.ServiceClass))
+	b.WriteString(fmt.Sprintf("Cluster ID:    %s\n", detail.ClusterID))
+	b.WriteString(fmt.Sprintf("ASG ID:        %s\n", detail.ASGID))
+
+	if detail.Deleting {
+		b.WriteString("\n** DELETING **\n")
+	}
+
+	// Display name servers
+	if len(detail.NameServers) > 0 {
+		b.WriteString(fmt.Sprintf("\nName Servers: %s\n", strings.Join(detail.NameServers, ", ")))
+	}
+
+	// Display network interfaces
+	if len(detail.Interfaces) > 0 {
+		b.WriteString(fmt.Sprintf("\nNetwork Interfaces: %d\n", len(detail.Interfaces)))
+		for _, iface := range detail.Interfaces {
+			b.WriteString(fmt.Sprintf("\n  [eth%d]\n", iface.Index))
+			b.WriteString(fmt.Sprintf("    Upstream:        %s\n", iface.Upstream))
+			if iface.VIP != "" {
+				b.WriteString(fmt.Sprintf("    VIP:             %s\n", iface.VIP))
+			}
+			if iface.DefaultGateway != "" {
+				b.WriteString(fmt.Sprintf("    Default Gateway: %s\n", iface.DefaultGateway))
+			}
+			if iface.NetmaskLen > 0 {
+				b.WriteString(fmt.Sprintf("    Netmask:         /%d\n", iface.NetmaskLen))
+			}
+			if len(iface.IPPool) > 0 {
+				b.WriteString(fmt.Sprintf("    IP Pool:         %s\n", strings.Join(iface.IPPool, ", ")))
+			}
+		}
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated: %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}

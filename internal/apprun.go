@@ -64,10 +64,21 @@ type AppRunLB struct {
 	ASGID        string // parent ASG ID
 }
 
+// AppRunLBInterface represents a load balancer network interface
+type AppRunLBInterface struct {
+	Index          int16
+	Upstream       string
+	VIP            string
+	DefaultGateway string
+	NetmaskLen     int16
+	IPPool         []string
+}
+
 // AppRunLBDetail contains detailed information about a load balancer
 type AppRunLBDetail struct {
 	AppRunLB
 	NameServers []string
+	Interfaces  []AppRunLBInterface
 	Deleting    bool
 }
 
@@ -509,4 +520,101 @@ func (c *SakuraClient) ListAppRunVersions(ctx context.Context, applicationID, cl
 
 	slog.Info("Successfully fetched AppRun Versions", slog.Int("count", len(allVersions)))
 	return allVersions, nil
+}
+
+// GetAppRunLBDetail fetches detailed information about a specific load balancer
+func (c *SakuraClient) GetAppRunLBDetail(ctx context.Context, clusterID, asgID, lbID string) (*AppRunLBDetail, error) {
+	slog.Info("Fetching AppRun LB detail", slog.String("lbID", lbID))
+
+	client, err := c.GetAppRunClient()
+	if err != nil {
+		slog.Error("Failed to get AppRun client", slog.Any("error", err))
+		return nil, err
+	}
+
+	parsedCluster, err := uuid.Parse(clusterID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid cluster ID: %w", err)
+	}
+	parsedASG, err := uuid.Parse(asgID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid ASG ID: %w", err)
+	}
+	parsedLB, err := uuid.Parse(lbID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid LB ID: %w", err)
+	}
+
+	params := apprun.GetLoadBalancerParams{
+		ClusterID:          apprun.ClusterID(parsedCluster),
+		AutoScalingGroupID: apprun.AutoScalingGroupID(parsedASG),
+		LoadBalancerID:     apprun.LoadBalancerID(parsedLB),
+	}
+
+	resp, err := client.GetLoadBalancer(ctx, params)
+	if err != nil {
+		slog.Error("Failed to fetch AppRun LB detail", slog.String("lbID", lbID), slog.Any("error", err))
+		return nil, err
+	}
+
+	lb := resp.LoadBalancer
+
+	createdAt := ""
+	if lb.Created > 0 {
+		createdAt = time.Unix(int64(lb.Created), 0).Format("2006-01-02 15:04:05")
+	}
+
+	// Convert name servers
+	nameServers := make([]string, len(lb.NameServers))
+	for i, ns := range lb.NameServers {
+		nameServers[i] = string(ns)
+	}
+
+	// Convert interfaces
+	interfaces := make([]AppRunLBInterface, len(lb.Interfaces))
+	for i, iface := range lb.Interfaces {
+		ipPool := make([]string, len(iface.IpPool))
+		for j, ip := range iface.IpPool {
+			ipPool[j] = fmt.Sprintf("%s-%s", string(ip.Start), string(ip.End))
+		}
+
+		vip := ""
+		if iface.Vip.Set {
+			vip = iface.Vip.Value
+		}
+		gw := ""
+		if iface.DefaultGateway.Set {
+			gw = iface.DefaultGateway.Value
+		}
+		netmask := int16(0)
+		if iface.NetmaskLen.Set {
+			netmask = iface.NetmaskLen.Value
+		}
+
+		interfaces[i] = AppRunLBInterface{
+			Index:          iface.InterfaceIndex,
+			Upstream:       iface.Upstream,
+			VIP:            vip,
+			DefaultGateway: gw,
+			NetmaskLen:     netmask,
+			IPPool:         ipPool,
+		}
+	}
+
+	detail := &AppRunLBDetail{
+		AppRunLB: AppRunLB{
+			ID:           uuid.UUID(lb.LoadBalancerID).String(),
+			Name:         lb.Name,
+			ServiceClass: lb.ServiceClassPath,
+			CreatedAt:    createdAt,
+			ClusterID:    clusterID,
+			ASGID:        asgID,
+		},
+		NameServers: nameServers,
+		Interfaces:  interfaces,
+		Deleting:    lb.Deleting,
+	}
+
+	slog.Info("Successfully fetched AppRun LB detail", slog.String("lbID", lbID))
+	return detail, nil
 }
