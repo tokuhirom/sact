@@ -100,6 +100,7 @@ type AppRunVersion struct {
 	CreatedAt       string
 	ApplicationID   string // parent application ID
 	ClusterID       string // parent cluster ID
+	IsActive        bool   // true if this is the active version
 }
 
 // Implement list.Item interface for AppRunCluster
@@ -155,7 +156,7 @@ func (a AppRunApplication) Description() string {
 	if a.ActiveVersion > 0 {
 		versionStr = fmt.Sprintf("v%d", a.ActiveVersion)
 	}
-	return fmt.Sprintf("Version: %s | Desired: %d", versionStr, a.DesiredCount)
+	return fmt.Sprintf("Version: %s | DesiredCount: %d", versionStr, a.DesiredCount)
 }
 
 // Implement list.Item interface for AppRunVersion
@@ -467,7 +468,7 @@ func (c *SakuraClient) ListAppRunApplications(ctx context.Context, clusterID str
 }
 
 // ListAppRunVersions fetches all versions for a specific application
-func (c *SakuraClient) ListAppRunVersions(ctx context.Context, applicationID, clusterID string) ([]AppRunVersion, error) {
+func (c *SakuraClient) ListAppRunVersions(ctx context.Context, applicationID, clusterID string, activeVersion int32) ([]AppRunVersion, error) {
 	slog.Info("Fetching AppRun Versions", slog.String("applicationID", applicationID))
 
 	client, err := c.GetAppRunClient()
@@ -509,6 +510,7 @@ func (c *SakuraClient) ListAppRunVersions(ctx context.Context, applicationID, cl
 				CreatedAt:       createdAt,
 				ApplicationID:   applicationID,
 				ClusterID:       clusterID,
+				IsActive:        int32(ver.Version) == activeVersion,
 			})
 		}
 

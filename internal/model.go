@@ -411,12 +411,12 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 			versionStr = fmt.Sprintf("v%d", app.ActiveVersion)
 		}
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("> [App] %-30s %-10s %d replicas",
+			str = selectedItemStyle.Render(fmt.Sprintf("> [App] %-30s %-10s desired:%d",
 				app.Name,
 				versionStr,
 				app.DesiredCount))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  [App] %-30s %-10s %d replicas",
+			str = itemStyle.Render(fmt.Sprintf("  [App] %-30s %-10s desired:%d",
 				app.Name,
 				versionStr,
 				app.DesiredCount))
@@ -428,13 +428,20 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 		if len(image) > 40 {
 			image = image[:37] + "..."
 		}
+		// Show "*" marker for active version
+		activeMarker := " "
+		if ver.IsActive {
+			activeMarker = "*"
+		}
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("> v%-5d %3d nodes  %s",
+			str = selectedItemStyle.Render(fmt.Sprintf(">%sv%-5d %3d nodes  %s",
+				activeMarker,
 				ver.Version,
 				ver.ActiveNodeCount,
 				image))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  v%-5d %3d nodes  %s",
+			str = itemStyle.Render(fmt.Sprintf(" %sv%-5d %3d nodes  %s",
+				activeMarker,
 				ver.Version,
 				ver.ActiveNodeCount,
 				image))
@@ -489,6 +496,7 @@ type model struct {
 	appRunSelectedClusterID string // selected cluster ID for ASG/App list
 	appRunSelectedASGID     string // selected ASG ID for LB list
 	appRunSelectedAppID     string // selected Application ID for Version list
+	appRunActiveVersion     int32  // active version of selected application
 	detailLoading           bool
 	resourceType            ResourceType
 	detailViewport          viewport.Model
@@ -1168,10 +1176,10 @@ func loadAppRunClusterContents(client *SakuraClient, clusterID string) tea.Cmd {
 	}
 }
 
-func loadAppRunVersions(client *SakuraClient, applicationID, clusterID string) tea.Cmd {
+func loadAppRunVersions(client *SakuraClient, applicationID, clusterID string, activeVersion int32) tea.Cmd {
 	return func() tea.Msg {
 		ctx := context.Background()
-		versions, err := client.ListAppRunVersions(ctx, applicationID, clusterID)
+		versions, err := client.ListAppRunVersions(ctx, applicationID, clusterID, activeVersion)
 		return appRunVersionsLoadedMsg{versions: versions, applicationID: applicationID, clusterID: clusterID, err: err}
 	}
 }
@@ -1692,8 +1700,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					// Drilldown into Version list
 					m.loading = true
 					m.appRunSelectedAppID = app.ID
+					m.appRunActiveVersion = app.ActiveVersion
 					m.appRunDrilldownLevel = 2
-					return m, loadAppRunVersions(m.client, app.ID, app.ClusterID)
+					return m, loadAppRunVersions(m.client, app.ID, app.ClusterID, app.ActiveVersion)
 				}
 				if _, ok := selectedItem.(AppRunVersion); ok {
 					// Version - show detail later
