@@ -1203,7 +1203,7 @@ func renderMonitoringLogStorageDetail(detail *MonitoringLogStorageDetail) string
 	b.WriteString("\n\n")
 
 	if detail.ResourceId != nil {
-		b.WriteString(fmt.Sprintf("Resource ID: %d\n", *detail.ResourceId))
+		b.WriteString(fmt.Sprintf("Resource ID: %s\n", *detail.ResourceId))
 	}
 	if detail.Id != nil {
 		b.WriteString(fmt.Sprintf("ID:          %s\n", *detail.Id))
@@ -1244,10 +1244,10 @@ func renderMonitoringLogStorageDetail(detail *MonitoringLogStorageDetail) string
 			if r.Uid != nil {
 				uid = r.Uid.String()[:8]
 			}
-			srcID := getInt64Ptr(r.ResourceId)
+			srcID := getStringPtr(r.ResourceId)
 			destID := getInt64Ptr(r.LogStorageId)
 			b.WriteString(fmt.Sprintf("  - %s (variant: %s)\n", uid, r.Variant))
-			b.WriteString(fmt.Sprintf("    Resource: %d -> LogStorage: %d\n", srcID, destID))
+			b.WriteString(fmt.Sprintf("    Resource: %s -> LogStorage: %d\n", srcID, destID))
 		}
 	}
 
@@ -1269,7 +1269,7 @@ func renderMonitoringMetricsStorageDetail(detail *MonitoringMetricsStorageDetail
 	b.WriteString("\n\n")
 
 	if detail.ResourceId != nil {
-		b.WriteString(fmt.Sprintf("Resource ID: %d\n", *detail.ResourceId))
+		b.WriteString(fmt.Sprintf("Resource ID: %s\n", *detail.ResourceId))
 	}
 	if detail.Id != nil {
 		b.WriteString(fmt.Sprintf("ID:          %s\n", *detail.Id))
@@ -1304,10 +1304,10 @@ func renderMonitoringMetricsStorageDetail(detail *MonitoringMetricsStorageDetail
 			if r.Uid != nil {
 				uid = r.Uid.String()[:8]
 			}
-			srcID := getInt64Ptr(r.ResourceId)
+			srcID := getStringPtr(r.ResourceId)
 			destID := getInt64Ptr(r.MetricsStorageId)
 			b.WriteString(fmt.Sprintf("  - %s (variant: %s)\n", uid, r.Variant))
-			b.WriteString(fmt.Sprintf("    Resource: %d -> MetricsStorage: %d\n", srcID, destID))
+			b.WriteString(fmt.Sprintf("    Resource: %s -> MetricsStorage: %d\n", srcID, destID))
 		}
 	}
 

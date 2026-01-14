@@ -74,7 +74,7 @@ func (s MonitoringLogStorage) Description() string {
 	if s.Usage != nil {
 		routings = s.Usage.LogRoutings
 	}
-	return fmt.Sprintf("ID: %d | Expire: %d days | Routings: %d", getInt64Ptr(s.ResourceId), getIntPtr(s.ExpireDay), routings)
+	return fmt.Sprintf("ID: %s | Expire: %d days | Routings: %d", getStringPtr(s.ResourceId), getIntPtr(s.ExpireDay), routings)
 }
 
 // Implement list.Item interface for MonitoringMetricsStorage
@@ -93,7 +93,7 @@ func (s MonitoringMetricsStorage) Description() string {
 		routings = s.Usage.MetricsRoutings
 		alertRules = s.Usage.AlertRules
 	}
-	return fmt.Sprintf("ID: %d | Routings: %d | Alert Rules: %d", getInt64Ptr(s.ResourceId), routings, alertRules)
+	return fmt.Sprintf("ID: %s | Routings: %d | Alert Rules: %d", getStringPtr(s.ResourceId), routings, alertRules)
 }
 
 // Implement list.Item interface for MonitoringLogRouting
@@ -112,8 +112,8 @@ func (r MonitoringLogRouting) Title() string {
 }
 
 func (r MonitoringLogRouting) Description() string {
-	return fmt.Sprintf("ResourceID: %d -> LogStorage: %d | Variant: %s",
-		getInt64Ptr(r.ResourceId),
+	return fmt.Sprintf("ResourceID: %s -> LogStorage: %d | Variant: %s",
+		getStringPtr(r.ResourceId),
 		getInt64Ptr(r.LogStorageId),
 		r.Variant)
 }
@@ -134,8 +134,8 @@ func (r MonitoringMetricsRouting) Title() string {
 }
 
 func (r MonitoringMetricsRouting) Description() string {
-	return fmt.Sprintf("ResourceID: %d -> MetricsStorage: %d | Variant: %s",
-		getInt64Ptr(r.ResourceId),
+	return fmt.Sprintf("ResourceID: %s -> MetricsStorage: %d | Variant: %s",
+		getStringPtr(r.ResourceId),
 		getInt64Ptr(r.MetricsStorageId),
 		r.Variant)
 }
@@ -302,8 +302,8 @@ func (c *SakuraClient) ListMonitoringMetricsRoutings(ctx context.Context) ([]Mon
 }
 
 // GetMonitoringLogStorageDetail fetches detail for a log storage
-func (c *SakuraClient) GetMonitoringLogStorageDetail(ctx context.Context, resourceID int64) (*MonitoringLogStorageDetail, error) {
-	slog.Info("Fetching Log Storage detail", slog.Int64("resourceID", resourceID))
+func (c *SakuraClient) GetMonitoringLogStorageDetail(ctx context.Context, resourceID string) (*MonitoringLogStorageDetail, error) {
+	slog.Info("Fetching Log Storage detail", slog.String("resourceID", resourceID))
 
 	monClient, err := c.getMonitoringClient()
 	if err != nil {
@@ -327,7 +327,10 @@ func (c *SakuraClient) GetMonitoringLogStorageDetail(ctx context.Context, resour
 	var filteredRoutings []MonitoringLogRouting
 	for _, r := range routings {
 		logStorageID := getInt64Ptr(r.LogStorageId)
-		if logStorageID == resourceID {
+		if logStorageID == 0 {
+			continue
+		}
+		if fmt.Sprintf("%d", logStorageID) == resourceID {
 			filteredRoutings = append(filteredRoutings, r)
 		}
 	}
@@ -359,13 +362,13 @@ func (c *SakuraClient) GetMonitoringLogStorageDetail(ctx context.Context, resour
 		Routings:             filteredRoutings,
 	}
 
-	slog.Info("Successfully fetched log storage detail", slog.Int64("resourceID", resourceID))
+	slog.Info("Successfully fetched log storage detail", slog.String("resourceID", resourceID))
 	return detail, nil
 }
 
 // GetMonitoringMetricsStorageDetail fetches detail for a metrics storage
-func (c *SakuraClient) GetMonitoringMetricsStorageDetail(ctx context.Context, resourceID int64) (*MonitoringMetricsStorageDetail, error) {
-	slog.Info("Fetching Metrics Storage detail", slog.Int64("resourceID", resourceID))
+func (c *SakuraClient) GetMonitoringMetricsStorageDetail(ctx context.Context, resourceID string) (*MonitoringMetricsStorageDetail, error) {
+	slog.Info("Fetching Metrics Storage detail", slog.String("resourceID", resourceID))
 
 	monClient, err := c.getMonitoringClient()
 	if err != nil {
@@ -389,7 +392,10 @@ func (c *SakuraClient) GetMonitoringMetricsStorageDetail(ctx context.Context, re
 	var filteredRoutings []MonitoringMetricsRouting
 	for _, r := range routings {
 		metricsStorageID := getInt64Ptr(r.MetricsStorageId)
-		if metricsStorageID == resourceID {
+		if metricsStorageID == 0 {
+			continue
+		}
+		if fmt.Sprintf("%d", metricsStorageID) == resourceID {
 			filteredRoutings = append(filteredRoutings, r)
 		}
 	}
@@ -421,6 +427,6 @@ func (c *SakuraClient) GetMonitoringMetricsStorageDetail(ctx context.Context, re
 		Routings:                 filteredRoutings,
 	}
 
-	slog.Info("Successfully fetched metrics storage detail", slog.Int64("resourceID", resourceID))
+	slog.Info("Successfully fetched metrics storage detail", slog.String("resourceID", resourceID))
 	return detail, nil
 }

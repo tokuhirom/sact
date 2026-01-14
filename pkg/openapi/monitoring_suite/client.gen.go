@@ -263,12 +263,12 @@ type AlertProject struct {
 	Icon         *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id                      *int64    `json:"id,omitempty"`
+	Id                      *string   `json:"id,omitempty"`
 	LogMeasureRulesUrl      *string   `json:"log_measure_rules_url,omitempty"`
 	Name                    *string   `json:"name,omitempty"`
 	NotificationRoutingsUrl *string   `json:"notification_routings_url,omitempty"`
 	NotificationTargetsUrl  *string   `json:"notification_targets_url,omitempty"`
-	ResourceId              *int64    `json:"resource_id"`
+	ResourceId              *string   `json:"resource_id"`
 	RulesUrl                *string   `json:"rules_url,omitempty"`
 	Tags                    *[]string `json:"tags,omitempty"`
 }
@@ -323,9 +323,9 @@ type DashboardProject struct {
 	Icon        *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64    `json:"id,omitempty"`
+	Id         *string   `json:"id,omitempty"`
 	Name       *string   `json:"name,omitempty"`
-	ResourceId *int64    `json:"resource_id"`
+	ResourceId *string   `json:"resource_id"`
 	Tags       *[]string `json:"tags,omitempty"`
 }
 
@@ -377,7 +377,7 @@ type LogMeasureRule struct {
 	CreatedAt   *time.Time `json:"created_at,omitempty"`
 	Description *string    `json:"description,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id               *int64              `json:"id,omitempty"`
+	Id               *string             `json:"id,omitempty"`
 	LogStorage       *LogStorage         `json:"log_storage,omitempty"`
 	LogStorageId     *int64              `json:"log_storage_id"`
 	MetricsStorage   *MetricsStorage     `json:"metrics_storage,omitempty"`
@@ -414,7 +414,7 @@ type LogRouting struct {
 	PublisherCode *string     `json:"publisher_code,omitempty"`
 
 	// ResourceId 対象リソースのID
-	ResourceId *int64              `json:"resource_id"`
+	ResourceId *string             `json:"resource_id"`
 	Uid        *openapi_types.UUID `json:"uid,omitempty"`
 	UpdatedAt  *time.Time          `json:"updated_at,omitempty"`
 	Variant    string              `json:"variant"`
@@ -438,7 +438,7 @@ type LogStorage struct {
 	Id         *string   `json:"id,omitempty"`
 	IsSystem   *bool     `json:"is_system,omitempty"`
 	Name       *string   `json:"name,omitempty"`
-	ResourceId *int64    `json:"resource_id"`
+	ResourceId *string   `json:"resource_id"`
 	Tags       *[]string `json:"tags,omitempty"`
 	Usage      *struct {
 		LogMeasureRules int `json:"log_measure_rules"`
@@ -450,7 +450,7 @@ type LogStorage struct {
 type LogStorageAccessKey struct {
 	Description *string `json:"description,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id     *int64              `json:"id,omitempty"`
+	Id     *string             `json:"id,omitempty"`
 	Secret *openapi_types.UUID `json:"secret,omitempty"`
 
 	// Token Returns a token string for the access key.
@@ -536,7 +536,7 @@ type MetricsRouting struct {
 	PublisherCode    *string         `json:"publisher_code,omitempty"`
 
 	// ResourceId 対象リソースのID
-	ResourceId *int64              `json:"resource_id"`
+	ResourceId *string             `json:"resource_id"`
 	Uid        *openapi_types.UUID `json:"uid,omitempty"`
 	UpdatedAt  *time.Time          `json:"updated_at,omitempty"`
 	Variant    string              `json:"variant"`
@@ -556,7 +556,7 @@ type MetricsStorage struct {
 	Id         *string    `json:"id,omitempty"`
 	IsSystem   *bool      `json:"is_system,omitempty"`
 	Name       *string    `json:"name,omitempty"`
-	ResourceId *int64     `json:"resource_id"`
+	ResourceId *string    `json:"resource_id"`
 	Tags       *[]string  `json:"tags,omitempty"`
 	UpdatedAt  *time.Time `json:"updated_at,omitempty"`
 	Usage      *struct {
@@ -570,7 +570,7 @@ type MetricsStorage struct {
 type MetricsStorageAccessKey struct {
 	Description *string `json:"description,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id     *int64              `json:"id,omitempty"`
+	Id     *string             `json:"id,omitempty"`
 	Secret *openapi_types.UUID `json:"secret,omitempty"`
 
 	// Token Returns a token string for the access key.
@@ -826,12 +826,12 @@ type PatchedAlertProject struct {
 	Icon         *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id                      *int64    `json:"id,omitempty"`
+	Id                      *string   `json:"id,omitempty"`
 	LogMeasureRulesUrl      *string   `json:"log_measure_rules_url,omitempty"`
 	Name                    *string   `json:"name,omitempty"`
 	NotificationRoutingsUrl *string   `json:"notification_routings_url,omitempty"`
 	NotificationTargetsUrl  *string   `json:"notification_targets_url,omitempty"`
-	ResourceId              *int64    `json:"resource_id"`
+	ResourceId              *string   `json:"resource_id"`
 	RulesUrl                *string   `json:"rules_url,omitempty"`
 	Tags                    *[]string `json:"tags,omitempty"`
 }
@@ -863,9 +863,9 @@ type PatchedDashboardProject struct {
 	Icon        *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64    `json:"id,omitempty"`
+	Id         *string   `json:"id,omitempty"`
 	Name       *string   `json:"name,omitempty"`
-	ResourceId *int64    `json:"resource_id"`
+	ResourceId *string   `json:"resource_id"`
 	Tags       *[]string `json:"tags,omitempty"`
 }
 
@@ -874,7 +874,7 @@ type PatchedLogMeasureRule struct {
 	CreatedAt   *time.Time `json:"created_at,omitempty"`
 	Description *string    `json:"description,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id               *int64               `json:"id,omitempty"`
+	Id               *string              `json:"id,omitempty"`
 	LogStorage       *LogStorage          `json:"log_storage,omitempty"`
 	LogStorageId     *int64               `json:"log_storage_id"`
 	MetricsStorage   *MetricsStorage      `json:"metrics_storage,omitempty"`
@@ -890,14 +890,14 @@ type PatchedLogMeasureRule struct {
 type PatchedLogRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id            *int64      `json:"id,omitempty"`
+	Id            *string     `json:"id,omitempty"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
 	LogStorageId  *int64      `json:"log_storage_id"`
 	Publisher     *Publisher  `json:"publisher,omitempty"`
 	PublisherCode *string     `json:"publisher_code,omitempty"`
 
 	// ResourceId 対象リソースのID
-	ResourceId *int64              `json:"resource_id"`
+	ResourceId *string             `json:"resource_id"`
 	Uid        *openapi_types.UUID `json:"uid,omitempty"`
 	UpdatedAt  *time.Time          `json:"updated_at,omitempty"`
 	Variant    *string             `json:"variant,omitempty"`
@@ -918,10 +918,10 @@ type PatchedLogStorage struct {
 	Icon      *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64    `json:"id,omitempty"`
+	Id         *string   `json:"id,omitempty"`
 	IsSystem   *bool     `json:"is_system,omitempty"`
 	Name       *string   `json:"name,omitempty"`
-	ResourceId *int64    `json:"resource_id"`
+	ResourceId *string   `json:"resource_id"`
 	Tags       *[]string `json:"tags,omitempty"`
 	Usage      *struct {
 		LogMeasureRules int `json:"log_measure_rules"`
@@ -933,7 +933,7 @@ type PatchedLogStorage struct {
 type PatchedLogStorageAccessKey struct {
 	Description *string `json:"description,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id     *int64              `json:"id,omitempty"`
+	Id     *string             `json:"id,omitempty"`
 	Secret *openapi_types.UUID `json:"secret,omitempty"`
 
 	// Token Returns a token string for the access key.
@@ -945,14 +945,14 @@ type PatchedLogStorageAccessKey struct {
 type PatchedMetricsRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id               *int64          `json:"id,omitempty"`
+	Id               *string         `json:"id,omitempty"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
 	MetricsStorageId *int64          `json:"metrics_storage_id"`
 	Publisher        *Publisher      `json:"publisher,omitempty"`
 	PublisherCode    *string         `json:"publisher_code,omitempty"`
 
 	// ResourceId 対象リソースのID
-	ResourceId *int64              `json:"resource_id"`
+	ResourceId *string             `json:"resource_id"`
 	Uid        *openapi_types.UUID `json:"uid,omitempty"`
 	UpdatedAt  *time.Time          `json:"updated_at,omitempty"`
 	Variant    *string             `json:"variant,omitempty"`
@@ -969,10 +969,10 @@ type PatchedMetricsStorage struct {
 	Icon *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64     `json:"id,omitempty"`
+	Id         *string    `json:"id,omitempty"`
 	IsSystem   *bool      `json:"is_system,omitempty"`
 	Name       *string    `json:"name,omitempty"`
-	ResourceId *int64     `json:"resource_id"`
+	ResourceId *string    `json:"resource_id"`
 	Tags       *[]string  `json:"tags,omitempty"`
 	UpdatedAt  *time.Time `json:"updated_at,omitempty"`
 	Usage      *struct {
@@ -986,7 +986,7 @@ type PatchedMetricsStorage struct {
 type PatchedMetricsStorageAccessKey struct {
 	Description *string `json:"description,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id     *int64              `json:"id,omitempty"`
+	Id     *string             `json:"id,omitempty"`
 	Secret *openapi_types.UUID `json:"secret,omitempty"`
 
 	// Token Returns a token string for the access key.
@@ -1036,9 +1036,9 @@ type PatchedTraceStorage struct {
 	Icon *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id                  *int64    `json:"id,omitempty"`
+	Id                  *string   `json:"id,omitempty"`
 	Name                *string   `json:"name,omitempty"`
-	ResourceId          *int64    `json:"resource_id,omitempty"`
+	ResourceId          *string   `json:"resource_id,omitempty"`
 	RetentionPeriodDays *int      `json:"retention_period_days,omitempty"`
 	Tags                *[]string `json:"tags,omitempty"`
 }
@@ -1151,9 +1151,9 @@ type TraceStorage struct {
 	Icon *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id                  *int64    `json:"id,omitempty"`
+	Id                  *string   `json:"id,omitempty"`
 	Name                *string   `json:"name,omitempty"`
-	ResourceId          *int64    `json:"resource_id,omitempty"`
+	ResourceId          *string   `json:"resource_id,omitempty"`
 	RetentionPeriodDays *int      `json:"retention_period_days,omitempty"`
 	Tags                *[]string `json:"tags,omitempty"`
 }
@@ -1227,13 +1227,13 @@ type WrappedAlertProject struct {
 	Icon         *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id                      *int64    `json:"id,omitempty"`
+	Id                      *string   `json:"id,omitempty"`
 	IsOk                    bool      `json:"is_ok"`
 	LogMeasureRulesUrl      *string   `json:"log_measure_rules_url,omitempty"`
 	Name                    *string   `json:"name,omitempty"`
 	NotificationRoutingsUrl *string   `json:"notification_routings_url,omitempty"`
 	NotificationTargetsUrl  *string   `json:"notification_targets_url,omitempty"`
-	ResourceId              *int64    `json:"resource_id"`
+	ResourceId              *string   `json:"resource_id"`
 	RulesUrl                *string   `json:"rules_url,omitempty"`
 	Tags                    *[]string `json:"tags,omitempty"`
 }
@@ -1246,10 +1246,10 @@ type WrappedDashboardProject struct {
 	Icon        *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64    `json:"id,omitempty"`
+	Id         *string   `json:"id,omitempty"`
 	IsOk       bool      `json:"is_ok"`
 	Name       *string   `json:"name,omitempty"`
-	ResourceId *int64    `json:"resource_id"`
+	ResourceId *string   `json:"resource_id"`
 	Tags       *[]string `json:"tags,omitempty"`
 }
 
@@ -1265,7 +1265,7 @@ type WrappedLogRouting struct {
 	PublisherCode *string     `json:"publisher_code,omitempty"`
 
 	// ResourceId 対象リソースのID
-	ResourceId *int64              `json:"resource_id"`
+	ResourceId *string             `json:"resource_id"`
 	Uid        *openapi_types.UUID `json:"uid,omitempty"`
 	UpdatedAt  *time.Time          `json:"updated_at,omitempty"`
 	Variant    string              `json:"variant"`
@@ -1290,7 +1290,7 @@ type WrappedLogStorage struct {
 	IsOk       bool      `json:"is_ok"`
 	IsSystem   *bool     `json:"is_system,omitempty"`
 	Name       *string   `json:"name,omitempty"`
-	ResourceId *int64    `json:"resource_id"`
+	ResourceId *string   `json:"resource_id"`
 	Tags       *[]string `json:"tags,omitempty"`
 	Usage      *struct {
 		LogMeasureRules int `json:"log_measure_rules"`
@@ -1302,7 +1302,7 @@ type WrappedLogStorage struct {
 type WrappedLogStorageAccessKey struct {
 	Description *string `json:"description,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id     *int64              `json:"id,omitempty"`
+	Id     *string             `json:"id,omitempty"`
 	IsOk   bool                `json:"is_ok"`
 	Secret *openapi_types.UUID `json:"secret,omitempty"`
 
@@ -1323,7 +1323,7 @@ type WrappedMetricsRouting struct {
 	PublisherCode    *string         `json:"publisher_code,omitempty"`
 
 	// ResourceId 対象リソースのID
-	ResourceId *int64              `json:"resource_id"`
+	ResourceId *string             `json:"resource_id"`
 	Uid        *openapi_types.UUID `json:"uid,omitempty"`
 	UpdatedAt  *time.Time          `json:"updated_at,omitempty"`
 	Variant    string              `json:"variant"`
@@ -1344,7 +1344,7 @@ type WrappedMetricsStorage struct {
 	IsOk       bool       `json:"is_ok"`
 	IsSystem   *bool      `json:"is_system,omitempty"`
 	Name       *string    `json:"name,omitempty"`
-	ResourceId *int64     `json:"resource_id"`
+	ResourceId *string    `json:"resource_id"`
 	Tags       *[]string  `json:"tags,omitempty"`
 	UpdatedAt  *time.Time `json:"updated_at,omitempty"`
 	Usage      *struct {
@@ -1358,7 +1358,7 @@ type WrappedMetricsStorage struct {
 type WrappedMetricsStorageAccessKey struct {
 	Description *string `json:"description,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id     *int64              `json:"id,omitempty"`
+	Id     *string             `json:"id,omitempty"`
 	IsOk   bool                `json:"is_ok"`
 	Secret *openapi_types.UUID `json:"secret,omitempty"`
 
@@ -1389,10 +1389,10 @@ type WrappedTraceStorage struct {
 	Icon *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id                  *int64    `json:"id,omitempty"`
+	Id                  *string   `json:"id,omitempty"`
 	IsOk                bool      `json:"is_ok"`
 	Name                *string   `json:"name,omitempty"`
-	ResourceId          *int64    `json:"resource_id,omitempty"`
+	ResourceId          *string   `json:"resource_id,omitempty"`
 	RetentionPeriodDays *int      `json:"retention_period_days,omitempty"`
 	Tags                *[]string `json:"tags,omitempty"`
 }
@@ -1528,7 +1528,7 @@ type LogsRoutingsListParams struct {
 	PublisherCode *string `form:"publisher__code,omitempty" json:"publisher__code,omitempty"`
 
 	// ResourceId Log storage resource id
-	ResourceId *int64  `form:"resource_id,omitempty" json:"resource_id,omitempty"`
+	ResourceId *string `form:"resource_id,omitempty" json:"resource_id,omitempty"`
 	Variant    *string `form:"variant,omitempty" json:"variant,omitempty"`
 }
 
@@ -1547,8 +1547,8 @@ type LogsStoragesListParams struct {
 	From *int `form:"from,omitempty" json:"from,omitempty"`
 
 	// IsSystem Is system
-	IsSystem   *bool  `form:"is_system,omitempty" json:"is_system,omitempty"`
-	ResourceId *int64 `form:"resource_id,omitempty" json:"resource_id,omitempty"`
+	IsSystem   *bool   `form:"is_system,omitempty" json:"is_system,omitempty"`
+	ResourceId *string `form:"resource_id,omitempty" json:"resource_id,omitempty"`
 
 	// Status * `init` - 初期化中
 	// * `free` - 未割り当て
@@ -1594,7 +1594,7 @@ type MetricsRoutingsListParams struct {
 	PublisherCode *string `form:"publisher__code,omitempty" json:"publisher__code,omitempty"`
 
 	// ResourceId Metrics storage resource id
-	ResourceId *int64  `form:"resource_id,omitempty" json:"resource_id,omitempty"`
+	ResourceId *string `form:"resource_id,omitempty" json:"resource_id,omitempty"`
 	Variant    *string `form:"variant,omitempty" json:"variant,omitempty"`
 }
 
@@ -1609,8 +1609,8 @@ type MetricsStoragesListParams struct {
 	From *int `form:"from,omitempty" json:"from,omitempty"`
 
 	// IsSystem Is system
-	IsSystem   *bool  `form:"is_system,omitempty" json:"is_system,omitempty"`
-	ResourceId *int64 `form:"resource_id,omitempty" json:"resource_id,omitempty"`
+	IsSystem   *bool   `form:"is_system,omitempty" json:"is_system,omitempty"`
+	ResourceId *string `form:"resource_id,omitempty" json:"resource_id,omitempty"`
 }
 
 // MetricsStoragesKeysListParams defines parameters for MetricsStoragesKeysList.
@@ -1655,7 +1655,7 @@ type TracesStoragesListParams struct {
 	// LogStorageBucketClassification * `shared` - 共有
 	// * `separated` - 分離
 	LogStorageBucketClassification *TracesStoragesListParamsLogStorageBucketClassification `form:"log_storage__bucket__classification,omitempty" json:"log_storage__bucket__classification,omitempty"`
-	ResourceId                     *int64                                                  `form:"resource_id,omitempty" json:"resource_id,omitempty"`
+	ResourceId                     *string                                                 `form:"resource_id,omitempty" json:"resource_id,omitempty"`
 }
 
 // TracesStoragesListParamsLogStorageBucketClassification defines parameters for TracesStoragesList.
@@ -2397,163 +2397,163 @@ type ClientInterface interface {
 	AlertsProjectsCreateWithFormdataBody(ctx context.Context, body AlertsProjectsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsHistoriesList request
-	AlertsProjectsHistoriesList(ctx context.Context, projectResourceId int64, params *AlertsProjectsHistoriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsHistoriesList(ctx context.Context, projectResourceId string, params *AlertsProjectsHistoriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsHistoriesRetrieve request
-	AlertsProjectsHistoriesRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsHistoriesRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsLogMeasureRulesList request
-	AlertsProjectsLogMeasureRulesList(ctx context.Context, projectResourceId int64, params *AlertsProjectsLogMeasureRulesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesList(ctx context.Context, projectResourceId string, params *AlertsProjectsLogMeasureRulesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsLogMeasureRulesCreateWithBody request with any body
-	AlertsProjectsLogMeasureRulesCreateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesCreateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsLogMeasureRulesCreate(ctx context.Context, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesCreate(ctx context.Context, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsLogMeasureRulesCreateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesCreateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsLogMeasureRulesDestroy request
-	AlertsProjectsLogMeasureRulesDestroy(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesDestroy(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsLogMeasureRulesRetrieve request
-	AlertsProjectsLogMeasureRulesRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsLogMeasureRulesPartialUpdateWithBody request with any body
-	AlertsProjectsLogMeasureRulesPartialUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesPartialUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsLogMeasureRulesPartialUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesPartialUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsLogMeasureRulesUpdateWithBody request with any body
-	AlertsProjectsLogMeasureRulesUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsLogMeasureRulesUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsLogMeasureRulesUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsLogMeasureRulesUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationRoutingsList request
-	AlertsProjectsNotificationRoutingsList(ctx context.Context, projectResourceId int64, params *AlertsProjectsNotificationRoutingsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsList(ctx context.Context, projectResourceId string, params *AlertsProjectsNotificationRoutingsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationRoutingsCreateWithBody request with any body
-	AlertsProjectsNotificationRoutingsCreateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsCreateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationRoutingsCreate(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsCreate(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationRoutingsCreateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsCreateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationRoutingsReorderUpdateWithBody request with any body
-	AlertsProjectsNotificationRoutingsReorderUpdateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsReorderUpdateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationRoutingsReorderUpdate(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsReorderUpdate(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationRoutingsDestroy request
-	AlertsProjectsNotificationRoutingsDestroy(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsDestroy(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationRoutingsRetrieve request
-	AlertsProjectsNotificationRoutingsRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationRoutingsPartialUpdateWithBody request with any body
-	AlertsProjectsNotificationRoutingsPartialUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsPartialUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationRoutingsPartialUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsPartialUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationRoutingsUpdateWithBody request with any body
-	AlertsProjectsNotificationRoutingsUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationRoutingsUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationRoutingsUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationRoutingsUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationTargetsList request
-	AlertsProjectsNotificationTargetsList(ctx context.Context, projectResourceId int64, params *AlertsProjectsNotificationTargetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsList(ctx context.Context, projectResourceId string, params *AlertsProjectsNotificationTargetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationTargetsCreateWithBody request with any body
-	AlertsProjectsNotificationTargetsCreateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsCreateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationTargetsCreate(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsCreate(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationTargetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationTargetsCreateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsCreateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationTargetsDestroy request
-	AlertsProjectsNotificationTargetsDestroy(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsDestroy(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationTargetsRetrieve request
-	AlertsProjectsNotificationTargetsRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationTargetsPartialUpdateWithBody request with any body
-	AlertsProjectsNotificationTargetsPartialUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsPartialUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationTargetsPartialUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsPartialUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsNotificationTargetsUpdateWithBody request with any body
-	AlertsProjectsNotificationTargetsUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationTargetsUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsNotificationTargetsUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsNotificationTargetsUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRulesList request
-	AlertsProjectsRulesList(ctx context.Context, projectResourceId int64, params *AlertsProjectsRulesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesList(ctx context.Context, projectResourceId string, params *AlertsProjectsRulesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRulesCreateWithBody request with any body
-	AlertsProjectsRulesCreateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesCreateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsRulesCreate(ctx context.Context, projectResourceId int64, body AlertsProjectsRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesCreate(ctx context.Context, projectResourceId string, body AlertsProjectsRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsRulesCreateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesCreateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRulesHistoriesList request
-	AlertsProjectsRulesHistoriesList(ctx context.Context, projectResourceId int64, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesHistoriesList(ctx context.Context, projectResourceId string, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRulesHistoriesRetrieve request
-	AlertsProjectsRulesHistoriesRetrieve(ctx context.Context, projectResourceId int64, ruleUid openapi_types.UUID, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesHistoriesRetrieve(ctx context.Context, projectResourceId string, ruleUid openapi_types.UUID, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRulesDestroy request
-	AlertsProjectsRulesDestroy(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesDestroy(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRulesRetrieve request
-	AlertsProjectsRulesRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRulesPartialUpdateWithBody request with any body
-	AlertsProjectsRulesPartialUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesPartialUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsRulesPartialUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesPartialUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsRulesPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRulesUpdateWithBody request with any body
-	AlertsProjectsRulesUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsRulesUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsRulesUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRulesUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsDestroy request
-	AlertsProjectsDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsRetrieve request
-	AlertsProjectsRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsPartialUpdateWithBody request with any body
-	AlertsProjectsPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsPartialUpdate(ctx context.Context, resourceId int64, body AlertsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsPartialUpdate(ctx context.Context, resourceId string, body AlertsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body AlertsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body AlertsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// AlertsProjectsUpdateWithBody request with any body
-	AlertsProjectsUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsUpdate(ctx context.Context, resourceId int64, body AlertsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsUpdate(ctx context.Context, resourceId string, body AlertsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	AlertsProjectsUpdateWithFormdataBody(ctx context.Context, resourceId int64, body AlertsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	AlertsProjectsUpdateWithFormdataBody(ctx context.Context, resourceId string, body AlertsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DashboardsProjectsList request
 	DashboardsProjectsList(ctx context.Context, params *DashboardsProjectsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2566,24 +2566,24 @@ type ClientInterface interface {
 	DashboardsProjectsCreateWithFormdataBody(ctx context.Context, body DashboardsProjectsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DashboardsProjectsDestroy request
-	DashboardsProjectsDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DashboardsProjectsDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DashboardsProjectsRetrieve request
-	DashboardsProjectsRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DashboardsProjectsRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DashboardsProjectsPartialUpdateWithBody request with any body
-	DashboardsProjectsPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DashboardsProjectsPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	DashboardsProjectsPartialUpdate(ctx context.Context, resourceId int64, body DashboardsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DashboardsProjectsPartialUpdate(ctx context.Context, resourceId string, body DashboardsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	DashboardsProjectsPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body DashboardsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DashboardsProjectsPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body DashboardsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DashboardsProjectsUpdateWithBody request with any body
-	DashboardsProjectsUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DashboardsProjectsUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	DashboardsProjectsUpdate(ctx context.Context, resourceId int64, body DashboardsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DashboardsProjectsUpdate(ctx context.Context, resourceId string, body DashboardsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	DashboardsProjectsUpdateWithFormdataBody(ctx context.Context, resourceId int64, body DashboardsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DashboardsProjectsUpdateWithFormdataBody(ctx context.Context, resourceId string, body DashboardsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsRoutingsList request
 	LogsRoutingsList(ctx context.Context, params *LogsRoutingsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2626,67 +2626,67 @@ type ClientInterface interface {
 	LogsStoragesCreateWithFormdataBody(ctx context.Context, body LogsStoragesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesKeysList request
-	LogsStoragesKeysList(ctx context.Context, logResourceId int64, params *LogsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysList(ctx context.Context, logResourceId string, params *LogsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesKeysCreateWithBody request with any body
-	LogsStoragesKeysCreateWithBody(ctx context.Context, logResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysCreateWithBody(ctx context.Context, logResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesKeysCreate(ctx context.Context, logResourceId int64, body LogsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysCreate(ctx context.Context, logResourceId string, body LogsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesKeysCreateWithFormdataBody(ctx context.Context, logResourceId int64, body LogsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysCreateWithFormdataBody(ctx context.Context, logResourceId string, body LogsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesKeysDestroy request
-	LogsStoragesKeysDestroy(ctx context.Context, logResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysDestroy(ctx context.Context, logResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesKeysRetrieve request
-	LogsStoragesKeysRetrieve(ctx context.Context, logResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysRetrieve(ctx context.Context, logResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesKeysPartialUpdateWithBody request with any body
-	LogsStoragesKeysPartialUpdateWithBody(ctx context.Context, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysPartialUpdateWithBody(ctx context.Context, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesKeysPartialUpdate(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysPartialUpdate(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesKeysUpdateWithBody request with any body
-	LogsStoragesKeysUpdateWithBody(ctx context.Context, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysUpdateWithBody(ctx context.Context, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesKeysUpdate(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysUpdate(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesKeysUpdateWithFormdataBody(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesKeysUpdateWithFormdataBody(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesDestroy request
-	LogsStoragesDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesRetrieve request
-	LogsStoragesRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesPartialUpdateWithBody request with any body
-	LogsStoragesPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesPartialUpdate(ctx context.Context, resourceId int64, body LogsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesPartialUpdate(ctx context.Context, resourceId string, body LogsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body LogsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body LogsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesUpdateWithBody request with any body
-	LogsStoragesUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesUpdate(ctx context.Context, resourceId int64, body LogsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesUpdate(ctx context.Context, resourceId string, body LogsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesUpdateWithFormdataBody(ctx context.Context, resourceId int64, body LogsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesUpdateWithFormdataBody(ctx context.Context, resourceId string, body LogsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesSetExpireCreateWithBody request with any body
-	LogsStoragesSetExpireCreateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesSetExpireCreateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesSetExpireCreate(ctx context.Context, resourceId int64, body LogsStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesSetExpireCreate(ctx context.Context, resourceId string, body LogsStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	LogsStoragesSetExpireCreateWithFormdataBody(ctx context.Context, resourceId int64, body LogsStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesSetExpireCreateWithFormdataBody(ctx context.Context, resourceId string, body LogsStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesStatsDailyRetrieve request
-	LogsStoragesStatsDailyRetrieve(ctx context.Context, resourceId int64, params *LogsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesStatsDailyRetrieve(ctx context.Context, resourceId string, params *LogsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// LogsStoragesStatsMonthlyRetrieve request
-	LogsStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId int64, params *LogsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	LogsStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId string, params *LogsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetResourcesLimits request
 	GetResourcesLimits(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2742,60 +2742,60 @@ type ClientInterface interface {
 	MetricsStoragesCreateWithFormdataBody(ctx context.Context, body MetricsStoragesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesKeysList request
-	MetricsStoragesKeysList(ctx context.Context, metricsResourceId int64, params *MetricsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysList(ctx context.Context, metricsResourceId string, params *MetricsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesKeysCreateWithBody request with any body
-	MetricsStoragesKeysCreateWithBody(ctx context.Context, metricsResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysCreateWithBody(ctx context.Context, metricsResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesKeysCreate(ctx context.Context, metricsResourceId int64, body MetricsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysCreate(ctx context.Context, metricsResourceId string, body MetricsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesKeysCreateWithFormdataBody(ctx context.Context, metricsResourceId int64, body MetricsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysCreateWithFormdataBody(ctx context.Context, metricsResourceId string, body MetricsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesKeysDestroy request
-	MetricsStoragesKeysDestroy(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysDestroy(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesKeysRetrieve request
-	MetricsStoragesKeysRetrieve(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysRetrieve(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesKeysPartialUpdateWithBody request with any body
-	MetricsStoragesKeysPartialUpdateWithBody(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysPartialUpdateWithBody(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesKeysPartialUpdate(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysPartialUpdate(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesKeysUpdateWithBody request with any body
-	MetricsStoragesKeysUpdateWithBody(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysUpdateWithBody(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesKeysUpdate(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysUpdate(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesKeysUpdateWithFormdataBody(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesKeysUpdateWithFormdataBody(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesDestroy request
-	MetricsStoragesDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesRetrieve request
-	MetricsStoragesRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesPartialUpdateWithBody request with any body
-	MetricsStoragesPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesPartialUpdate(ctx context.Context, resourceId int64, body MetricsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesPartialUpdate(ctx context.Context, resourceId string, body MetricsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body MetricsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body MetricsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesUpdateWithBody request with any body
-	MetricsStoragesUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesUpdate(ctx context.Context, resourceId int64, body MetricsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesUpdate(ctx context.Context, resourceId string, body MetricsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	MetricsStoragesUpdateWithFormdataBody(ctx context.Context, resourceId int64, body MetricsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesUpdateWithFormdataBody(ctx context.Context, resourceId string, body MetricsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesStatsDailyRetrieve request
-	MetricsStoragesStatsDailyRetrieve(ctx context.Context, resourceId int64, params *MetricsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesStatsDailyRetrieve(ctx context.Context, resourceId string, params *MetricsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// MetricsStoragesStatsMonthlyRetrieve request
-	MetricsStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId int64, params *MetricsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	MetricsStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId string, params *MetricsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PublishersList request
 	PublishersList(ctx context.Context, params *PublishersListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -2814,67 +2814,67 @@ type ClientInterface interface {
 	TracesStoragesCreateWithFormdataBody(ctx context.Context, body TracesStoragesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesDestroy request
-	TracesStoragesDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesRetrieve request
-	TracesStoragesRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesPartialUpdateWithBody request with any body
-	TracesStoragesPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesPartialUpdate(ctx context.Context, resourceId int64, body TracesStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesPartialUpdate(ctx context.Context, resourceId string, body TracesStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body TracesStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body TracesStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesUpdateWithBody request with any body
-	TracesStoragesUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesUpdate(ctx context.Context, resourceId int64, body TracesStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesUpdate(ctx context.Context, resourceId string, body TracesStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesUpdateWithFormdataBody(ctx context.Context, resourceId int64, body TracesStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesUpdateWithFormdataBody(ctx context.Context, resourceId string, body TracesStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesSetExpireCreateWithBody request with any body
-	TracesStoragesSetExpireCreateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesSetExpireCreateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesSetExpireCreate(ctx context.Context, resourceId int64, body TracesStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesSetExpireCreate(ctx context.Context, resourceId string, body TracesStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesSetExpireCreateWithFormdataBody(ctx context.Context, resourceId int64, body TracesStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesSetExpireCreateWithFormdataBody(ctx context.Context, resourceId string, body TracesStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesStatsDailyRetrieve request
-	TracesStoragesStatsDailyRetrieve(ctx context.Context, resourceId int64, params *TracesStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesStatsDailyRetrieve(ctx context.Context, resourceId string, params *TracesStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesStatsMonthlyRetrieve request
-	TracesStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId int64, params *TracesStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId string, params *TracesStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesKeysList request
-	TracesStoragesKeysList(ctx context.Context, traceResourceId int64, params *TracesStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysList(ctx context.Context, traceResourceId string, params *TracesStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesKeysCreateWithBody request with any body
-	TracesStoragesKeysCreateWithBody(ctx context.Context, traceResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysCreateWithBody(ctx context.Context, traceResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesKeysCreate(ctx context.Context, traceResourceId int64, body TracesStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysCreate(ctx context.Context, traceResourceId string, body TracesStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesKeysCreateWithFormdataBody(ctx context.Context, traceResourceId int64, body TracesStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysCreateWithFormdataBody(ctx context.Context, traceResourceId string, body TracesStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesKeysDestroy request
-	TracesStoragesKeysDestroy(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysDestroy(ctx context.Context, traceResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesKeysRetrieve request
-	TracesStoragesKeysRetrieve(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysRetrieve(ctx context.Context, traceResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesKeysPartialUpdateWithBody request with any body
-	TracesStoragesKeysPartialUpdateWithBody(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysPartialUpdateWithBody(ctx context.Context, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesKeysPartialUpdate(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysPartialUpdate(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TracesStoragesKeysUpdateWithBody request with any body
-	TracesStoragesKeysUpdateWithBody(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysUpdateWithBody(ctx context.Context, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesKeysUpdate(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysUpdate(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	TracesStoragesKeysUpdateWithFormdataBody(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	TracesStoragesKeysUpdateWithFormdataBody(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) AlertsProjectsList(ctx context.Context, params *AlertsProjectsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -2925,7 +2925,7 @@ func (c *Client) AlertsProjectsCreateWithFormdataBody(ctx context.Context, body 
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsHistoriesList(ctx context.Context, projectResourceId int64, params *AlertsProjectsHistoriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsHistoriesList(ctx context.Context, projectResourceId string, params *AlertsProjectsHistoriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsHistoriesListRequest(c.Server, projectResourceId, params)
 	if err != nil {
 		return nil, err
@@ -2937,7 +2937,7 @@ func (c *Client) AlertsProjectsHistoriesList(ctx context.Context, projectResourc
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsHistoriesRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsHistoriesRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsHistoriesRetrieveRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -2949,7 +2949,7 @@ func (c *Client) AlertsProjectsHistoriesRetrieve(ctx context.Context, projectRes
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesList(ctx context.Context, projectResourceId int64, params *AlertsProjectsLogMeasureRulesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesList(ctx context.Context, projectResourceId string, params *AlertsProjectsLogMeasureRulesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesListRequest(c.Server, projectResourceId, params)
 	if err != nil {
 		return nil, err
@@ -2961,7 +2961,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesList(ctx context.Context, projectR
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesCreateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesCreateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesCreateRequestWithBody(c.Server, projectResourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -2973,7 +2973,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesCreateWithBody(ctx context.Context
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesCreate(ctx context.Context, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesCreate(ctx context.Context, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesCreateRequest(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -2985,7 +2985,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesCreate(ctx context.Context, projec
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesCreateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesCreateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesCreateRequestWithFormdataBody(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -2997,7 +2997,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesCreateWithFormdataBody(ctx context
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesDestroy(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesDestroy(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesDestroyRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -3009,7 +3009,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesDestroy(ctx context.Context, proje
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesRetrieveRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -3021,7 +3021,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesRetrieve(ctx context.Context, proj
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithBody(c.Server, projectResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3033,7 +3033,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdateWithBody(ctx context.
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesPartialUpdateRequest(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3045,7 +3045,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdate(ctx context.Context,
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithFormdataBody(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3057,7 +3057,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBody(ctx 
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesUpdateRequestWithBody(c.Server, projectResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3069,7 +3069,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesUpdateWithBody(ctx context.Context
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesUpdateRequest(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3081,7 +3081,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesUpdate(ctx context.Context, projec
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsLogMeasureRulesUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsLogMeasureRulesUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsLogMeasureRulesUpdateRequestWithFormdataBody(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3093,7 +3093,7 @@ func (c *Client) AlertsProjectsLogMeasureRulesUpdateWithFormdataBody(ctx context
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsList(ctx context.Context, projectResourceId int64, params *AlertsProjectsNotificationRoutingsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsList(ctx context.Context, projectResourceId string, params *AlertsProjectsNotificationRoutingsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsListRequest(c.Server, projectResourceId, params)
 	if err != nil {
 		return nil, err
@@ -3105,7 +3105,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsList(ctx context.Context, pro
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsCreateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsCreateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsCreateRequestWithBody(c.Server, projectResourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3117,7 +3117,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsCreateWithBody(ctx context.Co
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsCreate(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsCreate(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsCreateRequest(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -3129,7 +3129,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsCreate(ctx context.Context, p
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsCreateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsCreateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsCreateRequestWithFormdataBody(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -3141,7 +3141,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsCreateWithFormdataBody(ctx co
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithBody(c.Server, projectResourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3153,7 +3153,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdateWithBody(ctx con
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdate(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdate(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsReorderUpdateRequest(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -3165,7 +3165,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdate(ctx context.Con
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithFormdataBody(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -3177,7 +3177,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBody
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsDestroy(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsDestroy(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsDestroyRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -3189,7 +3189,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsDestroy(ctx context.Context, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsRetrieveRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -3201,7 +3201,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsRetrieve(ctx context.Context,
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithBody(c.Server, projectResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3213,7 +3213,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdateWithBody(ctx con
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsPartialUpdateRequest(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3225,7 +3225,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdate(ctx context.Con
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithFormdataBody(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3237,7 +3237,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBody
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsUpdateRequestWithBody(c.Server, projectResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3249,7 +3249,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsUpdateWithBody(ctx context.Co
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsUpdateRequest(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3261,7 +3261,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsUpdate(ctx context.Context, p
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationRoutingsUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationRoutingsUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationRoutingsUpdateRequestWithFormdataBody(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3273,7 +3273,7 @@ func (c *Client) AlertsProjectsNotificationRoutingsUpdateWithFormdataBody(ctx co
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsList(ctx context.Context, projectResourceId int64, params *AlertsProjectsNotificationTargetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsList(ctx context.Context, projectResourceId string, params *AlertsProjectsNotificationTargetsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsListRequest(c.Server, projectResourceId, params)
 	if err != nil {
 		return nil, err
@@ -3285,7 +3285,7 @@ func (c *Client) AlertsProjectsNotificationTargetsList(ctx context.Context, proj
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsCreateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsCreateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsCreateRequestWithBody(c.Server, projectResourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3297,7 +3297,7 @@ func (c *Client) AlertsProjectsNotificationTargetsCreateWithBody(ctx context.Con
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsCreate(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsCreate(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationTargetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsCreateRequest(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -3309,7 +3309,7 @@ func (c *Client) AlertsProjectsNotificationTargetsCreate(ctx context.Context, pr
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsCreateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsCreateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsCreateRequestWithFormdataBody(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -3321,7 +3321,7 @@ func (c *Client) AlertsProjectsNotificationTargetsCreateWithFormdataBody(ctx con
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsDestroy(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsDestroy(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsDestroyRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -3333,7 +3333,7 @@ func (c *Client) AlertsProjectsNotificationTargetsDestroy(ctx context.Context, p
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsRetrieveRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -3345,7 +3345,7 @@ func (c *Client) AlertsProjectsNotificationTargetsRetrieve(ctx context.Context, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsPartialUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsPartialUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithBody(c.Server, projectResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3357,7 +3357,7 @@ func (c *Client) AlertsProjectsNotificationTargetsPartialUpdateWithBody(ctx cont
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsPartialUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsPartialUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsPartialUpdateRequest(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3369,7 +3369,7 @@ func (c *Client) AlertsProjectsNotificationTargetsPartialUpdate(ctx context.Cont
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithFormdataBody(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3381,7 +3381,7 @@ func (c *Client) AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBody(
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsUpdateRequestWithBody(c.Server, projectResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3393,7 +3393,7 @@ func (c *Client) AlertsProjectsNotificationTargetsUpdateWithBody(ctx context.Con
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsUpdateRequest(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3405,7 +3405,7 @@ func (c *Client) AlertsProjectsNotificationTargetsUpdate(ctx context.Context, pr
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsNotificationTargetsUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsNotificationTargetsUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsNotificationTargetsUpdateRequestWithFormdataBody(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3417,7 +3417,7 @@ func (c *Client) AlertsProjectsNotificationTargetsUpdateWithFormdataBody(ctx con
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesList(ctx context.Context, projectResourceId int64, params *AlertsProjectsRulesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesList(ctx context.Context, projectResourceId string, params *AlertsProjectsRulesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesListRequest(c.Server, projectResourceId, params)
 	if err != nil {
 		return nil, err
@@ -3429,7 +3429,7 @@ func (c *Client) AlertsProjectsRulesList(ctx context.Context, projectResourceId 
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesCreateWithBody(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesCreateWithBody(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesCreateRequestWithBody(c.Server, projectResourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3441,7 +3441,7 @@ func (c *Client) AlertsProjectsRulesCreateWithBody(ctx context.Context, projectR
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesCreate(ctx context.Context, projectResourceId int64, body AlertsProjectsRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesCreate(ctx context.Context, projectResourceId string, body AlertsProjectsRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesCreateRequest(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -3453,7 +3453,7 @@ func (c *Client) AlertsProjectsRulesCreate(ctx context.Context, projectResourceI
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesCreateWithFormdataBody(ctx context.Context, projectResourceId int64, body AlertsProjectsRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesCreateWithFormdataBody(ctx context.Context, projectResourceId string, body AlertsProjectsRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesCreateRequestWithFormdataBody(c.Server, projectResourceId, body)
 	if err != nil {
 		return nil, err
@@ -3465,7 +3465,7 @@ func (c *Client) AlertsProjectsRulesCreateWithFormdataBody(ctx context.Context, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesHistoriesList(ctx context.Context, projectResourceId int64, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesHistoriesList(ctx context.Context, projectResourceId string, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesHistoriesListRequest(c.Server, projectResourceId, ruleUid, params)
 	if err != nil {
 		return nil, err
@@ -3477,7 +3477,7 @@ func (c *Client) AlertsProjectsRulesHistoriesList(ctx context.Context, projectRe
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesHistoriesRetrieve(ctx context.Context, projectResourceId int64, ruleUid openapi_types.UUID, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesHistoriesRetrieve(ctx context.Context, projectResourceId string, ruleUid openapi_types.UUID, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesHistoriesRetrieveRequest(c.Server, projectResourceId, ruleUid, uid)
 	if err != nil {
 		return nil, err
@@ -3489,7 +3489,7 @@ func (c *Client) AlertsProjectsRulesHistoriesRetrieve(ctx context.Context, proje
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesDestroy(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesDestroy(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesDestroyRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -3501,7 +3501,7 @@ func (c *Client) AlertsProjectsRulesDestroy(ctx context.Context, projectResource
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesRetrieve(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesRetrieve(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesRetrieveRequest(c.Server, projectResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -3513,7 +3513,7 @@ func (c *Client) AlertsProjectsRulesRetrieve(ctx context.Context, projectResourc
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesPartialUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesPartialUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesPartialUpdateRequestWithBody(c.Server, projectResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3525,7 +3525,7 @@ func (c *Client) AlertsProjectsRulesPartialUpdateWithBody(ctx context.Context, p
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesPartialUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesPartialUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesPartialUpdateRequest(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3537,7 +3537,7 @@ func (c *Client) AlertsProjectsRulesPartialUpdate(ctx context.Context, projectRe
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesPartialUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesPartialUpdateRequestWithFormdataBody(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3549,7 +3549,7 @@ func (c *Client) AlertsProjectsRulesPartialUpdateWithFormdataBody(ctx context.Co
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesUpdateWithBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesUpdateWithBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesUpdateRequestWithBody(c.Server, projectResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3561,7 +3561,7 @@ func (c *Client) AlertsProjectsRulesUpdateWithBody(ctx context.Context, projectR
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesUpdate(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesUpdate(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesUpdateRequest(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3573,7 +3573,7 @@ func (c *Client) AlertsProjectsRulesUpdate(ctx context.Context, projectResourceI
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRulesUpdateWithFormdataBody(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRulesUpdateWithFormdataBody(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRulesUpdateRequestWithFormdataBody(c.Server, projectResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -3585,7 +3585,7 @@ func (c *Client) AlertsProjectsRulesUpdateWithFormdataBody(ctx context.Context, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsDestroyRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -3597,7 +3597,7 @@ func (c *Client) AlertsProjectsDestroy(ctx context.Context, resourceId int64, re
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsRetrieveRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -3609,7 +3609,7 @@ func (c *Client) AlertsProjectsRetrieve(ctx context.Context, resourceId int64, r
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsPartialUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3621,7 +3621,7 @@ func (c *Client) AlertsProjectsPartialUpdateWithBody(ctx context.Context, resour
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsPartialUpdate(ctx context.Context, resourceId int64, body AlertsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsPartialUpdate(ctx context.Context, resourceId string, body AlertsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsPartialUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -3633,7 +3633,7 @@ func (c *Client) AlertsProjectsPartialUpdate(ctx context.Context, resourceId int
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body AlertsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body AlertsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsPartialUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -3645,7 +3645,7 @@ func (c *Client) AlertsProjectsPartialUpdateWithFormdataBody(ctx context.Context
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3657,7 +3657,7 @@ func (c *Client) AlertsProjectsUpdateWithBody(ctx context.Context, resourceId in
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsUpdate(ctx context.Context, resourceId int64, body AlertsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsUpdate(ctx context.Context, resourceId string, body AlertsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -3669,7 +3669,7 @@ func (c *Client) AlertsProjectsUpdate(ctx context.Context, resourceId int64, bod
 	return c.Client.Do(req)
 }
 
-func (c *Client) AlertsProjectsUpdateWithFormdataBody(ctx context.Context, resourceId int64, body AlertsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) AlertsProjectsUpdateWithFormdataBody(ctx context.Context, resourceId string, body AlertsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAlertsProjectsUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -3729,7 +3729,7 @@ func (c *Client) DashboardsProjectsCreateWithFormdataBody(ctx context.Context, b
 	return c.Client.Do(req)
 }
 
-func (c *Client) DashboardsProjectsDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DashboardsProjectsDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDashboardsProjectsDestroyRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -3741,7 +3741,7 @@ func (c *Client) DashboardsProjectsDestroy(ctx context.Context, resourceId int64
 	return c.Client.Do(req)
 }
 
-func (c *Client) DashboardsProjectsRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DashboardsProjectsRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDashboardsProjectsRetrieveRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -3753,7 +3753,7 @@ func (c *Client) DashboardsProjectsRetrieve(ctx context.Context, resourceId int6
 	return c.Client.Do(req)
 }
 
-func (c *Client) DashboardsProjectsPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DashboardsProjectsPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDashboardsProjectsPartialUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3765,7 +3765,7 @@ func (c *Client) DashboardsProjectsPartialUpdateWithBody(ctx context.Context, re
 	return c.Client.Do(req)
 }
 
-func (c *Client) DashboardsProjectsPartialUpdate(ctx context.Context, resourceId int64, body DashboardsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DashboardsProjectsPartialUpdate(ctx context.Context, resourceId string, body DashboardsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDashboardsProjectsPartialUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -3777,7 +3777,7 @@ func (c *Client) DashboardsProjectsPartialUpdate(ctx context.Context, resourceId
 	return c.Client.Do(req)
 }
 
-func (c *Client) DashboardsProjectsPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body DashboardsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DashboardsProjectsPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body DashboardsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDashboardsProjectsPartialUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -3789,7 +3789,7 @@ func (c *Client) DashboardsProjectsPartialUpdateWithFormdataBody(ctx context.Con
 	return c.Client.Do(req)
 }
 
-func (c *Client) DashboardsProjectsUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DashboardsProjectsUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDashboardsProjectsUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -3801,7 +3801,7 @@ func (c *Client) DashboardsProjectsUpdateWithBody(ctx context.Context, resourceI
 	return c.Client.Do(req)
 }
 
-func (c *Client) DashboardsProjectsUpdate(ctx context.Context, resourceId int64, body DashboardsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DashboardsProjectsUpdate(ctx context.Context, resourceId string, body DashboardsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDashboardsProjectsUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -3813,7 +3813,7 @@ func (c *Client) DashboardsProjectsUpdate(ctx context.Context, resourceId int64,
 	return c.Client.Do(req)
 }
 
-func (c *Client) DashboardsProjectsUpdateWithFormdataBody(ctx context.Context, resourceId int64, body DashboardsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DashboardsProjectsUpdateWithFormdataBody(ctx context.Context, resourceId string, body DashboardsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDashboardsProjectsUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4017,7 +4017,7 @@ func (c *Client) LogsStoragesCreateWithFormdataBody(ctx context.Context, body Lo
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysList(ctx context.Context, logResourceId int64, params *LogsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysList(ctx context.Context, logResourceId string, params *LogsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysListRequest(c.Server, logResourceId, params)
 	if err != nil {
 		return nil, err
@@ -4029,7 +4029,7 @@ func (c *Client) LogsStoragesKeysList(ctx context.Context, logResourceId int64, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysCreateWithBody(ctx context.Context, logResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysCreateWithBody(ctx context.Context, logResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysCreateRequestWithBody(c.Server, logResourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4041,7 +4041,7 @@ func (c *Client) LogsStoragesKeysCreateWithBody(ctx context.Context, logResource
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysCreate(ctx context.Context, logResourceId int64, body LogsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysCreate(ctx context.Context, logResourceId string, body LogsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysCreateRequest(c.Server, logResourceId, body)
 	if err != nil {
 		return nil, err
@@ -4053,7 +4053,7 @@ func (c *Client) LogsStoragesKeysCreate(ctx context.Context, logResourceId int64
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysCreateWithFormdataBody(ctx context.Context, logResourceId int64, body LogsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysCreateWithFormdataBody(ctx context.Context, logResourceId string, body LogsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysCreateRequestWithFormdataBody(c.Server, logResourceId, body)
 	if err != nil {
 		return nil, err
@@ -4065,7 +4065,7 @@ func (c *Client) LogsStoragesKeysCreateWithFormdataBody(ctx context.Context, log
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysDestroy(ctx context.Context, logResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysDestroy(ctx context.Context, logResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysDestroyRequest(c.Server, logResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -4077,7 +4077,7 @@ func (c *Client) LogsStoragesKeysDestroy(ctx context.Context, logResourceId int6
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysRetrieve(ctx context.Context, logResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysRetrieve(ctx context.Context, logResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysRetrieveRequest(c.Server, logResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -4089,7 +4089,7 @@ func (c *Client) LogsStoragesKeysRetrieve(ctx context.Context, logResourceId int
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysPartialUpdateWithBody(ctx context.Context, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysPartialUpdateWithBody(ctx context.Context, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysPartialUpdateRequestWithBody(c.Server, logResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4101,7 +4101,7 @@ func (c *Client) LogsStoragesKeysPartialUpdateWithBody(ctx context.Context, logR
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysPartialUpdate(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysPartialUpdate(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysPartialUpdateRequest(c.Server, logResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -4113,7 +4113,7 @@ func (c *Client) LogsStoragesKeysPartialUpdate(ctx context.Context, logResourceI
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysPartialUpdateRequestWithFormdataBody(c.Server, logResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -4125,7 +4125,7 @@ func (c *Client) LogsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Conte
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysUpdateWithBody(ctx context.Context, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysUpdateWithBody(ctx context.Context, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysUpdateRequestWithBody(c.Server, logResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4137,7 +4137,7 @@ func (c *Client) LogsStoragesKeysUpdateWithBody(ctx context.Context, logResource
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysUpdate(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysUpdate(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysUpdateRequest(c.Server, logResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -4149,7 +4149,7 @@ func (c *Client) LogsStoragesKeysUpdate(ctx context.Context, logResourceId int64
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesKeysUpdateWithFormdataBody(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesKeysUpdateWithFormdataBody(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesKeysUpdateRequestWithFormdataBody(c.Server, logResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -4161,7 +4161,7 @@ func (c *Client) LogsStoragesKeysUpdateWithFormdataBody(ctx context.Context, log
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesDestroyRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -4173,7 +4173,7 @@ func (c *Client) LogsStoragesDestroy(ctx context.Context, resourceId int64, reqE
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesRetrieveRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -4185,7 +4185,7 @@ func (c *Client) LogsStoragesRetrieve(ctx context.Context, resourceId int64, req
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesPartialUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4197,7 +4197,7 @@ func (c *Client) LogsStoragesPartialUpdateWithBody(ctx context.Context, resource
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesPartialUpdate(ctx context.Context, resourceId int64, body LogsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesPartialUpdate(ctx context.Context, resourceId string, body LogsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesPartialUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4209,7 +4209,7 @@ func (c *Client) LogsStoragesPartialUpdate(ctx context.Context, resourceId int64
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body LogsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body LogsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesPartialUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4221,7 +4221,7 @@ func (c *Client) LogsStoragesPartialUpdateWithFormdataBody(ctx context.Context, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4233,7 +4233,7 @@ func (c *Client) LogsStoragesUpdateWithBody(ctx context.Context, resourceId int6
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesUpdate(ctx context.Context, resourceId int64, body LogsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesUpdate(ctx context.Context, resourceId string, body LogsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4245,7 +4245,7 @@ func (c *Client) LogsStoragesUpdate(ctx context.Context, resourceId int64, body 
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesUpdateWithFormdataBody(ctx context.Context, resourceId int64, body LogsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesUpdateWithFormdataBody(ctx context.Context, resourceId string, body LogsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4257,7 +4257,7 @@ func (c *Client) LogsStoragesUpdateWithFormdataBody(ctx context.Context, resourc
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesSetExpireCreateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesSetExpireCreateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesSetExpireCreateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4269,7 +4269,7 @@ func (c *Client) LogsStoragesSetExpireCreateWithBody(ctx context.Context, resour
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesSetExpireCreate(ctx context.Context, resourceId int64, body LogsStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesSetExpireCreate(ctx context.Context, resourceId string, body LogsStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesSetExpireCreateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4281,7 +4281,7 @@ func (c *Client) LogsStoragesSetExpireCreate(ctx context.Context, resourceId int
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesSetExpireCreateWithFormdataBody(ctx context.Context, resourceId int64, body LogsStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesSetExpireCreateWithFormdataBody(ctx context.Context, resourceId string, body LogsStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesSetExpireCreateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4293,7 +4293,7 @@ func (c *Client) LogsStoragesSetExpireCreateWithFormdataBody(ctx context.Context
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesStatsDailyRetrieve(ctx context.Context, resourceId int64, params *LogsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesStatsDailyRetrieve(ctx context.Context, resourceId string, params *LogsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesStatsDailyRetrieveRequest(c.Server, resourceId, params)
 	if err != nil {
 		return nil, err
@@ -4305,7 +4305,7 @@ func (c *Client) LogsStoragesStatsDailyRetrieve(ctx context.Context, resourceId 
 	return c.Client.Do(req)
 }
 
-func (c *Client) LogsStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId int64, params *LogsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) LogsStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId string, params *LogsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewLogsStoragesStatsMonthlyRetrieveRequest(c.Server, resourceId, params)
 	if err != nil {
 		return nil, err
@@ -4569,7 +4569,7 @@ func (c *Client) MetricsStoragesCreateWithFormdataBody(ctx context.Context, body
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysList(ctx context.Context, metricsResourceId int64, params *MetricsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysList(ctx context.Context, metricsResourceId string, params *MetricsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysListRequest(c.Server, metricsResourceId, params)
 	if err != nil {
 		return nil, err
@@ -4581,7 +4581,7 @@ func (c *Client) MetricsStoragesKeysList(ctx context.Context, metricsResourceId 
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysCreateWithBody(ctx context.Context, metricsResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysCreateWithBody(ctx context.Context, metricsResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysCreateRequestWithBody(c.Server, metricsResourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4593,7 +4593,7 @@ func (c *Client) MetricsStoragesKeysCreateWithBody(ctx context.Context, metricsR
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysCreate(ctx context.Context, metricsResourceId int64, body MetricsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysCreate(ctx context.Context, metricsResourceId string, body MetricsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysCreateRequest(c.Server, metricsResourceId, body)
 	if err != nil {
 		return nil, err
@@ -4605,7 +4605,7 @@ func (c *Client) MetricsStoragesKeysCreate(ctx context.Context, metricsResourceI
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysCreateWithFormdataBody(ctx context.Context, metricsResourceId int64, body MetricsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysCreateWithFormdataBody(ctx context.Context, metricsResourceId string, body MetricsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysCreateRequestWithFormdataBody(c.Server, metricsResourceId, body)
 	if err != nil {
 		return nil, err
@@ -4617,7 +4617,7 @@ func (c *Client) MetricsStoragesKeysCreateWithFormdataBody(ctx context.Context, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysDestroy(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysDestroy(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysDestroyRequest(c.Server, metricsResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -4629,7 +4629,7 @@ func (c *Client) MetricsStoragesKeysDestroy(ctx context.Context, metricsResource
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysRetrieve(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysRetrieve(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysRetrieveRequest(c.Server, metricsResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -4641,7 +4641,7 @@ func (c *Client) MetricsStoragesKeysRetrieve(ctx context.Context, metricsResourc
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysPartialUpdateWithBody(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysPartialUpdateWithBody(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysPartialUpdateRequestWithBody(c.Server, metricsResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4653,7 +4653,7 @@ func (c *Client) MetricsStoragesKeysPartialUpdateWithBody(ctx context.Context, m
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysPartialUpdate(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysPartialUpdate(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysPartialUpdateRequest(c.Server, metricsResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -4665,7 +4665,7 @@ func (c *Client) MetricsStoragesKeysPartialUpdate(ctx context.Context, metricsRe
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysPartialUpdateRequestWithFormdataBody(c.Server, metricsResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -4677,7 +4677,7 @@ func (c *Client) MetricsStoragesKeysPartialUpdateWithFormdataBody(ctx context.Co
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysUpdateWithBody(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysUpdateWithBody(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysUpdateRequestWithBody(c.Server, metricsResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4689,7 +4689,7 @@ func (c *Client) MetricsStoragesKeysUpdateWithBody(ctx context.Context, metricsR
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysUpdate(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysUpdate(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysUpdateRequest(c.Server, metricsResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -4701,7 +4701,7 @@ func (c *Client) MetricsStoragesKeysUpdate(ctx context.Context, metricsResourceI
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesKeysUpdateWithFormdataBody(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesKeysUpdateWithFormdataBody(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesKeysUpdateRequestWithFormdataBody(c.Server, metricsResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -4713,7 +4713,7 @@ func (c *Client) MetricsStoragesKeysUpdateWithFormdataBody(ctx context.Context, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesDestroyRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -4725,7 +4725,7 @@ func (c *Client) MetricsStoragesDestroy(ctx context.Context, resourceId int64, r
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesRetrieveRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -4737,7 +4737,7 @@ func (c *Client) MetricsStoragesRetrieve(ctx context.Context, resourceId int64, 
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesPartialUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4749,7 +4749,7 @@ func (c *Client) MetricsStoragesPartialUpdateWithBody(ctx context.Context, resou
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesPartialUpdate(ctx context.Context, resourceId int64, body MetricsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesPartialUpdate(ctx context.Context, resourceId string, body MetricsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesPartialUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4761,7 +4761,7 @@ func (c *Client) MetricsStoragesPartialUpdate(ctx context.Context, resourceId in
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body MetricsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body MetricsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesPartialUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4773,7 +4773,7 @@ func (c *Client) MetricsStoragesPartialUpdateWithFormdataBody(ctx context.Contex
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4785,7 +4785,7 @@ func (c *Client) MetricsStoragesUpdateWithBody(ctx context.Context, resourceId i
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesUpdate(ctx context.Context, resourceId int64, body MetricsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesUpdate(ctx context.Context, resourceId string, body MetricsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4797,7 +4797,7 @@ func (c *Client) MetricsStoragesUpdate(ctx context.Context, resourceId int64, bo
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesUpdateWithFormdataBody(ctx context.Context, resourceId int64, body MetricsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesUpdateWithFormdataBody(ctx context.Context, resourceId string, body MetricsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4809,7 +4809,7 @@ func (c *Client) MetricsStoragesUpdateWithFormdataBody(ctx context.Context, reso
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesStatsDailyRetrieve(ctx context.Context, resourceId int64, params *MetricsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesStatsDailyRetrieve(ctx context.Context, resourceId string, params *MetricsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesStatsDailyRetrieveRequest(c.Server, resourceId, params)
 	if err != nil {
 		return nil, err
@@ -4821,7 +4821,7 @@ func (c *Client) MetricsStoragesStatsDailyRetrieve(ctx context.Context, resource
 	return c.Client.Do(req)
 }
 
-func (c *Client) MetricsStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId int64, params *MetricsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) MetricsStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId string, params *MetricsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewMetricsStoragesStatsMonthlyRetrieveRequest(c.Server, resourceId, params)
 	if err != nil {
 		return nil, err
@@ -4905,7 +4905,7 @@ func (c *Client) TracesStoragesCreateWithFormdataBody(ctx context.Context, body 
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesDestroy(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesDestroy(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesDestroyRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -4917,7 +4917,7 @@ func (c *Client) TracesStoragesDestroy(ctx context.Context, resourceId int64, re
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesRetrieve(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesRetrieve(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesRetrieveRequest(c.Server, resourceId)
 	if err != nil {
 		return nil, err
@@ -4929,7 +4929,7 @@ func (c *Client) TracesStoragesRetrieve(ctx context.Context, resourceId int64, r
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesPartialUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesPartialUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesPartialUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4941,7 +4941,7 @@ func (c *Client) TracesStoragesPartialUpdateWithBody(ctx context.Context, resour
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesPartialUpdate(ctx context.Context, resourceId int64, body TracesStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesPartialUpdate(ctx context.Context, resourceId string, body TracesStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesPartialUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4953,7 +4953,7 @@ func (c *Client) TracesStoragesPartialUpdate(ctx context.Context, resourceId int
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId int64, body TracesStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesPartialUpdateWithFormdataBody(ctx context.Context, resourceId string, body TracesStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesPartialUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4965,7 +4965,7 @@ func (c *Client) TracesStoragesPartialUpdateWithFormdataBody(ctx context.Context
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesUpdateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesUpdateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesUpdateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -4977,7 +4977,7 @@ func (c *Client) TracesStoragesUpdateWithBody(ctx context.Context, resourceId in
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesUpdate(ctx context.Context, resourceId int64, body TracesStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesUpdate(ctx context.Context, resourceId string, body TracesStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesUpdateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -4989,7 +4989,7 @@ func (c *Client) TracesStoragesUpdate(ctx context.Context, resourceId int64, bod
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesUpdateWithFormdataBody(ctx context.Context, resourceId int64, body TracesStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesUpdateWithFormdataBody(ctx context.Context, resourceId string, body TracesStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesUpdateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -5001,7 +5001,7 @@ func (c *Client) TracesStoragesUpdateWithFormdataBody(ctx context.Context, resou
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesSetExpireCreateWithBody(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesSetExpireCreateWithBody(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesSetExpireCreateRequestWithBody(c.Server, resourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -5013,7 +5013,7 @@ func (c *Client) TracesStoragesSetExpireCreateWithBody(ctx context.Context, reso
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesSetExpireCreate(ctx context.Context, resourceId int64, body TracesStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesSetExpireCreate(ctx context.Context, resourceId string, body TracesStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesSetExpireCreateRequest(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -5025,7 +5025,7 @@ func (c *Client) TracesStoragesSetExpireCreate(ctx context.Context, resourceId i
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesSetExpireCreateWithFormdataBody(ctx context.Context, resourceId int64, body TracesStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesSetExpireCreateWithFormdataBody(ctx context.Context, resourceId string, body TracesStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesSetExpireCreateRequestWithFormdataBody(c.Server, resourceId, body)
 	if err != nil {
 		return nil, err
@@ -5037,7 +5037,7 @@ func (c *Client) TracesStoragesSetExpireCreateWithFormdataBody(ctx context.Conte
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesStatsDailyRetrieve(ctx context.Context, resourceId int64, params *TracesStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesStatsDailyRetrieve(ctx context.Context, resourceId string, params *TracesStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesStatsDailyRetrieveRequest(c.Server, resourceId, params)
 	if err != nil {
 		return nil, err
@@ -5049,7 +5049,7 @@ func (c *Client) TracesStoragesStatsDailyRetrieve(ctx context.Context, resourceI
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId int64, params *TracesStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesStatsMonthlyRetrieve(ctx context.Context, resourceId string, params *TracesStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesStatsMonthlyRetrieveRequest(c.Server, resourceId, params)
 	if err != nil {
 		return nil, err
@@ -5061,7 +5061,7 @@ func (c *Client) TracesStoragesStatsMonthlyRetrieve(ctx context.Context, resourc
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysList(ctx context.Context, traceResourceId int64, params *TracesStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysList(ctx context.Context, traceResourceId string, params *TracesStoragesKeysListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysListRequest(c.Server, traceResourceId, params)
 	if err != nil {
 		return nil, err
@@ -5073,7 +5073,7 @@ func (c *Client) TracesStoragesKeysList(ctx context.Context, traceResourceId int
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysCreateWithBody(ctx context.Context, traceResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysCreateWithBody(ctx context.Context, traceResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysCreateRequestWithBody(c.Server, traceResourceId, contentType, body)
 	if err != nil {
 		return nil, err
@@ -5085,7 +5085,7 @@ func (c *Client) TracesStoragesKeysCreateWithBody(ctx context.Context, traceReso
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysCreate(ctx context.Context, traceResourceId int64, body TracesStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysCreate(ctx context.Context, traceResourceId string, body TracesStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysCreateRequest(c.Server, traceResourceId, body)
 	if err != nil {
 		return nil, err
@@ -5097,7 +5097,7 @@ func (c *Client) TracesStoragesKeysCreate(ctx context.Context, traceResourceId i
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysCreateWithFormdataBody(ctx context.Context, traceResourceId int64, body TracesStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysCreateWithFormdataBody(ctx context.Context, traceResourceId string, body TracesStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysCreateRequestWithFormdataBody(c.Server, traceResourceId, body)
 	if err != nil {
 		return nil, err
@@ -5109,7 +5109,7 @@ func (c *Client) TracesStoragesKeysCreateWithFormdataBody(ctx context.Context, t
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysDestroy(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysDestroy(ctx context.Context, traceResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysDestroyRequest(c.Server, traceResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -5121,7 +5121,7 @@ func (c *Client) TracesStoragesKeysDestroy(ctx context.Context, traceResourceId 
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysRetrieve(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysRetrieve(ctx context.Context, traceResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysRetrieveRequest(c.Server, traceResourceId, uid)
 	if err != nil {
 		return nil, err
@@ -5133,7 +5133,7 @@ func (c *Client) TracesStoragesKeysRetrieve(ctx context.Context, traceResourceId
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysPartialUpdateWithBody(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysPartialUpdateWithBody(ctx context.Context, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysPartialUpdateRequestWithBody(c.Server, traceResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -5145,7 +5145,7 @@ func (c *Client) TracesStoragesKeysPartialUpdateWithBody(ctx context.Context, tr
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysPartialUpdate(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysPartialUpdate(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysPartialUpdateRequest(c.Server, traceResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -5157,7 +5157,7 @@ func (c *Client) TracesStoragesKeysPartialUpdate(ctx context.Context, traceResou
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysPartialUpdateWithFormdataBody(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysPartialUpdateRequestWithFormdataBody(c.Server, traceResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -5169,7 +5169,7 @@ func (c *Client) TracesStoragesKeysPartialUpdateWithFormdataBody(ctx context.Con
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysUpdateWithBody(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysUpdateWithBody(ctx context.Context, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysUpdateRequestWithBody(c.Server, traceResourceId, uid, contentType, body)
 	if err != nil {
 		return nil, err
@@ -5181,7 +5181,7 @@ func (c *Client) TracesStoragesKeysUpdateWithBody(ctx context.Context, traceReso
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysUpdate(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysUpdate(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysUpdateRequest(c.Server, traceResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -5193,7 +5193,7 @@ func (c *Client) TracesStoragesKeysUpdate(ctx context.Context, traceResourceId i
 	return c.Client.Do(req)
 }
 
-func (c *Client) TracesStoragesKeysUpdateWithFormdataBody(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) TracesStoragesKeysUpdateWithFormdataBody(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewTracesStoragesKeysUpdateRequestWithFormdataBody(c.Server, traceResourceId, uid, body)
 	if err != nil {
 		return nil, err
@@ -5322,7 +5322,7 @@ func NewAlertsProjectsCreateRequestWithBody(server string, contentType string, b
 }
 
 // NewAlertsProjectsHistoriesListRequest generates requests for AlertsProjectsHistoriesList
-func NewAlertsProjectsHistoriesListRequest(server string, projectResourceId int64, params *AlertsProjectsHistoriesListParams) (*http.Request, error) {
+func NewAlertsProjectsHistoriesListRequest(server string, projectResourceId string, params *AlertsProjectsHistoriesListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5442,7 +5442,7 @@ func NewAlertsProjectsHistoriesListRequest(server string, projectResourceId int6
 }
 
 // NewAlertsProjectsHistoriesRetrieveRequest generates requests for AlertsProjectsHistoriesRetrieve
-func NewAlertsProjectsHistoriesRetrieveRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsHistoriesRetrieveRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5483,7 +5483,7 @@ func NewAlertsProjectsHistoriesRetrieveRequest(server string, projectResourceId 
 }
 
 // NewAlertsProjectsLogMeasureRulesListRequest generates requests for AlertsProjectsLogMeasureRulesList
-func NewAlertsProjectsLogMeasureRulesListRequest(server string, projectResourceId int64, params *AlertsProjectsLogMeasureRulesListParams) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesListRequest(server string, projectResourceId string, params *AlertsProjectsLogMeasureRulesListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5587,7 +5587,7 @@ func NewAlertsProjectsLogMeasureRulesListRequest(server string, projectResourceI
 }
 
 // NewAlertsProjectsLogMeasureRulesCreateRequest calls the generic AlertsProjectsLogMeasureRulesCreate builder with application/json body
-func NewAlertsProjectsLogMeasureRulesCreateRequest(server string, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesCreateRequest(server string, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -5598,7 +5598,7 @@ func NewAlertsProjectsLogMeasureRulesCreateRequest(server string, projectResourc
 }
 
 // NewAlertsProjectsLogMeasureRulesCreateRequestWithFormdataBody calls the generic AlertsProjectsLogMeasureRulesCreate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsLogMeasureRulesCreateRequestWithFormdataBody(server string, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesCreateRequestWithFormdataBody(server string, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -5609,7 +5609,7 @@ func NewAlertsProjectsLogMeasureRulesCreateRequestWithFormdataBody(server string
 }
 
 // NewAlertsProjectsLogMeasureRulesCreateRequestWithBody generates requests for AlertsProjectsLogMeasureRulesCreate with any type of body
-func NewAlertsProjectsLogMeasureRulesCreateRequestWithBody(server string, projectResourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesCreateRequestWithBody(server string, projectResourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5645,7 +5645,7 @@ func NewAlertsProjectsLogMeasureRulesCreateRequestWithBody(server string, projec
 }
 
 // NewAlertsProjectsLogMeasureRulesDestroyRequest generates requests for AlertsProjectsLogMeasureRulesDestroy
-func NewAlertsProjectsLogMeasureRulesDestroyRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesDestroyRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5686,7 +5686,7 @@ func NewAlertsProjectsLogMeasureRulesDestroyRequest(server string, projectResour
 }
 
 // NewAlertsProjectsLogMeasureRulesRetrieveRequest generates requests for AlertsProjectsLogMeasureRulesRetrieve
-func NewAlertsProjectsLogMeasureRulesRetrieveRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesRetrieveRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5727,7 +5727,7 @@ func NewAlertsProjectsLogMeasureRulesRetrieveRequest(server string, projectResou
 }
 
 // NewAlertsProjectsLogMeasureRulesPartialUpdateRequest calls the generic AlertsProjectsLogMeasureRulesPartialUpdate builder with application/json body
-func NewAlertsProjectsLogMeasureRulesPartialUpdateRequest(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesPartialUpdateRequest(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -5738,7 +5738,7 @@ func NewAlertsProjectsLogMeasureRulesPartialUpdateRequest(server string, project
 }
 
 // NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithFormdataBody calls the generic AlertsProjectsLogMeasureRulesPartialUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithFormdataBody(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithFormdataBody(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -5749,7 +5749,7 @@ func NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithFormdataBody(server
 }
 
 // NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithBody generates requests for AlertsProjectsLogMeasureRulesPartialUpdate with any type of body
-func NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithBody(server string, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithBody(server string, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5792,7 +5792,7 @@ func NewAlertsProjectsLogMeasureRulesPartialUpdateRequestWithBody(server string,
 }
 
 // NewAlertsProjectsLogMeasureRulesUpdateRequest calls the generic AlertsProjectsLogMeasureRulesUpdate builder with application/json body
-func NewAlertsProjectsLogMeasureRulesUpdateRequest(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesUpdateRequest(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -5803,7 +5803,7 @@ func NewAlertsProjectsLogMeasureRulesUpdateRequest(server string, projectResourc
 }
 
 // NewAlertsProjectsLogMeasureRulesUpdateRequestWithFormdataBody calls the generic AlertsProjectsLogMeasureRulesUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsLogMeasureRulesUpdateRequestWithFormdataBody(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesUpdateRequestWithFormdataBody(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -5814,7 +5814,7 @@ func NewAlertsProjectsLogMeasureRulesUpdateRequestWithFormdataBody(server string
 }
 
 // NewAlertsProjectsLogMeasureRulesUpdateRequestWithBody generates requests for AlertsProjectsLogMeasureRulesUpdate with any type of body
-func NewAlertsProjectsLogMeasureRulesUpdateRequestWithBody(server string, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsLogMeasureRulesUpdateRequestWithBody(server string, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5857,7 +5857,7 @@ func NewAlertsProjectsLogMeasureRulesUpdateRequestWithBody(server string, projec
 }
 
 // NewAlertsProjectsNotificationRoutingsListRequest generates requests for AlertsProjectsNotificationRoutingsList
-func NewAlertsProjectsNotificationRoutingsListRequest(server string, projectResourceId int64, params *AlertsProjectsNotificationRoutingsListParams) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsListRequest(server string, projectResourceId string, params *AlertsProjectsNotificationRoutingsListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -5945,7 +5945,7 @@ func NewAlertsProjectsNotificationRoutingsListRequest(server string, projectReso
 }
 
 // NewAlertsProjectsNotificationRoutingsCreateRequest calls the generic AlertsProjectsNotificationRoutingsCreate builder with application/json body
-func NewAlertsProjectsNotificationRoutingsCreateRequest(server string, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsCreateRequest(server string, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -5956,7 +5956,7 @@ func NewAlertsProjectsNotificationRoutingsCreateRequest(server string, projectRe
 }
 
 // NewAlertsProjectsNotificationRoutingsCreateRequestWithFormdataBody calls the generic AlertsProjectsNotificationRoutingsCreate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsNotificationRoutingsCreateRequestWithFormdataBody(server string, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsCreateRequestWithFormdataBody(server string, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -5967,7 +5967,7 @@ func NewAlertsProjectsNotificationRoutingsCreateRequestWithFormdataBody(server s
 }
 
 // NewAlertsProjectsNotificationRoutingsCreateRequestWithBody generates requests for AlertsProjectsNotificationRoutingsCreate with any type of body
-func NewAlertsProjectsNotificationRoutingsCreateRequestWithBody(server string, projectResourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsCreateRequestWithBody(server string, projectResourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6003,7 +6003,7 @@ func NewAlertsProjectsNotificationRoutingsCreateRequestWithBody(server string, p
 }
 
 // NewAlertsProjectsNotificationRoutingsReorderUpdateRequest calls the generic AlertsProjectsNotificationRoutingsReorderUpdate builder with application/json body
-func NewAlertsProjectsNotificationRoutingsReorderUpdateRequest(server string, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsReorderUpdateRequest(server string, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -6014,7 +6014,7 @@ func NewAlertsProjectsNotificationRoutingsReorderUpdateRequest(server string, pr
 }
 
 // NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithFormdataBody calls the generic AlertsProjectsNotificationRoutingsReorderUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithFormdataBody(server string, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithFormdataBody(server string, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -6025,7 +6025,7 @@ func NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithFormdataBody(s
 }
 
 // NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithBody generates requests for AlertsProjectsNotificationRoutingsReorderUpdate with any type of body
-func NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithBody(server string, projectResourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithBody(server string, projectResourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6061,7 +6061,7 @@ func NewAlertsProjectsNotificationRoutingsReorderUpdateRequestWithBody(server st
 }
 
 // NewAlertsProjectsNotificationRoutingsDestroyRequest generates requests for AlertsProjectsNotificationRoutingsDestroy
-func NewAlertsProjectsNotificationRoutingsDestroyRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsDestroyRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6102,7 +6102,7 @@ func NewAlertsProjectsNotificationRoutingsDestroyRequest(server string, projectR
 }
 
 // NewAlertsProjectsNotificationRoutingsRetrieveRequest generates requests for AlertsProjectsNotificationRoutingsRetrieve
-func NewAlertsProjectsNotificationRoutingsRetrieveRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsRetrieveRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6143,7 +6143,7 @@ func NewAlertsProjectsNotificationRoutingsRetrieveRequest(server string, project
 }
 
 // NewAlertsProjectsNotificationRoutingsPartialUpdateRequest calls the generic AlertsProjectsNotificationRoutingsPartialUpdate builder with application/json body
-func NewAlertsProjectsNotificationRoutingsPartialUpdateRequest(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsPartialUpdateRequest(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -6154,7 +6154,7 @@ func NewAlertsProjectsNotificationRoutingsPartialUpdateRequest(server string, pr
 }
 
 // NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithFormdataBody calls the generic AlertsProjectsNotificationRoutingsPartialUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithFormdataBody(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithFormdataBody(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -6165,7 +6165,7 @@ func NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithFormdataBody(s
 }
 
 // NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithBody generates requests for AlertsProjectsNotificationRoutingsPartialUpdate with any type of body
-func NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithBody(server string, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithBody(server string, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6208,7 +6208,7 @@ func NewAlertsProjectsNotificationRoutingsPartialUpdateRequestWithBody(server st
 }
 
 // NewAlertsProjectsNotificationRoutingsUpdateRequest calls the generic AlertsProjectsNotificationRoutingsUpdate builder with application/json body
-func NewAlertsProjectsNotificationRoutingsUpdateRequest(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsUpdateRequest(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -6219,7 +6219,7 @@ func NewAlertsProjectsNotificationRoutingsUpdateRequest(server string, projectRe
 }
 
 // NewAlertsProjectsNotificationRoutingsUpdateRequestWithFormdataBody calls the generic AlertsProjectsNotificationRoutingsUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsNotificationRoutingsUpdateRequestWithFormdataBody(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsUpdateRequestWithFormdataBody(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -6230,7 +6230,7 @@ func NewAlertsProjectsNotificationRoutingsUpdateRequestWithFormdataBody(server s
 }
 
 // NewAlertsProjectsNotificationRoutingsUpdateRequestWithBody generates requests for AlertsProjectsNotificationRoutingsUpdate with any type of body
-func NewAlertsProjectsNotificationRoutingsUpdateRequestWithBody(server string, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsNotificationRoutingsUpdateRequestWithBody(server string, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6273,7 +6273,7 @@ func NewAlertsProjectsNotificationRoutingsUpdateRequestWithBody(server string, p
 }
 
 // NewAlertsProjectsNotificationTargetsListRequest generates requests for AlertsProjectsNotificationTargetsList
-func NewAlertsProjectsNotificationTargetsListRequest(server string, projectResourceId int64, params *AlertsProjectsNotificationTargetsListParams) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsListRequest(server string, projectResourceId string, params *AlertsProjectsNotificationTargetsListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6361,7 +6361,7 @@ func NewAlertsProjectsNotificationTargetsListRequest(server string, projectResou
 }
 
 // NewAlertsProjectsNotificationTargetsCreateRequest calls the generic AlertsProjectsNotificationTargetsCreate builder with application/json body
-func NewAlertsProjectsNotificationTargetsCreateRequest(server string, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsCreateRequest(server string, projectResourceId string, body AlertsProjectsNotificationTargetsCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -6372,7 +6372,7 @@ func NewAlertsProjectsNotificationTargetsCreateRequest(server string, projectRes
 }
 
 // NewAlertsProjectsNotificationTargetsCreateRequestWithFormdataBody calls the generic AlertsProjectsNotificationTargetsCreate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsNotificationTargetsCreateRequestWithFormdataBody(server string, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsCreateRequestWithFormdataBody(server string, projectResourceId string, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -6383,7 +6383,7 @@ func NewAlertsProjectsNotificationTargetsCreateRequestWithFormdataBody(server st
 }
 
 // NewAlertsProjectsNotificationTargetsCreateRequestWithBody generates requests for AlertsProjectsNotificationTargetsCreate with any type of body
-func NewAlertsProjectsNotificationTargetsCreateRequestWithBody(server string, projectResourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsCreateRequestWithBody(server string, projectResourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6419,7 +6419,7 @@ func NewAlertsProjectsNotificationTargetsCreateRequestWithBody(server string, pr
 }
 
 // NewAlertsProjectsNotificationTargetsDestroyRequest generates requests for AlertsProjectsNotificationTargetsDestroy
-func NewAlertsProjectsNotificationTargetsDestroyRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsDestroyRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6460,7 +6460,7 @@ func NewAlertsProjectsNotificationTargetsDestroyRequest(server string, projectRe
 }
 
 // NewAlertsProjectsNotificationTargetsRetrieveRequest generates requests for AlertsProjectsNotificationTargetsRetrieve
-func NewAlertsProjectsNotificationTargetsRetrieveRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsRetrieveRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6501,7 +6501,7 @@ func NewAlertsProjectsNotificationTargetsRetrieveRequest(server string, projectR
 }
 
 // NewAlertsProjectsNotificationTargetsPartialUpdateRequest calls the generic AlertsProjectsNotificationTargetsPartialUpdate builder with application/json body
-func NewAlertsProjectsNotificationTargetsPartialUpdateRequest(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsPartialUpdateRequest(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -6512,7 +6512,7 @@ func NewAlertsProjectsNotificationTargetsPartialUpdateRequest(server string, pro
 }
 
 // NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithFormdataBody calls the generic AlertsProjectsNotificationTargetsPartialUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithFormdataBody(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithFormdataBody(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -6523,7 +6523,7 @@ func NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithFormdataBody(se
 }
 
 // NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithBody generates requests for AlertsProjectsNotificationTargetsPartialUpdate with any type of body
-func NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithBody(server string, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithBody(server string, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6566,7 +6566,7 @@ func NewAlertsProjectsNotificationTargetsPartialUpdateRequestWithBody(server str
 }
 
 // NewAlertsProjectsNotificationTargetsUpdateRequest calls the generic AlertsProjectsNotificationTargetsUpdate builder with application/json body
-func NewAlertsProjectsNotificationTargetsUpdateRequest(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsUpdateRequest(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -6577,7 +6577,7 @@ func NewAlertsProjectsNotificationTargetsUpdateRequest(server string, projectRes
 }
 
 // NewAlertsProjectsNotificationTargetsUpdateRequestWithFormdataBody calls the generic AlertsProjectsNotificationTargetsUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsNotificationTargetsUpdateRequestWithFormdataBody(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsUpdateRequestWithFormdataBody(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -6588,7 +6588,7 @@ func NewAlertsProjectsNotificationTargetsUpdateRequestWithFormdataBody(server st
 }
 
 // NewAlertsProjectsNotificationTargetsUpdateRequestWithBody generates requests for AlertsProjectsNotificationTargetsUpdate with any type of body
-func NewAlertsProjectsNotificationTargetsUpdateRequestWithBody(server string, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsNotificationTargetsUpdateRequestWithBody(server string, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6631,7 +6631,7 @@ func NewAlertsProjectsNotificationTargetsUpdateRequestWithBody(server string, pr
 }
 
 // NewAlertsProjectsRulesListRequest generates requests for AlertsProjectsRulesList
-func NewAlertsProjectsRulesListRequest(server string, projectResourceId int64, params *AlertsProjectsRulesListParams) (*http.Request, error) {
+func NewAlertsProjectsRulesListRequest(server string, projectResourceId string, params *AlertsProjectsRulesListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6703,7 +6703,7 @@ func NewAlertsProjectsRulesListRequest(server string, projectResourceId int64, p
 }
 
 // NewAlertsProjectsRulesCreateRequest calls the generic AlertsProjectsRulesCreate builder with application/json body
-func NewAlertsProjectsRulesCreateRequest(server string, projectResourceId int64, body AlertsProjectsRulesCreateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsRulesCreateRequest(server string, projectResourceId string, body AlertsProjectsRulesCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -6714,7 +6714,7 @@ func NewAlertsProjectsRulesCreateRequest(server string, projectResourceId int64,
 }
 
 // NewAlertsProjectsRulesCreateRequestWithFormdataBody calls the generic AlertsProjectsRulesCreate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsRulesCreateRequestWithFormdataBody(server string, projectResourceId int64, body AlertsProjectsRulesCreateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsRulesCreateRequestWithFormdataBody(server string, projectResourceId string, body AlertsProjectsRulesCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -6725,7 +6725,7 @@ func NewAlertsProjectsRulesCreateRequestWithFormdataBody(server string, projectR
 }
 
 // NewAlertsProjectsRulesCreateRequestWithBody generates requests for AlertsProjectsRulesCreate with any type of body
-func NewAlertsProjectsRulesCreateRequestWithBody(server string, projectResourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsRulesCreateRequestWithBody(server string, projectResourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6761,7 +6761,7 @@ func NewAlertsProjectsRulesCreateRequestWithBody(server string, projectResourceI
 }
 
 // NewAlertsProjectsRulesHistoriesListRequest generates requests for AlertsProjectsRulesHistoriesList
-func NewAlertsProjectsRulesHistoriesListRequest(server string, projectResourceId int64, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams) (*http.Request, error) {
+func NewAlertsProjectsRulesHistoriesListRequest(server string, projectResourceId string, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6888,7 +6888,7 @@ func NewAlertsProjectsRulesHistoriesListRequest(server string, projectResourceId
 }
 
 // NewAlertsProjectsRulesHistoriesRetrieveRequest generates requests for AlertsProjectsRulesHistoriesRetrieve
-func NewAlertsProjectsRulesHistoriesRetrieveRequest(server string, projectResourceId int64, ruleUid openapi_types.UUID, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsRulesHistoriesRetrieveRequest(server string, projectResourceId string, ruleUid openapi_types.UUID, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6936,7 +6936,7 @@ func NewAlertsProjectsRulesHistoriesRetrieveRequest(server string, projectResour
 }
 
 // NewAlertsProjectsRulesDestroyRequest generates requests for AlertsProjectsRulesDestroy
-func NewAlertsProjectsRulesDestroyRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsRulesDestroyRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -6977,7 +6977,7 @@ func NewAlertsProjectsRulesDestroyRequest(server string, projectResourceId int64
 }
 
 // NewAlertsProjectsRulesRetrieveRequest generates requests for AlertsProjectsRulesRetrieve
-func NewAlertsProjectsRulesRetrieveRequest(server string, projectResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewAlertsProjectsRulesRetrieveRequest(server string, projectResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7018,7 +7018,7 @@ func NewAlertsProjectsRulesRetrieveRequest(server string, projectResourceId int6
 }
 
 // NewAlertsProjectsRulesPartialUpdateRequest calls the generic AlertsProjectsRulesPartialUpdate builder with application/json body
-func NewAlertsProjectsRulesPartialUpdateRequest(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsRulesPartialUpdateRequest(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -7029,7 +7029,7 @@ func NewAlertsProjectsRulesPartialUpdateRequest(server string, projectResourceId
 }
 
 // NewAlertsProjectsRulesPartialUpdateRequestWithFormdataBody calls the generic AlertsProjectsRulesPartialUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsRulesPartialUpdateRequestWithFormdataBody(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsRulesPartialUpdateRequestWithFormdataBody(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -7040,7 +7040,7 @@ func NewAlertsProjectsRulesPartialUpdateRequestWithFormdataBody(server string, p
 }
 
 // NewAlertsProjectsRulesPartialUpdateRequestWithBody generates requests for AlertsProjectsRulesPartialUpdate with any type of body
-func NewAlertsProjectsRulesPartialUpdateRequestWithBody(server string, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsRulesPartialUpdateRequestWithBody(server string, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7083,7 +7083,7 @@ func NewAlertsProjectsRulesPartialUpdateRequestWithBody(server string, projectRe
 }
 
 // NewAlertsProjectsRulesUpdateRequest calls the generic AlertsProjectsRulesUpdate builder with application/json body
-func NewAlertsProjectsRulesUpdateRequest(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsRulesUpdateRequest(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -7094,7 +7094,7 @@ func NewAlertsProjectsRulesUpdateRequest(server string, projectResourceId int64,
 }
 
 // NewAlertsProjectsRulesUpdateRequestWithFormdataBody calls the generic AlertsProjectsRulesUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsRulesUpdateRequestWithFormdataBody(server string, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsRulesUpdateRequestWithFormdataBody(server string, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -7105,7 +7105,7 @@ func NewAlertsProjectsRulesUpdateRequestWithFormdataBody(server string, projectR
 }
 
 // NewAlertsProjectsRulesUpdateRequestWithBody generates requests for AlertsProjectsRulesUpdate with any type of body
-func NewAlertsProjectsRulesUpdateRequestWithBody(server string, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsRulesUpdateRequestWithBody(server string, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7148,7 +7148,7 @@ func NewAlertsProjectsRulesUpdateRequestWithBody(server string, projectResourceI
 }
 
 // NewAlertsProjectsDestroyRequest generates requests for AlertsProjectsDestroy
-func NewAlertsProjectsDestroyRequest(server string, resourceId int64) (*http.Request, error) {
+func NewAlertsProjectsDestroyRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7182,7 +7182,7 @@ func NewAlertsProjectsDestroyRequest(server string, resourceId int64) (*http.Req
 }
 
 // NewAlertsProjectsRetrieveRequest generates requests for AlertsProjectsRetrieve
-func NewAlertsProjectsRetrieveRequest(server string, resourceId int64) (*http.Request, error) {
+func NewAlertsProjectsRetrieveRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7216,7 +7216,7 @@ func NewAlertsProjectsRetrieveRequest(server string, resourceId int64) (*http.Re
 }
 
 // NewAlertsProjectsPartialUpdateRequest calls the generic AlertsProjectsPartialUpdate builder with application/json body
-func NewAlertsProjectsPartialUpdateRequest(server string, resourceId int64, body AlertsProjectsPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsPartialUpdateRequest(server string, resourceId string, body AlertsProjectsPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -7227,7 +7227,7 @@ func NewAlertsProjectsPartialUpdateRequest(server string, resourceId int64, body
 }
 
 // NewAlertsProjectsPartialUpdateRequestWithFormdataBody calls the generic AlertsProjectsPartialUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsPartialUpdateRequestWithFormdataBody(server string, resourceId int64, body AlertsProjectsPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsPartialUpdateRequestWithFormdataBody(server string, resourceId string, body AlertsProjectsPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -7238,7 +7238,7 @@ func NewAlertsProjectsPartialUpdateRequestWithFormdataBody(server string, resour
 }
 
 // NewAlertsProjectsPartialUpdateRequestWithBody generates requests for AlertsProjectsPartialUpdate with any type of body
-func NewAlertsProjectsPartialUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsPartialUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7274,7 +7274,7 @@ func NewAlertsProjectsPartialUpdateRequestWithBody(server string, resourceId int
 }
 
 // NewAlertsProjectsUpdateRequest calls the generic AlertsProjectsUpdate builder with application/json body
-func NewAlertsProjectsUpdateRequest(server string, resourceId int64, body AlertsProjectsUpdateJSONRequestBody) (*http.Request, error) {
+func NewAlertsProjectsUpdateRequest(server string, resourceId string, body AlertsProjectsUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -7285,7 +7285,7 @@ func NewAlertsProjectsUpdateRequest(server string, resourceId int64, body Alerts
 }
 
 // NewAlertsProjectsUpdateRequestWithFormdataBody calls the generic AlertsProjectsUpdate builder with application/x-www-form-urlencoded body
-func NewAlertsProjectsUpdateRequestWithFormdataBody(server string, resourceId int64, body AlertsProjectsUpdateFormdataRequestBody) (*http.Request, error) {
+func NewAlertsProjectsUpdateRequestWithFormdataBody(server string, resourceId string, body AlertsProjectsUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -7296,7 +7296,7 @@ func NewAlertsProjectsUpdateRequestWithFormdataBody(server string, resourceId in
 }
 
 // NewAlertsProjectsUpdateRequestWithBody generates requests for AlertsProjectsUpdate with any type of body
-func NewAlertsProjectsUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewAlertsProjectsUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7448,7 +7448,7 @@ func NewDashboardsProjectsCreateRequestWithBody(server string, contentType strin
 }
 
 // NewDashboardsProjectsDestroyRequest generates requests for DashboardsProjectsDestroy
-func NewDashboardsProjectsDestroyRequest(server string, resourceId int64) (*http.Request, error) {
+func NewDashboardsProjectsDestroyRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7482,7 +7482,7 @@ func NewDashboardsProjectsDestroyRequest(server string, resourceId int64) (*http
 }
 
 // NewDashboardsProjectsRetrieveRequest generates requests for DashboardsProjectsRetrieve
-func NewDashboardsProjectsRetrieveRequest(server string, resourceId int64) (*http.Request, error) {
+func NewDashboardsProjectsRetrieveRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7516,7 +7516,7 @@ func NewDashboardsProjectsRetrieveRequest(server string, resourceId int64) (*htt
 }
 
 // NewDashboardsProjectsPartialUpdateRequest calls the generic DashboardsProjectsPartialUpdate builder with application/json body
-func NewDashboardsProjectsPartialUpdateRequest(server string, resourceId int64, body DashboardsProjectsPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewDashboardsProjectsPartialUpdateRequest(server string, resourceId string, body DashboardsProjectsPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -7527,7 +7527,7 @@ func NewDashboardsProjectsPartialUpdateRequest(server string, resourceId int64, 
 }
 
 // NewDashboardsProjectsPartialUpdateRequestWithFormdataBody calls the generic DashboardsProjectsPartialUpdate builder with application/x-www-form-urlencoded body
-func NewDashboardsProjectsPartialUpdateRequestWithFormdataBody(server string, resourceId int64, body DashboardsProjectsPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewDashboardsProjectsPartialUpdateRequestWithFormdataBody(server string, resourceId string, body DashboardsProjectsPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -7538,7 +7538,7 @@ func NewDashboardsProjectsPartialUpdateRequestWithFormdataBody(server string, re
 }
 
 // NewDashboardsProjectsPartialUpdateRequestWithBody generates requests for DashboardsProjectsPartialUpdate with any type of body
-func NewDashboardsProjectsPartialUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewDashboardsProjectsPartialUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -7574,7 +7574,7 @@ func NewDashboardsProjectsPartialUpdateRequestWithBody(server string, resourceId
 }
 
 // NewDashboardsProjectsUpdateRequest calls the generic DashboardsProjectsUpdate builder with application/json body
-func NewDashboardsProjectsUpdateRequest(server string, resourceId int64, body DashboardsProjectsUpdateJSONRequestBody) (*http.Request, error) {
+func NewDashboardsProjectsUpdateRequest(server string, resourceId string, body DashboardsProjectsUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -7585,7 +7585,7 @@ func NewDashboardsProjectsUpdateRequest(server string, resourceId int64, body Da
 }
 
 // NewDashboardsProjectsUpdateRequestWithFormdataBody calls the generic DashboardsProjectsUpdate builder with application/x-www-form-urlencoded body
-func NewDashboardsProjectsUpdateRequestWithFormdataBody(server string, resourceId int64, body DashboardsProjectsUpdateFormdataRequestBody) (*http.Request, error) {
+func NewDashboardsProjectsUpdateRequestWithFormdataBody(server string, resourceId string, body DashboardsProjectsUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -7596,7 +7596,7 @@ func NewDashboardsProjectsUpdateRequestWithFormdataBody(server string, resourceI
 }
 
 // NewDashboardsProjectsUpdateRequestWithBody generates requests for DashboardsProjectsUpdate with any type of body
-func NewDashboardsProjectsUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewDashboardsProjectsUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8176,7 +8176,7 @@ func NewLogsStoragesCreateRequestWithBody(server string, contentType string, bod
 }
 
 // NewLogsStoragesKeysListRequest generates requests for LogsStoragesKeysList
-func NewLogsStoragesKeysListRequest(server string, logResourceId int64, params *LogsStoragesKeysListParams) (*http.Request, error) {
+func NewLogsStoragesKeysListRequest(server string, logResourceId string, params *LogsStoragesKeysListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8248,7 +8248,7 @@ func NewLogsStoragesKeysListRequest(server string, logResourceId int64, params *
 }
 
 // NewLogsStoragesKeysCreateRequest calls the generic LogsStoragesKeysCreate builder with application/json body
-func NewLogsStoragesKeysCreateRequest(server string, logResourceId int64, body LogsStoragesKeysCreateJSONRequestBody) (*http.Request, error) {
+func NewLogsStoragesKeysCreateRequest(server string, logResourceId string, body LogsStoragesKeysCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -8259,7 +8259,7 @@ func NewLogsStoragesKeysCreateRequest(server string, logResourceId int64, body L
 }
 
 // NewLogsStoragesKeysCreateRequestWithFormdataBody calls the generic LogsStoragesKeysCreate builder with application/x-www-form-urlencoded body
-func NewLogsStoragesKeysCreateRequestWithFormdataBody(server string, logResourceId int64, body LogsStoragesKeysCreateFormdataRequestBody) (*http.Request, error) {
+func NewLogsStoragesKeysCreateRequestWithFormdataBody(server string, logResourceId string, body LogsStoragesKeysCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -8270,7 +8270,7 @@ func NewLogsStoragesKeysCreateRequestWithFormdataBody(server string, logResource
 }
 
 // NewLogsStoragesKeysCreateRequestWithBody generates requests for LogsStoragesKeysCreate with any type of body
-func NewLogsStoragesKeysCreateRequestWithBody(server string, logResourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewLogsStoragesKeysCreateRequestWithBody(server string, logResourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8306,7 +8306,7 @@ func NewLogsStoragesKeysCreateRequestWithBody(server string, logResourceId int64
 }
 
 // NewLogsStoragesKeysDestroyRequest generates requests for LogsStoragesKeysDestroy
-func NewLogsStoragesKeysDestroyRequest(server string, logResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewLogsStoragesKeysDestroyRequest(server string, logResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8347,7 +8347,7 @@ func NewLogsStoragesKeysDestroyRequest(server string, logResourceId int64, uid o
 }
 
 // NewLogsStoragesKeysRetrieveRequest generates requests for LogsStoragesKeysRetrieve
-func NewLogsStoragesKeysRetrieveRequest(server string, logResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewLogsStoragesKeysRetrieveRequest(server string, logResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8388,7 +8388,7 @@ func NewLogsStoragesKeysRetrieveRequest(server string, logResourceId int64, uid 
 }
 
 // NewLogsStoragesKeysPartialUpdateRequest calls the generic LogsStoragesKeysPartialUpdate builder with application/json body
-func NewLogsStoragesKeysPartialUpdateRequest(server string, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewLogsStoragesKeysPartialUpdateRequest(server string, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -8399,7 +8399,7 @@ func NewLogsStoragesKeysPartialUpdateRequest(server string, logResourceId int64,
 }
 
 // NewLogsStoragesKeysPartialUpdateRequestWithFormdataBody calls the generic LogsStoragesKeysPartialUpdate builder with application/x-www-form-urlencoded body
-func NewLogsStoragesKeysPartialUpdateRequestWithFormdataBody(server string, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewLogsStoragesKeysPartialUpdateRequestWithFormdataBody(server string, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -8410,7 +8410,7 @@ func NewLogsStoragesKeysPartialUpdateRequestWithFormdataBody(server string, logR
 }
 
 // NewLogsStoragesKeysPartialUpdateRequestWithBody generates requests for LogsStoragesKeysPartialUpdate with any type of body
-func NewLogsStoragesKeysPartialUpdateRequestWithBody(server string, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewLogsStoragesKeysPartialUpdateRequestWithBody(server string, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8453,7 +8453,7 @@ func NewLogsStoragesKeysPartialUpdateRequestWithBody(server string, logResourceI
 }
 
 // NewLogsStoragesKeysUpdateRequest calls the generic LogsStoragesKeysUpdate builder with application/json body
-func NewLogsStoragesKeysUpdateRequest(server string, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody) (*http.Request, error) {
+func NewLogsStoragesKeysUpdateRequest(server string, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -8464,7 +8464,7 @@ func NewLogsStoragesKeysUpdateRequest(server string, logResourceId int64, uid op
 }
 
 // NewLogsStoragesKeysUpdateRequestWithFormdataBody calls the generic LogsStoragesKeysUpdate builder with application/x-www-form-urlencoded body
-func NewLogsStoragesKeysUpdateRequestWithFormdataBody(server string, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody) (*http.Request, error) {
+func NewLogsStoragesKeysUpdateRequestWithFormdataBody(server string, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -8475,7 +8475,7 @@ func NewLogsStoragesKeysUpdateRequestWithFormdataBody(server string, logResource
 }
 
 // NewLogsStoragesKeysUpdateRequestWithBody generates requests for LogsStoragesKeysUpdate with any type of body
-func NewLogsStoragesKeysUpdateRequestWithBody(server string, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewLogsStoragesKeysUpdateRequestWithBody(server string, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8518,7 +8518,7 @@ func NewLogsStoragesKeysUpdateRequestWithBody(server string, logResourceId int64
 }
 
 // NewLogsStoragesDestroyRequest generates requests for LogsStoragesDestroy
-func NewLogsStoragesDestroyRequest(server string, resourceId int64) (*http.Request, error) {
+func NewLogsStoragesDestroyRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8552,7 +8552,7 @@ func NewLogsStoragesDestroyRequest(server string, resourceId int64) (*http.Reque
 }
 
 // NewLogsStoragesRetrieveRequest generates requests for LogsStoragesRetrieve
-func NewLogsStoragesRetrieveRequest(server string, resourceId int64) (*http.Request, error) {
+func NewLogsStoragesRetrieveRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8586,7 +8586,7 @@ func NewLogsStoragesRetrieveRequest(server string, resourceId int64) (*http.Requ
 }
 
 // NewLogsStoragesPartialUpdateRequest calls the generic LogsStoragesPartialUpdate builder with application/json body
-func NewLogsStoragesPartialUpdateRequest(server string, resourceId int64, body LogsStoragesPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewLogsStoragesPartialUpdateRequest(server string, resourceId string, body LogsStoragesPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -8597,7 +8597,7 @@ func NewLogsStoragesPartialUpdateRequest(server string, resourceId int64, body L
 }
 
 // NewLogsStoragesPartialUpdateRequestWithFormdataBody calls the generic LogsStoragesPartialUpdate builder with application/x-www-form-urlencoded body
-func NewLogsStoragesPartialUpdateRequestWithFormdataBody(server string, resourceId int64, body LogsStoragesPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewLogsStoragesPartialUpdateRequestWithFormdataBody(server string, resourceId string, body LogsStoragesPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -8608,7 +8608,7 @@ func NewLogsStoragesPartialUpdateRequestWithFormdataBody(server string, resource
 }
 
 // NewLogsStoragesPartialUpdateRequestWithBody generates requests for LogsStoragesPartialUpdate with any type of body
-func NewLogsStoragesPartialUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewLogsStoragesPartialUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8644,7 +8644,7 @@ func NewLogsStoragesPartialUpdateRequestWithBody(server string, resourceId int64
 }
 
 // NewLogsStoragesUpdateRequest calls the generic LogsStoragesUpdate builder with application/json body
-func NewLogsStoragesUpdateRequest(server string, resourceId int64, body LogsStoragesUpdateJSONRequestBody) (*http.Request, error) {
+func NewLogsStoragesUpdateRequest(server string, resourceId string, body LogsStoragesUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -8655,7 +8655,7 @@ func NewLogsStoragesUpdateRequest(server string, resourceId int64, body LogsStor
 }
 
 // NewLogsStoragesUpdateRequestWithFormdataBody calls the generic LogsStoragesUpdate builder with application/x-www-form-urlencoded body
-func NewLogsStoragesUpdateRequestWithFormdataBody(server string, resourceId int64, body LogsStoragesUpdateFormdataRequestBody) (*http.Request, error) {
+func NewLogsStoragesUpdateRequestWithFormdataBody(server string, resourceId string, body LogsStoragesUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -8666,7 +8666,7 @@ func NewLogsStoragesUpdateRequestWithFormdataBody(server string, resourceId int6
 }
 
 // NewLogsStoragesUpdateRequestWithBody generates requests for LogsStoragesUpdate with any type of body
-func NewLogsStoragesUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewLogsStoragesUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8702,7 +8702,7 @@ func NewLogsStoragesUpdateRequestWithBody(server string, resourceId int64, conte
 }
 
 // NewLogsStoragesSetExpireCreateRequest calls the generic LogsStoragesSetExpireCreate builder with application/json body
-func NewLogsStoragesSetExpireCreateRequest(server string, resourceId int64, body LogsStoragesSetExpireCreateJSONRequestBody) (*http.Request, error) {
+func NewLogsStoragesSetExpireCreateRequest(server string, resourceId string, body LogsStoragesSetExpireCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -8713,7 +8713,7 @@ func NewLogsStoragesSetExpireCreateRequest(server string, resourceId int64, body
 }
 
 // NewLogsStoragesSetExpireCreateRequestWithFormdataBody calls the generic LogsStoragesSetExpireCreate builder with application/x-www-form-urlencoded body
-func NewLogsStoragesSetExpireCreateRequestWithFormdataBody(server string, resourceId int64, body LogsStoragesSetExpireCreateFormdataRequestBody) (*http.Request, error) {
+func NewLogsStoragesSetExpireCreateRequestWithFormdataBody(server string, resourceId string, body LogsStoragesSetExpireCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -8724,7 +8724,7 @@ func NewLogsStoragesSetExpireCreateRequestWithFormdataBody(server string, resour
 }
 
 // NewLogsStoragesSetExpireCreateRequestWithBody generates requests for LogsStoragesSetExpireCreate with any type of body
-func NewLogsStoragesSetExpireCreateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewLogsStoragesSetExpireCreateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8760,7 +8760,7 @@ func NewLogsStoragesSetExpireCreateRequestWithBody(server string, resourceId int
 }
 
 // NewLogsStoragesStatsDailyRetrieveRequest generates requests for LogsStoragesStatsDailyRetrieve
-func NewLogsStoragesStatsDailyRetrieveRequest(server string, resourceId int64, params *LogsStoragesStatsDailyRetrieveParams) (*http.Request, error) {
+func NewLogsStoragesStatsDailyRetrieveRequest(server string, resourceId string, params *LogsStoragesStatsDailyRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -8832,7 +8832,7 @@ func NewLogsStoragesStatsDailyRetrieveRequest(server string, resourceId int64, p
 }
 
 // NewLogsStoragesStatsMonthlyRetrieveRequest generates requests for LogsStoragesStatsMonthlyRetrieve
-func NewLogsStoragesStatsMonthlyRetrieveRequest(server string, resourceId int64, params *LogsStoragesStatsMonthlyRetrieveParams) (*http.Request, error) {
+func NewLogsStoragesStatsMonthlyRetrieveRequest(server string, resourceId string, params *LogsStoragesStatsMonthlyRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9501,7 +9501,7 @@ func NewMetricsStoragesCreateRequestWithBody(server string, contentType string, 
 }
 
 // NewMetricsStoragesKeysListRequest generates requests for MetricsStoragesKeysList
-func NewMetricsStoragesKeysListRequest(server string, metricsResourceId int64, params *MetricsStoragesKeysListParams) (*http.Request, error) {
+func NewMetricsStoragesKeysListRequest(server string, metricsResourceId string, params *MetricsStoragesKeysListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9573,7 +9573,7 @@ func NewMetricsStoragesKeysListRequest(server string, metricsResourceId int64, p
 }
 
 // NewMetricsStoragesKeysCreateRequest calls the generic MetricsStoragesKeysCreate builder with application/json body
-func NewMetricsStoragesKeysCreateRequest(server string, metricsResourceId int64, body MetricsStoragesKeysCreateJSONRequestBody) (*http.Request, error) {
+func NewMetricsStoragesKeysCreateRequest(server string, metricsResourceId string, body MetricsStoragesKeysCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -9584,7 +9584,7 @@ func NewMetricsStoragesKeysCreateRequest(server string, metricsResourceId int64,
 }
 
 // NewMetricsStoragesKeysCreateRequestWithFormdataBody calls the generic MetricsStoragesKeysCreate builder with application/x-www-form-urlencoded body
-func NewMetricsStoragesKeysCreateRequestWithFormdataBody(server string, metricsResourceId int64, body MetricsStoragesKeysCreateFormdataRequestBody) (*http.Request, error) {
+func NewMetricsStoragesKeysCreateRequestWithFormdataBody(server string, metricsResourceId string, body MetricsStoragesKeysCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -9595,7 +9595,7 @@ func NewMetricsStoragesKeysCreateRequestWithFormdataBody(server string, metricsR
 }
 
 // NewMetricsStoragesKeysCreateRequestWithBody generates requests for MetricsStoragesKeysCreate with any type of body
-func NewMetricsStoragesKeysCreateRequestWithBody(server string, metricsResourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewMetricsStoragesKeysCreateRequestWithBody(server string, metricsResourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9631,7 +9631,7 @@ func NewMetricsStoragesKeysCreateRequestWithBody(server string, metricsResourceI
 }
 
 // NewMetricsStoragesKeysDestroyRequest generates requests for MetricsStoragesKeysDestroy
-func NewMetricsStoragesKeysDestroyRequest(server string, metricsResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewMetricsStoragesKeysDestroyRequest(server string, metricsResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9672,7 +9672,7 @@ func NewMetricsStoragesKeysDestroyRequest(server string, metricsResourceId int64
 }
 
 // NewMetricsStoragesKeysRetrieveRequest generates requests for MetricsStoragesKeysRetrieve
-func NewMetricsStoragesKeysRetrieveRequest(server string, metricsResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewMetricsStoragesKeysRetrieveRequest(server string, metricsResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9713,7 +9713,7 @@ func NewMetricsStoragesKeysRetrieveRequest(server string, metricsResourceId int6
 }
 
 // NewMetricsStoragesKeysPartialUpdateRequest calls the generic MetricsStoragesKeysPartialUpdate builder with application/json body
-func NewMetricsStoragesKeysPartialUpdateRequest(server string, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewMetricsStoragesKeysPartialUpdateRequest(server string, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -9724,7 +9724,7 @@ func NewMetricsStoragesKeysPartialUpdateRequest(server string, metricsResourceId
 }
 
 // NewMetricsStoragesKeysPartialUpdateRequestWithFormdataBody calls the generic MetricsStoragesKeysPartialUpdate builder with application/x-www-form-urlencoded body
-func NewMetricsStoragesKeysPartialUpdateRequestWithFormdataBody(server string, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewMetricsStoragesKeysPartialUpdateRequestWithFormdataBody(server string, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -9735,7 +9735,7 @@ func NewMetricsStoragesKeysPartialUpdateRequestWithFormdataBody(server string, m
 }
 
 // NewMetricsStoragesKeysPartialUpdateRequestWithBody generates requests for MetricsStoragesKeysPartialUpdate with any type of body
-func NewMetricsStoragesKeysPartialUpdateRequestWithBody(server string, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewMetricsStoragesKeysPartialUpdateRequestWithBody(server string, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9778,7 +9778,7 @@ func NewMetricsStoragesKeysPartialUpdateRequestWithBody(server string, metricsRe
 }
 
 // NewMetricsStoragesKeysUpdateRequest calls the generic MetricsStoragesKeysUpdate builder with application/json body
-func NewMetricsStoragesKeysUpdateRequest(server string, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody) (*http.Request, error) {
+func NewMetricsStoragesKeysUpdateRequest(server string, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -9789,7 +9789,7 @@ func NewMetricsStoragesKeysUpdateRequest(server string, metricsResourceId int64,
 }
 
 // NewMetricsStoragesKeysUpdateRequestWithFormdataBody calls the generic MetricsStoragesKeysUpdate builder with application/x-www-form-urlencoded body
-func NewMetricsStoragesKeysUpdateRequestWithFormdataBody(server string, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody) (*http.Request, error) {
+func NewMetricsStoragesKeysUpdateRequestWithFormdataBody(server string, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -9800,7 +9800,7 @@ func NewMetricsStoragesKeysUpdateRequestWithFormdataBody(server string, metricsR
 }
 
 // NewMetricsStoragesKeysUpdateRequestWithBody generates requests for MetricsStoragesKeysUpdate with any type of body
-func NewMetricsStoragesKeysUpdateRequestWithBody(server string, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewMetricsStoragesKeysUpdateRequestWithBody(server string, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9843,7 +9843,7 @@ func NewMetricsStoragesKeysUpdateRequestWithBody(server string, metricsResourceI
 }
 
 // NewMetricsStoragesDestroyRequest generates requests for MetricsStoragesDestroy
-func NewMetricsStoragesDestroyRequest(server string, resourceId int64) (*http.Request, error) {
+func NewMetricsStoragesDestroyRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9877,7 +9877,7 @@ func NewMetricsStoragesDestroyRequest(server string, resourceId int64) (*http.Re
 }
 
 // NewMetricsStoragesRetrieveRequest generates requests for MetricsStoragesRetrieve
-func NewMetricsStoragesRetrieveRequest(server string, resourceId int64) (*http.Request, error) {
+func NewMetricsStoragesRetrieveRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9911,7 +9911,7 @@ func NewMetricsStoragesRetrieveRequest(server string, resourceId int64) (*http.R
 }
 
 // NewMetricsStoragesPartialUpdateRequest calls the generic MetricsStoragesPartialUpdate builder with application/json body
-func NewMetricsStoragesPartialUpdateRequest(server string, resourceId int64, body MetricsStoragesPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewMetricsStoragesPartialUpdateRequest(server string, resourceId string, body MetricsStoragesPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -9922,7 +9922,7 @@ func NewMetricsStoragesPartialUpdateRequest(server string, resourceId int64, bod
 }
 
 // NewMetricsStoragesPartialUpdateRequestWithFormdataBody calls the generic MetricsStoragesPartialUpdate builder with application/x-www-form-urlencoded body
-func NewMetricsStoragesPartialUpdateRequestWithFormdataBody(server string, resourceId int64, body MetricsStoragesPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewMetricsStoragesPartialUpdateRequestWithFormdataBody(server string, resourceId string, body MetricsStoragesPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -9933,7 +9933,7 @@ func NewMetricsStoragesPartialUpdateRequestWithFormdataBody(server string, resou
 }
 
 // NewMetricsStoragesPartialUpdateRequestWithBody generates requests for MetricsStoragesPartialUpdate with any type of body
-func NewMetricsStoragesPartialUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewMetricsStoragesPartialUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -9969,7 +9969,7 @@ func NewMetricsStoragesPartialUpdateRequestWithBody(server string, resourceId in
 }
 
 // NewMetricsStoragesUpdateRequest calls the generic MetricsStoragesUpdate builder with application/json body
-func NewMetricsStoragesUpdateRequest(server string, resourceId int64, body MetricsStoragesUpdateJSONRequestBody) (*http.Request, error) {
+func NewMetricsStoragesUpdateRequest(server string, resourceId string, body MetricsStoragesUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -9980,7 +9980,7 @@ func NewMetricsStoragesUpdateRequest(server string, resourceId int64, body Metri
 }
 
 // NewMetricsStoragesUpdateRequestWithFormdataBody calls the generic MetricsStoragesUpdate builder with application/x-www-form-urlencoded body
-func NewMetricsStoragesUpdateRequestWithFormdataBody(server string, resourceId int64, body MetricsStoragesUpdateFormdataRequestBody) (*http.Request, error) {
+func NewMetricsStoragesUpdateRequestWithFormdataBody(server string, resourceId string, body MetricsStoragesUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -9991,7 +9991,7 @@ func NewMetricsStoragesUpdateRequestWithFormdataBody(server string, resourceId i
 }
 
 // NewMetricsStoragesUpdateRequestWithBody generates requests for MetricsStoragesUpdate with any type of body
-func NewMetricsStoragesUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewMetricsStoragesUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10027,7 +10027,7 @@ func NewMetricsStoragesUpdateRequestWithBody(server string, resourceId int64, co
 }
 
 // NewMetricsStoragesStatsDailyRetrieveRequest generates requests for MetricsStoragesStatsDailyRetrieve
-func NewMetricsStoragesStatsDailyRetrieveRequest(server string, resourceId int64, params *MetricsStoragesStatsDailyRetrieveParams) (*http.Request, error) {
+func NewMetricsStoragesStatsDailyRetrieveRequest(server string, resourceId string, params *MetricsStoragesStatsDailyRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10099,7 +10099,7 @@ func NewMetricsStoragesStatsDailyRetrieveRequest(server string, resourceId int64
 }
 
 // NewMetricsStoragesStatsMonthlyRetrieveRequest generates requests for MetricsStoragesStatsMonthlyRetrieve
-func NewMetricsStoragesStatsMonthlyRetrieveRequest(server string, resourceId int64, params *MetricsStoragesStatsMonthlyRetrieveParams) (*http.Request, error) {
+func NewMetricsStoragesStatsMonthlyRetrieveRequest(server string, resourceId string, params *MetricsStoragesStatsMonthlyRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10414,7 +10414,7 @@ func NewTracesStoragesCreateRequestWithBody(server string, contentType string, b
 }
 
 // NewTracesStoragesDestroyRequest generates requests for TracesStoragesDestroy
-func NewTracesStoragesDestroyRequest(server string, resourceId int64) (*http.Request, error) {
+func NewTracesStoragesDestroyRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10448,7 +10448,7 @@ func NewTracesStoragesDestroyRequest(server string, resourceId int64) (*http.Req
 }
 
 // NewTracesStoragesRetrieveRequest generates requests for TracesStoragesRetrieve
-func NewTracesStoragesRetrieveRequest(server string, resourceId int64) (*http.Request, error) {
+func NewTracesStoragesRetrieveRequest(server string, resourceId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10482,7 +10482,7 @@ func NewTracesStoragesRetrieveRequest(server string, resourceId int64) (*http.Re
 }
 
 // NewTracesStoragesPartialUpdateRequest calls the generic TracesStoragesPartialUpdate builder with application/json body
-func NewTracesStoragesPartialUpdateRequest(server string, resourceId int64, body TracesStoragesPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewTracesStoragesPartialUpdateRequest(server string, resourceId string, body TracesStoragesPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -10493,7 +10493,7 @@ func NewTracesStoragesPartialUpdateRequest(server string, resourceId int64, body
 }
 
 // NewTracesStoragesPartialUpdateRequestWithFormdataBody calls the generic TracesStoragesPartialUpdate builder with application/x-www-form-urlencoded body
-func NewTracesStoragesPartialUpdateRequestWithFormdataBody(server string, resourceId int64, body TracesStoragesPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewTracesStoragesPartialUpdateRequestWithFormdataBody(server string, resourceId string, body TracesStoragesPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -10504,7 +10504,7 @@ func NewTracesStoragesPartialUpdateRequestWithFormdataBody(server string, resour
 }
 
 // NewTracesStoragesPartialUpdateRequestWithBody generates requests for TracesStoragesPartialUpdate with any type of body
-func NewTracesStoragesPartialUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewTracesStoragesPartialUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10540,7 +10540,7 @@ func NewTracesStoragesPartialUpdateRequestWithBody(server string, resourceId int
 }
 
 // NewTracesStoragesUpdateRequest calls the generic TracesStoragesUpdate builder with application/json body
-func NewTracesStoragesUpdateRequest(server string, resourceId int64, body TracesStoragesUpdateJSONRequestBody) (*http.Request, error) {
+func NewTracesStoragesUpdateRequest(server string, resourceId string, body TracesStoragesUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -10551,7 +10551,7 @@ func NewTracesStoragesUpdateRequest(server string, resourceId int64, body Traces
 }
 
 // NewTracesStoragesUpdateRequestWithFormdataBody calls the generic TracesStoragesUpdate builder with application/x-www-form-urlencoded body
-func NewTracesStoragesUpdateRequestWithFormdataBody(server string, resourceId int64, body TracesStoragesUpdateFormdataRequestBody) (*http.Request, error) {
+func NewTracesStoragesUpdateRequestWithFormdataBody(server string, resourceId string, body TracesStoragesUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -10562,7 +10562,7 @@ func NewTracesStoragesUpdateRequestWithFormdataBody(server string, resourceId in
 }
 
 // NewTracesStoragesUpdateRequestWithBody generates requests for TracesStoragesUpdate with any type of body
-func NewTracesStoragesUpdateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewTracesStoragesUpdateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10598,7 +10598,7 @@ func NewTracesStoragesUpdateRequestWithBody(server string, resourceId int64, con
 }
 
 // NewTracesStoragesSetExpireCreateRequest calls the generic TracesStoragesSetExpireCreate builder with application/json body
-func NewTracesStoragesSetExpireCreateRequest(server string, resourceId int64, body TracesStoragesSetExpireCreateJSONRequestBody) (*http.Request, error) {
+func NewTracesStoragesSetExpireCreateRequest(server string, resourceId string, body TracesStoragesSetExpireCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -10609,7 +10609,7 @@ func NewTracesStoragesSetExpireCreateRequest(server string, resourceId int64, bo
 }
 
 // NewTracesStoragesSetExpireCreateRequestWithFormdataBody calls the generic TracesStoragesSetExpireCreate builder with application/x-www-form-urlencoded body
-func NewTracesStoragesSetExpireCreateRequestWithFormdataBody(server string, resourceId int64, body TracesStoragesSetExpireCreateFormdataRequestBody) (*http.Request, error) {
+func NewTracesStoragesSetExpireCreateRequestWithFormdataBody(server string, resourceId string, body TracesStoragesSetExpireCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -10620,7 +10620,7 @@ func NewTracesStoragesSetExpireCreateRequestWithFormdataBody(server string, reso
 }
 
 // NewTracesStoragesSetExpireCreateRequestWithBody generates requests for TracesStoragesSetExpireCreate with any type of body
-func NewTracesStoragesSetExpireCreateRequestWithBody(server string, resourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewTracesStoragesSetExpireCreateRequestWithBody(server string, resourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10656,7 +10656,7 @@ func NewTracesStoragesSetExpireCreateRequestWithBody(server string, resourceId i
 }
 
 // NewTracesStoragesStatsDailyRetrieveRequest generates requests for TracesStoragesStatsDailyRetrieve
-func NewTracesStoragesStatsDailyRetrieveRequest(server string, resourceId int64, params *TracesStoragesStatsDailyRetrieveParams) (*http.Request, error) {
+func NewTracesStoragesStatsDailyRetrieveRequest(server string, resourceId string, params *TracesStoragesStatsDailyRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10728,7 +10728,7 @@ func NewTracesStoragesStatsDailyRetrieveRequest(server string, resourceId int64,
 }
 
 // NewTracesStoragesStatsMonthlyRetrieveRequest generates requests for TracesStoragesStatsMonthlyRetrieve
-func NewTracesStoragesStatsMonthlyRetrieveRequest(server string, resourceId int64, params *TracesStoragesStatsMonthlyRetrieveParams) (*http.Request, error) {
+func NewTracesStoragesStatsMonthlyRetrieveRequest(server string, resourceId string, params *TracesStoragesStatsMonthlyRetrieveParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10780,7 +10780,7 @@ func NewTracesStoragesStatsMonthlyRetrieveRequest(server string, resourceId int6
 }
 
 // NewTracesStoragesKeysListRequest generates requests for TracesStoragesKeysList
-func NewTracesStoragesKeysListRequest(server string, traceResourceId int64, params *TracesStoragesKeysListParams) (*http.Request, error) {
+func NewTracesStoragesKeysListRequest(server string, traceResourceId string, params *TracesStoragesKeysListParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10852,7 +10852,7 @@ func NewTracesStoragesKeysListRequest(server string, traceResourceId int64, para
 }
 
 // NewTracesStoragesKeysCreateRequest calls the generic TracesStoragesKeysCreate builder with application/json body
-func NewTracesStoragesKeysCreateRequest(server string, traceResourceId int64, body TracesStoragesKeysCreateJSONRequestBody) (*http.Request, error) {
+func NewTracesStoragesKeysCreateRequest(server string, traceResourceId string, body TracesStoragesKeysCreateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -10863,7 +10863,7 @@ func NewTracesStoragesKeysCreateRequest(server string, traceResourceId int64, bo
 }
 
 // NewTracesStoragesKeysCreateRequestWithFormdataBody calls the generic TracesStoragesKeysCreate builder with application/x-www-form-urlencoded body
-func NewTracesStoragesKeysCreateRequestWithFormdataBody(server string, traceResourceId int64, body TracesStoragesKeysCreateFormdataRequestBody) (*http.Request, error) {
+func NewTracesStoragesKeysCreateRequestWithFormdataBody(server string, traceResourceId string, body TracesStoragesKeysCreateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -10874,7 +10874,7 @@ func NewTracesStoragesKeysCreateRequestWithFormdataBody(server string, traceReso
 }
 
 // NewTracesStoragesKeysCreateRequestWithBody generates requests for TracesStoragesKeysCreate with any type of body
-func NewTracesStoragesKeysCreateRequestWithBody(server string, traceResourceId int64, contentType string, body io.Reader) (*http.Request, error) {
+func NewTracesStoragesKeysCreateRequestWithBody(server string, traceResourceId string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10910,7 +10910,7 @@ func NewTracesStoragesKeysCreateRequestWithBody(server string, traceResourceId i
 }
 
 // NewTracesStoragesKeysDestroyRequest generates requests for TracesStoragesKeysDestroy
-func NewTracesStoragesKeysDestroyRequest(server string, traceResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewTracesStoragesKeysDestroyRequest(server string, traceResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10951,7 +10951,7 @@ func NewTracesStoragesKeysDestroyRequest(server string, traceResourceId int64, u
 }
 
 // NewTracesStoragesKeysRetrieveRequest generates requests for TracesStoragesKeysRetrieve
-func NewTracesStoragesKeysRetrieveRequest(server string, traceResourceId int64, uid openapi_types.UUID) (*http.Request, error) {
+func NewTracesStoragesKeysRetrieveRequest(server string, traceResourceId string, uid openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -10992,7 +10992,7 @@ func NewTracesStoragesKeysRetrieveRequest(server string, traceResourceId int64, 
 }
 
 // NewTracesStoragesKeysPartialUpdateRequest calls the generic TracesStoragesKeysPartialUpdate builder with application/json body
-func NewTracesStoragesKeysPartialUpdateRequest(server string, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody) (*http.Request, error) {
+func NewTracesStoragesKeysPartialUpdateRequest(server string, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -11003,7 +11003,7 @@ func NewTracesStoragesKeysPartialUpdateRequest(server string, traceResourceId in
 }
 
 // NewTracesStoragesKeysPartialUpdateRequestWithFormdataBody calls the generic TracesStoragesKeysPartialUpdate builder with application/x-www-form-urlencoded body
-func NewTracesStoragesKeysPartialUpdateRequestWithFormdataBody(server string, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody) (*http.Request, error) {
+func NewTracesStoragesKeysPartialUpdateRequestWithFormdataBody(server string, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -11014,7 +11014,7 @@ func NewTracesStoragesKeysPartialUpdateRequestWithFormdataBody(server string, tr
 }
 
 // NewTracesStoragesKeysPartialUpdateRequestWithBody generates requests for TracesStoragesKeysPartialUpdate with any type of body
-func NewTracesStoragesKeysPartialUpdateRequestWithBody(server string, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewTracesStoragesKeysPartialUpdateRequestWithBody(server string, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -11057,7 +11057,7 @@ func NewTracesStoragesKeysPartialUpdateRequestWithBody(server string, traceResou
 }
 
 // NewTracesStoragesKeysUpdateRequest calls the generic TracesStoragesKeysUpdate builder with application/json body
-func NewTracesStoragesKeysUpdateRequest(server string, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody) (*http.Request, error) {
+func NewTracesStoragesKeysUpdateRequest(server string, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
@@ -11068,7 +11068,7 @@ func NewTracesStoragesKeysUpdateRequest(server string, traceResourceId int64, ui
 }
 
 // NewTracesStoragesKeysUpdateRequestWithFormdataBody calls the generic TracesStoragesKeysUpdate builder with application/x-www-form-urlencoded body
-func NewTracesStoragesKeysUpdateRequestWithFormdataBody(server string, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody) (*http.Request, error) {
+func NewTracesStoragesKeysUpdateRequestWithFormdataBody(server string, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	bodyStr, err := runtime.MarshalForm(body, nil)
 	if err != nil {
@@ -11079,7 +11079,7 @@ func NewTracesStoragesKeysUpdateRequestWithFormdataBody(server string, traceReso
 }
 
 // NewTracesStoragesKeysUpdateRequestWithBody generates requests for TracesStoragesKeysUpdate with any type of body
-func NewTracesStoragesKeysUpdateRequestWithBody(server string, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+func NewTracesStoragesKeysUpdateRequestWithBody(server string, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -11175,163 +11175,163 @@ type ClientWithResponsesInterface interface {
 	AlertsProjectsCreateWithFormdataBodyWithResponse(ctx context.Context, body AlertsProjectsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsCreateResponse, error)
 
 	// AlertsProjectsHistoriesListWithResponse request
-	AlertsProjectsHistoriesListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsHistoriesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsHistoriesListResponse, error)
+	AlertsProjectsHistoriesListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsHistoriesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsHistoriesListResponse, error)
 
 	// AlertsProjectsHistoriesRetrieveWithResponse request
-	AlertsProjectsHistoriesRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsHistoriesRetrieveResponse, error)
+	AlertsProjectsHistoriesRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsHistoriesRetrieveResponse, error)
 
 	// AlertsProjectsLogMeasureRulesListWithResponse request
-	AlertsProjectsLogMeasureRulesListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsLogMeasureRulesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesListResponse, error)
+	AlertsProjectsLogMeasureRulesListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsLogMeasureRulesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesListResponse, error)
 
 	// AlertsProjectsLogMeasureRulesCreateWithBodyWithResponse request with any body
-	AlertsProjectsLogMeasureRulesCreateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error)
+	AlertsProjectsLogMeasureRulesCreateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error)
 
-	AlertsProjectsLogMeasureRulesCreateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error)
+	AlertsProjectsLogMeasureRulesCreateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error)
 
-	AlertsProjectsLogMeasureRulesCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error)
+	AlertsProjectsLogMeasureRulesCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error)
 
 	// AlertsProjectsLogMeasureRulesDestroyWithResponse request
-	AlertsProjectsLogMeasureRulesDestroyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesDestroyResponse, error)
+	AlertsProjectsLogMeasureRulesDestroyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesDestroyResponse, error)
 
 	// AlertsProjectsLogMeasureRulesRetrieveWithResponse request
-	AlertsProjectsLogMeasureRulesRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesRetrieveResponse, error)
+	AlertsProjectsLogMeasureRulesRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesRetrieveResponse, error)
 
 	// AlertsProjectsLogMeasureRulesPartialUpdateWithBodyWithResponse request with any body
-	AlertsProjectsLogMeasureRulesPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error)
+	AlertsProjectsLogMeasureRulesPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error)
 
-	AlertsProjectsLogMeasureRulesPartialUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error)
+	AlertsProjectsLogMeasureRulesPartialUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error)
 
-	AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error)
+	AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error)
 
 	// AlertsProjectsLogMeasureRulesUpdateWithBodyWithResponse request with any body
-	AlertsProjectsLogMeasureRulesUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error)
+	AlertsProjectsLogMeasureRulesUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error)
 
-	AlertsProjectsLogMeasureRulesUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error)
+	AlertsProjectsLogMeasureRulesUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error)
 
-	AlertsProjectsLogMeasureRulesUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error)
+	AlertsProjectsLogMeasureRulesUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error)
 
 	// AlertsProjectsNotificationRoutingsListWithResponse request
-	AlertsProjectsNotificationRoutingsListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsNotificationRoutingsListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsListResponse, error)
+	AlertsProjectsNotificationRoutingsListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsNotificationRoutingsListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsListResponse, error)
 
 	// AlertsProjectsNotificationRoutingsCreateWithBodyWithResponse request with any body
-	AlertsProjectsNotificationRoutingsCreateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error)
+	AlertsProjectsNotificationRoutingsCreateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error)
 
-	AlertsProjectsNotificationRoutingsCreateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error)
+	AlertsProjectsNotificationRoutingsCreateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error)
 
-	AlertsProjectsNotificationRoutingsCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error)
+	AlertsProjectsNotificationRoutingsCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error)
 
 	// AlertsProjectsNotificationRoutingsReorderUpdateWithBodyWithResponse request with any body
-	AlertsProjectsNotificationRoutingsReorderUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsReorderUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error)
 
-	AlertsProjectsNotificationRoutingsReorderUpdateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsReorderUpdateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error)
 
-	AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error)
 
 	// AlertsProjectsNotificationRoutingsDestroyWithResponse request
-	AlertsProjectsNotificationRoutingsDestroyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsDestroyResponse, error)
+	AlertsProjectsNotificationRoutingsDestroyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsDestroyResponse, error)
 
 	// AlertsProjectsNotificationRoutingsRetrieveWithResponse request
-	AlertsProjectsNotificationRoutingsRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsRetrieveResponse, error)
+	AlertsProjectsNotificationRoutingsRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsRetrieveResponse, error)
 
 	// AlertsProjectsNotificationRoutingsPartialUpdateWithBodyWithResponse request with any body
-	AlertsProjectsNotificationRoutingsPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error)
 
-	AlertsProjectsNotificationRoutingsPartialUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsPartialUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error)
 
-	AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error)
 
 	// AlertsProjectsNotificationRoutingsUpdateWithBodyWithResponse request with any body
-	AlertsProjectsNotificationRoutingsUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error)
 
-	AlertsProjectsNotificationRoutingsUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error)
 
-	AlertsProjectsNotificationRoutingsUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error)
+	AlertsProjectsNotificationRoutingsUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error)
 
 	// AlertsProjectsNotificationTargetsListWithResponse request
-	AlertsProjectsNotificationTargetsListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsNotificationTargetsListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsListResponse, error)
+	AlertsProjectsNotificationTargetsListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsNotificationTargetsListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsListResponse, error)
 
 	// AlertsProjectsNotificationTargetsCreateWithBodyWithResponse request with any body
-	AlertsProjectsNotificationTargetsCreateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error)
+	AlertsProjectsNotificationTargetsCreateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error)
 
-	AlertsProjectsNotificationTargetsCreateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error)
+	AlertsProjectsNotificationTargetsCreateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationTargetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error)
 
-	AlertsProjectsNotificationTargetsCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error)
+	AlertsProjectsNotificationTargetsCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error)
 
 	// AlertsProjectsNotificationTargetsDestroyWithResponse request
-	AlertsProjectsNotificationTargetsDestroyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsDestroyResponse, error)
+	AlertsProjectsNotificationTargetsDestroyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsDestroyResponse, error)
 
 	// AlertsProjectsNotificationTargetsRetrieveWithResponse request
-	AlertsProjectsNotificationTargetsRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsRetrieveResponse, error)
+	AlertsProjectsNotificationTargetsRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsRetrieveResponse, error)
 
 	// AlertsProjectsNotificationTargetsPartialUpdateWithBodyWithResponse request with any body
-	AlertsProjectsNotificationTargetsPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error)
+	AlertsProjectsNotificationTargetsPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error)
 
-	AlertsProjectsNotificationTargetsPartialUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error)
+	AlertsProjectsNotificationTargetsPartialUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error)
 
-	AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error)
+	AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error)
 
 	// AlertsProjectsNotificationTargetsUpdateWithBodyWithResponse request with any body
-	AlertsProjectsNotificationTargetsUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error)
+	AlertsProjectsNotificationTargetsUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error)
 
-	AlertsProjectsNotificationTargetsUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error)
+	AlertsProjectsNotificationTargetsUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error)
 
-	AlertsProjectsNotificationTargetsUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error)
+	AlertsProjectsNotificationTargetsUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error)
 
 	// AlertsProjectsRulesListWithResponse request
-	AlertsProjectsRulesListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsRulesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesListResponse, error)
+	AlertsProjectsRulesListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsRulesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesListResponse, error)
 
 	// AlertsProjectsRulesCreateWithBodyWithResponse request with any body
-	AlertsProjectsRulesCreateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error)
+	AlertsProjectsRulesCreateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error)
 
-	AlertsProjectsRulesCreateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error)
+	AlertsProjectsRulesCreateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error)
 
-	AlertsProjectsRulesCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error)
+	AlertsProjectsRulesCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error)
 
 	// AlertsProjectsRulesHistoriesListWithResponse request
-	AlertsProjectsRulesHistoriesListWithResponse(ctx context.Context, projectResourceId int64, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesHistoriesListResponse, error)
+	AlertsProjectsRulesHistoriesListWithResponse(ctx context.Context, projectResourceId string, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesHistoriesListResponse, error)
 
 	// AlertsProjectsRulesHistoriesRetrieveWithResponse request
-	AlertsProjectsRulesHistoriesRetrieveWithResponse(ctx context.Context, projectResourceId int64, ruleUid openapi_types.UUID, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesHistoriesRetrieveResponse, error)
+	AlertsProjectsRulesHistoriesRetrieveWithResponse(ctx context.Context, projectResourceId string, ruleUid openapi_types.UUID, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesHistoriesRetrieveResponse, error)
 
 	// AlertsProjectsRulesDestroyWithResponse request
-	AlertsProjectsRulesDestroyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesDestroyResponse, error)
+	AlertsProjectsRulesDestroyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesDestroyResponse, error)
 
 	// AlertsProjectsRulesRetrieveWithResponse request
-	AlertsProjectsRulesRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesRetrieveResponse, error)
+	AlertsProjectsRulesRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesRetrieveResponse, error)
 
 	// AlertsProjectsRulesPartialUpdateWithBodyWithResponse request with any body
-	AlertsProjectsRulesPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error)
+	AlertsProjectsRulesPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error)
 
-	AlertsProjectsRulesPartialUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error)
+	AlertsProjectsRulesPartialUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error)
 
-	AlertsProjectsRulesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error)
+	AlertsProjectsRulesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error)
 
 	// AlertsProjectsRulesUpdateWithBodyWithResponse request with any body
-	AlertsProjectsRulesUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error)
+	AlertsProjectsRulesUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error)
 
-	AlertsProjectsRulesUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error)
+	AlertsProjectsRulesUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error)
 
-	AlertsProjectsRulesUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error)
+	AlertsProjectsRulesUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error)
 
 	// AlertsProjectsDestroyWithResponse request
-	AlertsProjectsDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*AlertsProjectsDestroyResponse, error)
+	AlertsProjectsDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*AlertsProjectsDestroyResponse, error)
 
 	// AlertsProjectsRetrieveWithResponse request
-	AlertsProjectsRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*AlertsProjectsRetrieveResponse, error)
+	AlertsProjectsRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*AlertsProjectsRetrieveResponse, error)
 
 	// AlertsProjectsPartialUpdateWithBodyWithResponse request with any body
-	AlertsProjectsPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error)
+	AlertsProjectsPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error)
 
-	AlertsProjectsPartialUpdateWithResponse(ctx context.Context, resourceId int64, body AlertsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error)
+	AlertsProjectsPartialUpdateWithResponse(ctx context.Context, resourceId string, body AlertsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error)
 
-	AlertsProjectsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body AlertsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error)
+	AlertsProjectsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body AlertsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error)
 
 	// AlertsProjectsUpdateWithBodyWithResponse request with any body
-	AlertsProjectsUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error)
+	AlertsProjectsUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error)
 
-	AlertsProjectsUpdateWithResponse(ctx context.Context, resourceId int64, body AlertsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error)
+	AlertsProjectsUpdateWithResponse(ctx context.Context, resourceId string, body AlertsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error)
 
-	AlertsProjectsUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body AlertsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error)
+	AlertsProjectsUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body AlertsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error)
 
 	// DashboardsProjectsListWithResponse request
 	DashboardsProjectsListWithResponse(ctx context.Context, params *DashboardsProjectsListParams, reqEditors ...RequestEditorFn) (*DashboardsProjectsListResponse, error)
@@ -11344,24 +11344,24 @@ type ClientWithResponsesInterface interface {
 	DashboardsProjectsCreateWithFormdataBodyWithResponse(ctx context.Context, body DashboardsProjectsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsCreateResponse, error)
 
 	// DashboardsProjectsDestroyWithResponse request
-	DashboardsProjectsDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*DashboardsProjectsDestroyResponse, error)
+	DashboardsProjectsDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*DashboardsProjectsDestroyResponse, error)
 
 	// DashboardsProjectsRetrieveWithResponse request
-	DashboardsProjectsRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*DashboardsProjectsRetrieveResponse, error)
+	DashboardsProjectsRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*DashboardsProjectsRetrieveResponse, error)
 
 	// DashboardsProjectsPartialUpdateWithBodyWithResponse request with any body
-	DashboardsProjectsPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error)
+	DashboardsProjectsPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error)
 
-	DashboardsProjectsPartialUpdateWithResponse(ctx context.Context, resourceId int64, body DashboardsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error)
+	DashboardsProjectsPartialUpdateWithResponse(ctx context.Context, resourceId string, body DashboardsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error)
 
-	DashboardsProjectsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body DashboardsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error)
+	DashboardsProjectsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body DashboardsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error)
 
 	// DashboardsProjectsUpdateWithBodyWithResponse request with any body
-	DashboardsProjectsUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error)
+	DashboardsProjectsUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error)
 
-	DashboardsProjectsUpdateWithResponse(ctx context.Context, resourceId int64, body DashboardsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error)
+	DashboardsProjectsUpdateWithResponse(ctx context.Context, resourceId string, body DashboardsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error)
 
-	DashboardsProjectsUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body DashboardsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error)
+	DashboardsProjectsUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body DashboardsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error)
 
 	// LogsRoutingsListWithResponse request
 	LogsRoutingsListWithResponse(ctx context.Context, params *LogsRoutingsListParams, reqEditors ...RequestEditorFn) (*LogsRoutingsListResponse, error)
@@ -11404,67 +11404,67 @@ type ClientWithResponsesInterface interface {
 	LogsStoragesCreateWithFormdataBodyWithResponse(ctx context.Context, body LogsStoragesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesCreateResponse, error)
 
 	// LogsStoragesKeysListWithResponse request
-	LogsStoragesKeysListWithResponse(ctx context.Context, logResourceId int64, params *LogsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*LogsStoragesKeysListResponse, error)
+	LogsStoragesKeysListWithResponse(ctx context.Context, logResourceId string, params *LogsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*LogsStoragesKeysListResponse, error)
 
 	// LogsStoragesKeysCreateWithBodyWithResponse request with any body
-	LogsStoragesKeysCreateWithBodyWithResponse(ctx context.Context, logResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error)
+	LogsStoragesKeysCreateWithBodyWithResponse(ctx context.Context, logResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error)
 
-	LogsStoragesKeysCreateWithResponse(ctx context.Context, logResourceId int64, body LogsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error)
+	LogsStoragesKeysCreateWithResponse(ctx context.Context, logResourceId string, body LogsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error)
 
-	LogsStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, logResourceId int64, body LogsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error)
+	LogsStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, logResourceId string, body LogsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error)
 
 	// LogsStoragesKeysDestroyWithResponse request
-	LogsStoragesKeysDestroyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*LogsStoragesKeysDestroyResponse, error)
+	LogsStoragesKeysDestroyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*LogsStoragesKeysDestroyResponse, error)
 
 	// LogsStoragesKeysRetrieveWithResponse request
-	LogsStoragesKeysRetrieveWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*LogsStoragesKeysRetrieveResponse, error)
+	LogsStoragesKeysRetrieveWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*LogsStoragesKeysRetrieveResponse, error)
 
 	// LogsStoragesKeysPartialUpdateWithBodyWithResponse request with any body
-	LogsStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error)
+	LogsStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error)
 
-	LogsStoragesKeysPartialUpdateWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error)
+	LogsStoragesKeysPartialUpdateWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error)
 
-	LogsStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error)
+	LogsStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error)
 
 	// LogsStoragesKeysUpdateWithBodyWithResponse request with any body
-	LogsStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error)
+	LogsStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error)
 
-	LogsStoragesKeysUpdateWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error)
+	LogsStoragesKeysUpdateWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error)
 
-	LogsStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error)
+	LogsStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error)
 
 	// LogsStoragesDestroyWithResponse request
-	LogsStoragesDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*LogsStoragesDestroyResponse, error)
+	LogsStoragesDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*LogsStoragesDestroyResponse, error)
 
 	// LogsStoragesRetrieveWithResponse request
-	LogsStoragesRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*LogsStoragesRetrieveResponse, error)
+	LogsStoragesRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*LogsStoragesRetrieveResponse, error)
 
 	// LogsStoragesPartialUpdateWithBodyWithResponse request with any body
-	LogsStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error)
+	LogsStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error)
 
-	LogsStoragesPartialUpdateWithResponse(ctx context.Context, resourceId int64, body LogsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error)
+	LogsStoragesPartialUpdateWithResponse(ctx context.Context, resourceId string, body LogsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error)
 
-	LogsStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body LogsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error)
+	LogsStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body LogsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error)
 
 	// LogsStoragesUpdateWithBodyWithResponse request with any body
-	LogsStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error)
+	LogsStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error)
 
-	LogsStoragesUpdateWithResponse(ctx context.Context, resourceId int64, body LogsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error)
+	LogsStoragesUpdateWithResponse(ctx context.Context, resourceId string, body LogsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error)
 
-	LogsStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body LogsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error)
+	LogsStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body LogsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error)
 
 	// LogsStoragesSetExpireCreateWithBodyWithResponse request with any body
-	LogsStoragesSetExpireCreateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error)
+	LogsStoragesSetExpireCreateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error)
 
-	LogsStoragesSetExpireCreateWithResponse(ctx context.Context, resourceId int64, body LogsStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error)
+	LogsStoragesSetExpireCreateWithResponse(ctx context.Context, resourceId string, body LogsStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error)
 
-	LogsStoragesSetExpireCreateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body LogsStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error)
+	LogsStoragesSetExpireCreateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body LogsStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error)
 
 	// LogsStoragesStatsDailyRetrieveWithResponse request
-	LogsStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId int64, params *LogsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*LogsStoragesStatsDailyRetrieveResponse, error)
+	LogsStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId string, params *LogsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*LogsStoragesStatsDailyRetrieveResponse, error)
 
 	// LogsStoragesStatsMonthlyRetrieveWithResponse request
-	LogsStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId int64, params *LogsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*LogsStoragesStatsMonthlyRetrieveResponse, error)
+	LogsStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId string, params *LogsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*LogsStoragesStatsMonthlyRetrieveResponse, error)
 
 	// GetResourcesLimitsWithResponse request
 	GetResourcesLimitsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetResourcesLimitsResponse, error)
@@ -11520,60 +11520,60 @@ type ClientWithResponsesInterface interface {
 	MetricsStoragesCreateWithFormdataBodyWithResponse(ctx context.Context, body MetricsStoragesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesCreateResponse, error)
 
 	// MetricsStoragesKeysListWithResponse request
-	MetricsStoragesKeysListWithResponse(ctx context.Context, metricsResourceId int64, params *MetricsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysListResponse, error)
+	MetricsStoragesKeysListWithResponse(ctx context.Context, metricsResourceId string, params *MetricsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysListResponse, error)
 
 	// MetricsStoragesKeysCreateWithBodyWithResponse request with any body
-	MetricsStoragesKeysCreateWithBodyWithResponse(ctx context.Context, metricsResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error)
+	MetricsStoragesKeysCreateWithBodyWithResponse(ctx context.Context, metricsResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error)
 
-	MetricsStoragesKeysCreateWithResponse(ctx context.Context, metricsResourceId int64, body MetricsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error)
+	MetricsStoragesKeysCreateWithResponse(ctx context.Context, metricsResourceId string, body MetricsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error)
 
-	MetricsStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId int64, body MetricsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error)
+	MetricsStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId string, body MetricsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error)
 
 	// MetricsStoragesKeysDestroyWithResponse request
-	MetricsStoragesKeysDestroyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysDestroyResponse, error)
+	MetricsStoragesKeysDestroyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysDestroyResponse, error)
 
 	// MetricsStoragesKeysRetrieveWithResponse request
-	MetricsStoragesKeysRetrieveWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysRetrieveResponse, error)
+	MetricsStoragesKeysRetrieveWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysRetrieveResponse, error)
 
 	// MetricsStoragesKeysPartialUpdateWithBodyWithResponse request with any body
-	MetricsStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error)
+	MetricsStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error)
 
-	MetricsStoragesKeysPartialUpdateWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error)
+	MetricsStoragesKeysPartialUpdateWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error)
 
-	MetricsStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error)
+	MetricsStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error)
 
 	// MetricsStoragesKeysUpdateWithBodyWithResponse request with any body
-	MetricsStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error)
+	MetricsStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error)
 
-	MetricsStoragesKeysUpdateWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error)
+	MetricsStoragesKeysUpdateWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error)
 
-	MetricsStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error)
+	MetricsStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error)
 
 	// MetricsStoragesDestroyWithResponse request
-	MetricsStoragesDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*MetricsStoragesDestroyResponse, error)
+	MetricsStoragesDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*MetricsStoragesDestroyResponse, error)
 
 	// MetricsStoragesRetrieveWithResponse request
-	MetricsStoragesRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*MetricsStoragesRetrieveResponse, error)
+	MetricsStoragesRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*MetricsStoragesRetrieveResponse, error)
 
 	// MetricsStoragesPartialUpdateWithBodyWithResponse request with any body
-	MetricsStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error)
+	MetricsStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error)
 
-	MetricsStoragesPartialUpdateWithResponse(ctx context.Context, resourceId int64, body MetricsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error)
+	MetricsStoragesPartialUpdateWithResponse(ctx context.Context, resourceId string, body MetricsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error)
 
-	MetricsStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body MetricsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error)
+	MetricsStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body MetricsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error)
 
 	// MetricsStoragesUpdateWithBodyWithResponse request with any body
-	MetricsStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error)
+	MetricsStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error)
 
-	MetricsStoragesUpdateWithResponse(ctx context.Context, resourceId int64, body MetricsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error)
+	MetricsStoragesUpdateWithResponse(ctx context.Context, resourceId string, body MetricsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error)
 
-	MetricsStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body MetricsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error)
+	MetricsStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body MetricsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error)
 
 	// MetricsStoragesStatsDailyRetrieveWithResponse request
-	MetricsStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId int64, params *MetricsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*MetricsStoragesStatsDailyRetrieveResponse, error)
+	MetricsStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId string, params *MetricsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*MetricsStoragesStatsDailyRetrieveResponse, error)
 
 	// MetricsStoragesStatsMonthlyRetrieveWithResponse request
-	MetricsStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId int64, params *MetricsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*MetricsStoragesStatsMonthlyRetrieveResponse, error)
+	MetricsStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId string, params *MetricsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*MetricsStoragesStatsMonthlyRetrieveResponse, error)
 
 	// PublishersListWithResponse request
 	PublishersListWithResponse(ctx context.Context, params *PublishersListParams, reqEditors ...RequestEditorFn) (*PublishersListResponse, error)
@@ -11592,67 +11592,67 @@ type ClientWithResponsesInterface interface {
 	TracesStoragesCreateWithFormdataBodyWithResponse(ctx context.Context, body TracesStoragesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesCreateResponse, error)
 
 	// TracesStoragesDestroyWithResponse request
-	TracesStoragesDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*TracesStoragesDestroyResponse, error)
+	TracesStoragesDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*TracesStoragesDestroyResponse, error)
 
 	// TracesStoragesRetrieveWithResponse request
-	TracesStoragesRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*TracesStoragesRetrieveResponse, error)
+	TracesStoragesRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*TracesStoragesRetrieveResponse, error)
 
 	// TracesStoragesPartialUpdateWithBodyWithResponse request with any body
-	TracesStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error)
+	TracesStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error)
 
-	TracesStoragesPartialUpdateWithResponse(ctx context.Context, resourceId int64, body TracesStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error)
+	TracesStoragesPartialUpdateWithResponse(ctx context.Context, resourceId string, body TracesStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error)
 
-	TracesStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body TracesStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error)
+	TracesStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body TracesStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error)
 
 	// TracesStoragesUpdateWithBodyWithResponse request with any body
-	TracesStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error)
+	TracesStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error)
 
-	TracesStoragesUpdateWithResponse(ctx context.Context, resourceId int64, body TracesStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error)
+	TracesStoragesUpdateWithResponse(ctx context.Context, resourceId string, body TracesStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error)
 
-	TracesStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body TracesStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error)
+	TracesStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body TracesStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error)
 
 	// TracesStoragesSetExpireCreateWithBodyWithResponse request with any body
-	TracesStoragesSetExpireCreateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error)
+	TracesStoragesSetExpireCreateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error)
 
-	TracesStoragesSetExpireCreateWithResponse(ctx context.Context, resourceId int64, body TracesStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error)
+	TracesStoragesSetExpireCreateWithResponse(ctx context.Context, resourceId string, body TracesStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error)
 
-	TracesStoragesSetExpireCreateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body TracesStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error)
+	TracesStoragesSetExpireCreateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body TracesStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error)
 
 	// TracesStoragesStatsDailyRetrieveWithResponse request
-	TracesStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId int64, params *TracesStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*TracesStoragesStatsDailyRetrieveResponse, error)
+	TracesStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId string, params *TracesStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*TracesStoragesStatsDailyRetrieveResponse, error)
 
 	// TracesStoragesStatsMonthlyRetrieveWithResponse request
-	TracesStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId int64, params *TracesStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*TracesStoragesStatsMonthlyRetrieveResponse, error)
+	TracesStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId string, params *TracesStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*TracesStoragesStatsMonthlyRetrieveResponse, error)
 
 	// TracesStoragesKeysListWithResponse request
-	TracesStoragesKeysListWithResponse(ctx context.Context, traceResourceId int64, params *TracesStoragesKeysListParams, reqEditors ...RequestEditorFn) (*TracesStoragesKeysListResponse, error)
+	TracesStoragesKeysListWithResponse(ctx context.Context, traceResourceId string, params *TracesStoragesKeysListParams, reqEditors ...RequestEditorFn) (*TracesStoragesKeysListResponse, error)
 
 	// TracesStoragesKeysCreateWithBodyWithResponse request with any body
-	TracesStoragesKeysCreateWithBodyWithResponse(ctx context.Context, traceResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error)
+	TracesStoragesKeysCreateWithBodyWithResponse(ctx context.Context, traceResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error)
 
-	TracesStoragesKeysCreateWithResponse(ctx context.Context, traceResourceId int64, body TracesStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error)
+	TracesStoragesKeysCreateWithResponse(ctx context.Context, traceResourceId string, body TracesStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error)
 
-	TracesStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId int64, body TracesStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error)
+	TracesStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId string, body TracesStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error)
 
 	// TracesStoragesKeysDestroyWithResponse request
-	TracesStoragesKeysDestroyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*TracesStoragesKeysDestroyResponse, error)
+	TracesStoragesKeysDestroyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*TracesStoragesKeysDestroyResponse, error)
 
 	// TracesStoragesKeysRetrieveWithResponse request
-	TracesStoragesKeysRetrieveWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*TracesStoragesKeysRetrieveResponse, error)
+	TracesStoragesKeysRetrieveWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*TracesStoragesKeysRetrieveResponse, error)
 
 	// TracesStoragesKeysPartialUpdateWithBodyWithResponse request with any body
-	TracesStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error)
+	TracesStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error)
 
-	TracesStoragesKeysPartialUpdateWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error)
+	TracesStoragesKeysPartialUpdateWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error)
 
-	TracesStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error)
+	TracesStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error)
 
 	// TracesStoragesKeysUpdateWithBodyWithResponse request with any body
-	TracesStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error)
+	TracesStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error)
 
-	TracesStoragesKeysUpdateWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error)
+	TracesStoragesKeysUpdateWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error)
 
-	TracesStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error)
+	TracesStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error)
 }
 
 type AlertsProjectsListResponse struct {
@@ -13920,7 +13920,7 @@ func (c *ClientWithResponses) AlertsProjectsCreateWithFormdataBodyWithResponse(c
 }
 
 // AlertsProjectsHistoriesListWithResponse request returning *AlertsProjectsHistoriesListResponse
-func (c *ClientWithResponses) AlertsProjectsHistoriesListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsHistoriesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsHistoriesListResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsHistoriesListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsHistoriesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsHistoriesListResponse, error) {
 	rsp, err := c.AlertsProjectsHistoriesList(ctx, projectResourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13929,7 +13929,7 @@ func (c *ClientWithResponses) AlertsProjectsHistoriesListWithResponse(ctx contex
 }
 
 // AlertsProjectsHistoriesRetrieveWithResponse request returning *AlertsProjectsHistoriesRetrieveResponse
-func (c *ClientWithResponses) AlertsProjectsHistoriesRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsHistoriesRetrieveResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsHistoriesRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsHistoriesRetrieveResponse, error) {
 	rsp, err := c.AlertsProjectsHistoriesRetrieve(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13938,7 +13938,7 @@ func (c *ClientWithResponses) AlertsProjectsHistoriesRetrieveWithResponse(ctx co
 }
 
 // AlertsProjectsLogMeasureRulesListWithResponse request returning *AlertsProjectsLogMeasureRulesListResponse
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsLogMeasureRulesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesListResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsLogMeasureRulesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesListResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesList(ctx, projectResourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13947,7 +13947,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesListWithResponse(ctx 
 }
 
 // AlertsProjectsLogMeasureRulesCreateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsLogMeasureRulesCreateResponse
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesCreateWithBody(ctx, projectResourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13955,7 +13955,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithBodyWithRes
 	return ParseAlertsProjectsLogMeasureRulesCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesCreate(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13963,7 +13963,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithResponse(ct
 	return ParseAlertsProjectsLogMeasureRulesCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsLogMeasureRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesCreateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesCreateWithFormdataBody(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13972,7 +13972,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesCreateWithFormdataBod
 }
 
 // AlertsProjectsLogMeasureRulesDestroyWithResponse request returning *AlertsProjectsLogMeasureRulesDestroyResponse
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesDestroyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesDestroyResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesDestroyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesDestroyResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesDestroy(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13981,7 +13981,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesDestroyWithResponse(c
 }
 
 // AlertsProjectsLogMeasureRulesRetrieveWithResponse request returning *AlertsProjectsLogMeasureRulesRetrieveResponse
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesRetrieveResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesRetrieveResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesRetrieve(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13990,7 +13990,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesRetrieveWithResponse(
 }
 
 // AlertsProjectsLogMeasureRulesPartialUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsLogMeasureRulesPartialUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesPartialUpdateWithBody(ctx, projectResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -13998,7 +13998,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithBody
 	return ParseAlertsProjectsLogMeasureRulesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesPartialUpdate(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14006,7 +14006,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithResp
 	return ParseAlertsProjectsLogMeasureRulesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesPartialUpdateWithFormdataBody(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14015,7 +14015,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesPartialUpdateWithForm
 }
 
 // AlertsProjectsLogMeasureRulesUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsLogMeasureRulesUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesUpdateWithBody(ctx, projectResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14023,7 +14023,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithBodyWithRes
 	return ParseAlertsProjectsLogMeasureRulesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesUpdate(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14031,7 +14031,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithResponse(ct
 	return ParseAlertsProjectsLogMeasureRulesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsLogMeasureRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsLogMeasureRulesUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsLogMeasureRulesUpdateWithFormdataBody(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14040,7 +14040,7 @@ func (c *ClientWithResponses) AlertsProjectsLogMeasureRulesUpdateWithFormdataBod
 }
 
 // AlertsProjectsNotificationRoutingsListWithResponse request returning *AlertsProjectsNotificationRoutingsListResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsNotificationRoutingsListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsListResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsNotificationRoutingsListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsListResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsList(ctx, projectResourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14049,7 +14049,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsListWithResponse
 }
 
 // AlertsProjectsNotificationRoutingsCreateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsNotificationRoutingsCreateResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsCreateWithBody(ctx, projectResourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14057,7 +14057,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithBodyWi
 	return ParseAlertsProjectsNotificationRoutingsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsCreate(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14065,7 +14065,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithRespon
 	return ParseAlertsProjectsNotificationRoutingsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsCreateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsCreateWithFormdataBody(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14074,7 +14074,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsCreateWithFormda
 }
 
 // AlertsProjectsNotificationRoutingsReorderUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsNotificationRoutingsReorderUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsReorderUpdateWithBody(ctx, projectResourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14082,7 +14082,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWit
 	return ParseAlertsProjectsNotificationRoutingsReorderUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsReorderUpdate(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14090,7 +14090,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWit
 	return ParseAlertsProjectsNotificationRoutingsReorderUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationRoutingsReorderUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsReorderUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsReorderUpdateWithFormdataBody(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14099,7 +14099,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsReorderUpdateWit
 }
 
 // AlertsProjectsNotificationRoutingsDestroyWithResponse request returning *AlertsProjectsNotificationRoutingsDestroyResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsDestroyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsDestroyResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsDestroyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsDestroyResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsDestroy(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14108,7 +14108,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsDestroyWithRespo
 }
 
 // AlertsProjectsNotificationRoutingsRetrieveWithResponse request returning *AlertsProjectsNotificationRoutingsRetrieveResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsRetrieveResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsRetrieveResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsRetrieve(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14117,7 +14117,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsRetrieveWithResp
 }
 
 // AlertsProjectsNotificationRoutingsPartialUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsNotificationRoutingsPartialUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsPartialUpdateWithBody(ctx, projectResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14125,7 +14125,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWit
 	return ParseAlertsProjectsNotificationRoutingsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsPartialUpdate(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14133,7 +14133,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWit
 	return ParseAlertsProjectsNotificationRoutingsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsPartialUpdateWithFormdataBody(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14142,7 +14142,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsPartialUpdateWit
 }
 
 // AlertsProjectsNotificationRoutingsUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsNotificationRoutingsUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsUpdateWithBody(ctx, projectResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14150,7 +14150,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithBodyWi
 	return ParseAlertsProjectsNotificationRoutingsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsUpdate(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14158,7 +14158,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithRespon
 	return ParseAlertsProjectsNotificationRoutingsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationRoutingsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationRoutingsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationRoutingsUpdateWithFormdataBody(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14167,7 +14167,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationRoutingsUpdateWithFormda
 }
 
 // AlertsProjectsNotificationTargetsListWithResponse request returning *AlertsProjectsNotificationTargetsListResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsNotificationTargetsListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsListResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsNotificationTargetsListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsListResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsList(ctx, projectResourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14176,7 +14176,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsListWithResponse(
 }
 
 // AlertsProjectsNotificationTargetsCreateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsNotificationTargetsCreateResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsCreateWithBody(ctx, projectResourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14184,7 +14184,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithBodyWit
 	return ParseAlertsProjectsNotificationTargetsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationTargetsCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsCreate(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14192,7 +14192,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithRespons
 	return ParseAlertsProjectsNotificationTargetsCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsNotificationTargetsCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsCreateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsCreateWithFormdataBody(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14201,7 +14201,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsCreateWithFormdat
 }
 
 // AlertsProjectsNotificationTargetsDestroyWithResponse request returning *AlertsProjectsNotificationTargetsDestroyResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsDestroyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsDestroyResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsDestroyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsDestroyResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsDestroy(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14210,7 +14210,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsDestroyWithRespon
 }
 
 // AlertsProjectsNotificationTargetsRetrieveWithResponse request returning *AlertsProjectsNotificationTargetsRetrieveResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsRetrieveResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsRetrieveResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsRetrieve(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14219,7 +14219,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsRetrieveWithRespo
 }
 
 // AlertsProjectsNotificationTargetsPartialUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsNotificationTargetsPartialUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsPartialUpdateWithBody(ctx, projectResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14227,7 +14227,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWith
 	return ParseAlertsProjectsNotificationTargetsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsPartialUpdate(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14235,7 +14235,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWith
 	return ParseAlertsProjectsNotificationTargetsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsPartialUpdateWithFormdataBody(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14244,7 +14244,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsPartialUpdateWith
 }
 
 // AlertsProjectsNotificationTargetsUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsNotificationTargetsUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsUpdateWithBody(ctx, projectResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14252,7 +14252,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithBodyWit
 	return ParseAlertsProjectsNotificationTargetsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsUpdate(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14260,7 +14260,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithRespons
 	return ParseAlertsProjectsNotificationTargetsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsNotificationTargetsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsNotificationTargetsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsNotificationTargetsUpdateWithFormdataBody(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14269,7 +14269,7 @@ func (c *ClientWithResponses) AlertsProjectsNotificationTargetsUpdateWithFormdat
 }
 
 // AlertsProjectsRulesListWithResponse request returning *AlertsProjectsRulesListResponse
-func (c *ClientWithResponses) AlertsProjectsRulesListWithResponse(ctx context.Context, projectResourceId int64, params *AlertsProjectsRulesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesListResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesListWithResponse(ctx context.Context, projectResourceId string, params *AlertsProjectsRulesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesListResponse, error) {
 	rsp, err := c.AlertsProjectsRulesList(ctx, projectResourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14278,7 +14278,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesListWithResponse(ctx context.Co
 }
 
 // AlertsProjectsRulesCreateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsRulesCreateResponse
-func (c *ClientWithResponses) AlertsProjectsRulesCreateWithBodyWithResponse(ctx context.Context, projectResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesCreateWithBodyWithResponse(ctx context.Context, projectResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesCreateWithBody(ctx, projectResourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14286,7 +14286,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesCreateWithBodyWithResponse(ctx 
 	return ParseAlertsProjectsRulesCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsRulesCreateWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesCreateWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsRulesCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesCreate(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14294,7 +14294,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesCreateWithResponse(ctx context.
 	return ParseAlertsProjectsRulesCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsRulesCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, body AlertsProjectsRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesCreateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, body AlertsProjectsRulesCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesCreateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesCreateWithFormdataBody(ctx, projectResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14303,7 +14303,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesCreateWithFormdataBodyWithRespo
 }
 
 // AlertsProjectsRulesHistoriesListWithResponse request returning *AlertsProjectsRulesHistoriesListResponse
-func (c *ClientWithResponses) AlertsProjectsRulesHistoriesListWithResponse(ctx context.Context, projectResourceId int64, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesHistoriesListResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesHistoriesListWithResponse(ctx context.Context, projectResourceId string, ruleUid openapi_types.UUID, params *AlertsProjectsRulesHistoriesListParams, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesHistoriesListResponse, error) {
 	rsp, err := c.AlertsProjectsRulesHistoriesList(ctx, projectResourceId, ruleUid, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14312,7 +14312,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesHistoriesListWithResponse(ctx c
 }
 
 // AlertsProjectsRulesHistoriesRetrieveWithResponse request returning *AlertsProjectsRulesHistoriesRetrieveResponse
-func (c *ClientWithResponses) AlertsProjectsRulesHistoriesRetrieveWithResponse(ctx context.Context, projectResourceId int64, ruleUid openapi_types.UUID, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesHistoriesRetrieveResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesHistoriesRetrieveWithResponse(ctx context.Context, projectResourceId string, ruleUid openapi_types.UUID, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesHistoriesRetrieveResponse, error) {
 	rsp, err := c.AlertsProjectsRulesHistoriesRetrieve(ctx, projectResourceId, ruleUid, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14321,7 +14321,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesHistoriesRetrieveWithResponse(c
 }
 
 // AlertsProjectsRulesDestroyWithResponse request returning *AlertsProjectsRulesDestroyResponse
-func (c *ClientWithResponses) AlertsProjectsRulesDestroyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesDestroyResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesDestroyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesDestroyResponse, error) {
 	rsp, err := c.AlertsProjectsRulesDestroy(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14330,7 +14330,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesDestroyWithResponse(ctx context
 }
 
 // AlertsProjectsRulesRetrieveWithResponse request returning *AlertsProjectsRulesRetrieveResponse
-func (c *ClientWithResponses) AlertsProjectsRulesRetrieveWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesRetrieveResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesRetrieveWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesRetrieveResponse, error) {
 	rsp, err := c.AlertsProjectsRulesRetrieve(ctx, projectResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14339,7 +14339,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesRetrieveWithResponse(ctx contex
 }
 
 // AlertsProjectsRulesPartialUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsRulesPartialUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesPartialUpdateWithBody(ctx, projectResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14347,7 +14347,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithBodyWithRespon
 	return ParseAlertsProjectsRulesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesPartialUpdate(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14355,7 +14355,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithResponse(ctx c
 	return ParseAlertsProjectsRulesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesPartialUpdateWithFormdataBody(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14364,7 +14364,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesPartialUpdateWithFormdataBodyWi
 }
 
 // AlertsProjectsRulesUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsRulesUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesUpdateWithBody(ctx, projectResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14372,7 +14372,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithBodyWithResponse(ctx 
 	return ParseAlertsProjectsRulesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesUpdate(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14380,7 +14380,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithResponse(ctx context.
 	return ParseAlertsProjectsRulesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId int64, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithFormdataBodyWithResponse(ctx context.Context, projectResourceId string, uid openapi_types.UUID, body AlertsProjectsRulesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsRulesUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsRulesUpdateWithFormdataBody(ctx, projectResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14389,7 +14389,7 @@ func (c *ClientWithResponses) AlertsProjectsRulesUpdateWithFormdataBodyWithRespo
 }
 
 // AlertsProjectsDestroyWithResponse request returning *AlertsProjectsDestroyResponse
-func (c *ClientWithResponses) AlertsProjectsDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*AlertsProjectsDestroyResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*AlertsProjectsDestroyResponse, error) {
 	rsp, err := c.AlertsProjectsDestroy(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14398,7 +14398,7 @@ func (c *ClientWithResponses) AlertsProjectsDestroyWithResponse(ctx context.Cont
 }
 
 // AlertsProjectsRetrieveWithResponse request returning *AlertsProjectsRetrieveResponse
-func (c *ClientWithResponses) AlertsProjectsRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*AlertsProjectsRetrieveResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*AlertsProjectsRetrieveResponse, error) {
 	rsp, err := c.AlertsProjectsRetrieve(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14407,7 +14407,7 @@ func (c *ClientWithResponses) AlertsProjectsRetrieveWithResponse(ctx context.Con
 }
 
 // AlertsProjectsPartialUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsPartialUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsPartialUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14415,7 +14415,7 @@ func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithBodyWithResponse(ct
 	return ParseAlertsProjectsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithResponse(ctx context.Context, resourceId int64, body AlertsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithResponse(ctx context.Context, resourceId string, body AlertsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsPartialUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14423,7 +14423,7 @@ func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithResponse(ctx contex
 	return ParseAlertsProjectsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body AlertsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body AlertsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsPartialUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsPartialUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14432,7 +14432,7 @@ func (c *ClientWithResponses) AlertsProjectsPartialUpdateWithFormdataBodyWithRes
 }
 
 // AlertsProjectsUpdateWithBodyWithResponse request with arbitrary body returning *AlertsProjectsUpdateResponse
-func (c *ClientWithResponses) AlertsProjectsUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14440,7 +14440,7 @@ func (c *ClientWithResponses) AlertsProjectsUpdateWithBodyWithResponse(ctx conte
 	return ParseAlertsProjectsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsUpdateWithResponse(ctx context.Context, resourceId int64, body AlertsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsUpdateWithResponse(ctx context.Context, resourceId string, body AlertsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14448,7 +14448,7 @@ func (c *ClientWithResponses) AlertsProjectsUpdateWithResponse(ctx context.Conte
 	return ParseAlertsProjectsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) AlertsProjectsUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body AlertsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error) {
+func (c *ClientWithResponses) AlertsProjectsUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body AlertsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*AlertsProjectsUpdateResponse, error) {
 	rsp, err := c.AlertsProjectsUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14491,7 +14491,7 @@ func (c *ClientWithResponses) DashboardsProjectsCreateWithFormdataBodyWithRespon
 }
 
 // DashboardsProjectsDestroyWithResponse request returning *DashboardsProjectsDestroyResponse
-func (c *ClientWithResponses) DashboardsProjectsDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*DashboardsProjectsDestroyResponse, error) {
+func (c *ClientWithResponses) DashboardsProjectsDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*DashboardsProjectsDestroyResponse, error) {
 	rsp, err := c.DashboardsProjectsDestroy(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14500,7 +14500,7 @@ func (c *ClientWithResponses) DashboardsProjectsDestroyWithResponse(ctx context.
 }
 
 // DashboardsProjectsRetrieveWithResponse request returning *DashboardsProjectsRetrieveResponse
-func (c *ClientWithResponses) DashboardsProjectsRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*DashboardsProjectsRetrieveResponse, error) {
+func (c *ClientWithResponses) DashboardsProjectsRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*DashboardsProjectsRetrieveResponse, error) {
 	rsp, err := c.DashboardsProjectsRetrieve(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14509,7 +14509,7 @@ func (c *ClientWithResponses) DashboardsProjectsRetrieveWithResponse(ctx context
 }
 
 // DashboardsProjectsPartialUpdateWithBodyWithResponse request with arbitrary body returning *DashboardsProjectsPartialUpdateResponse
-func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error) {
 	rsp, err := c.DashboardsProjectsPartialUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14517,7 +14517,7 @@ func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithBodyWithRespons
 	return ParseDashboardsProjectsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithResponse(ctx context.Context, resourceId int64, body DashboardsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithResponse(ctx context.Context, resourceId string, body DashboardsProjectsPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error) {
 	rsp, err := c.DashboardsProjectsPartialUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14525,7 +14525,7 @@ func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithResponse(ctx co
 	return ParseDashboardsProjectsPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body DashboardsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error) {
+func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body DashboardsProjectsPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsPartialUpdateResponse, error) {
 	rsp, err := c.DashboardsProjectsPartialUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14534,7 +14534,7 @@ func (c *ClientWithResponses) DashboardsProjectsPartialUpdateWithFormdataBodyWit
 }
 
 // DashboardsProjectsUpdateWithBodyWithResponse request with arbitrary body returning *DashboardsProjectsUpdateResponse
-func (c *ClientWithResponses) DashboardsProjectsUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error) {
+func (c *ClientWithResponses) DashboardsProjectsUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error) {
 	rsp, err := c.DashboardsProjectsUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14542,7 +14542,7 @@ func (c *ClientWithResponses) DashboardsProjectsUpdateWithBodyWithResponse(ctx c
 	return ParseDashboardsProjectsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) DashboardsProjectsUpdateWithResponse(ctx context.Context, resourceId int64, body DashboardsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error) {
+func (c *ClientWithResponses) DashboardsProjectsUpdateWithResponse(ctx context.Context, resourceId string, body DashboardsProjectsUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error) {
 	rsp, err := c.DashboardsProjectsUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14550,7 +14550,7 @@ func (c *ClientWithResponses) DashboardsProjectsUpdateWithResponse(ctx context.C
 	return ParseDashboardsProjectsUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) DashboardsProjectsUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body DashboardsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error) {
+func (c *ClientWithResponses) DashboardsProjectsUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body DashboardsProjectsUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*DashboardsProjectsUpdateResponse, error) {
 	rsp, err := c.DashboardsProjectsUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14695,7 +14695,7 @@ func (c *ClientWithResponses) LogsStoragesCreateWithFormdataBodyWithResponse(ctx
 }
 
 // LogsStoragesKeysListWithResponse request returning *LogsStoragesKeysListResponse
-func (c *ClientWithResponses) LogsStoragesKeysListWithResponse(ctx context.Context, logResourceId int64, params *LogsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*LogsStoragesKeysListResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysListWithResponse(ctx context.Context, logResourceId string, params *LogsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*LogsStoragesKeysListResponse, error) {
 	rsp, err := c.LogsStoragesKeysList(ctx, logResourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14704,7 +14704,7 @@ func (c *ClientWithResponses) LogsStoragesKeysListWithResponse(ctx context.Conte
 }
 
 // LogsStoragesKeysCreateWithBodyWithResponse request with arbitrary body returning *LogsStoragesKeysCreateResponse
-func (c *ClientWithResponses) LogsStoragesKeysCreateWithBodyWithResponse(ctx context.Context, logResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysCreateWithBodyWithResponse(ctx context.Context, logResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error) {
 	rsp, err := c.LogsStoragesKeysCreateWithBody(ctx, logResourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14712,7 +14712,7 @@ func (c *ClientWithResponses) LogsStoragesKeysCreateWithBodyWithResponse(ctx con
 	return ParseLogsStoragesKeysCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesKeysCreateWithResponse(ctx context.Context, logResourceId int64, body LogsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysCreateWithResponse(ctx context.Context, logResourceId string, body LogsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error) {
 	rsp, err := c.LogsStoragesKeysCreate(ctx, logResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14720,7 +14720,7 @@ func (c *ClientWithResponses) LogsStoragesKeysCreateWithResponse(ctx context.Con
 	return ParseLogsStoragesKeysCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, logResourceId int64, body LogsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, logResourceId string, body LogsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysCreateResponse, error) {
 	rsp, err := c.LogsStoragesKeysCreateWithFormdataBody(ctx, logResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14729,7 +14729,7 @@ func (c *ClientWithResponses) LogsStoragesKeysCreateWithFormdataBodyWithResponse
 }
 
 // LogsStoragesKeysDestroyWithResponse request returning *LogsStoragesKeysDestroyResponse
-func (c *ClientWithResponses) LogsStoragesKeysDestroyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*LogsStoragesKeysDestroyResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysDestroyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*LogsStoragesKeysDestroyResponse, error) {
 	rsp, err := c.LogsStoragesKeysDestroy(ctx, logResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14738,7 +14738,7 @@ func (c *ClientWithResponses) LogsStoragesKeysDestroyWithResponse(ctx context.Co
 }
 
 // LogsStoragesKeysRetrieveWithResponse request returning *LogsStoragesKeysRetrieveResponse
-func (c *ClientWithResponses) LogsStoragesKeysRetrieveWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*LogsStoragesKeysRetrieveResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysRetrieveWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*LogsStoragesKeysRetrieveResponse, error) {
 	rsp, err := c.LogsStoragesKeysRetrieve(ctx, logResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14747,7 +14747,7 @@ func (c *ClientWithResponses) LogsStoragesKeysRetrieveWithResponse(ctx context.C
 }
 
 // LogsStoragesKeysPartialUpdateWithBodyWithResponse request with arbitrary body returning *LogsStoragesKeysPartialUpdateResponse
-func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.LogsStoragesKeysPartialUpdateWithBody(ctx, logResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14755,7 +14755,7 @@ func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithBodyWithResponse(
 	return ParseLogsStoragesKeysPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.LogsStoragesKeysPartialUpdate(ctx, logResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14763,7 +14763,7 @@ func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithResponse(ctx cont
 	return ParseLogsStoragesKeysPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.LogsStoragesKeysPartialUpdateWithFormdataBody(ctx, logResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14772,7 +14772,7 @@ func (c *ClientWithResponses) LogsStoragesKeysPartialUpdateWithFormdataBodyWithR
 }
 
 // LogsStoragesKeysUpdateWithBodyWithResponse request with arbitrary body returning *LogsStoragesKeysUpdateResponse
-func (c *ClientWithResponses) LogsStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error) {
 	rsp, err := c.LogsStoragesKeysUpdateWithBody(ctx, logResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14780,7 +14780,7 @@ func (c *ClientWithResponses) LogsStoragesKeysUpdateWithBodyWithResponse(ctx con
 	return ParseLogsStoragesKeysUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesKeysUpdateWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysUpdateWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error) {
 	rsp, err := c.LogsStoragesKeysUpdate(ctx, logResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14788,7 +14788,7 @@ func (c *ClientWithResponses) LogsStoragesKeysUpdateWithResponse(ctx context.Con
 	return ParseLogsStoragesKeysUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, logResourceId int64, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, logResourceId string, uid openapi_types.UUID, body LogsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesKeysUpdateResponse, error) {
 	rsp, err := c.LogsStoragesKeysUpdateWithFormdataBody(ctx, logResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14797,7 +14797,7 @@ func (c *ClientWithResponses) LogsStoragesKeysUpdateWithFormdataBodyWithResponse
 }
 
 // LogsStoragesDestroyWithResponse request returning *LogsStoragesDestroyResponse
-func (c *ClientWithResponses) LogsStoragesDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*LogsStoragesDestroyResponse, error) {
+func (c *ClientWithResponses) LogsStoragesDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*LogsStoragesDestroyResponse, error) {
 	rsp, err := c.LogsStoragesDestroy(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14806,7 +14806,7 @@ func (c *ClientWithResponses) LogsStoragesDestroyWithResponse(ctx context.Contex
 }
 
 // LogsStoragesRetrieveWithResponse request returning *LogsStoragesRetrieveResponse
-func (c *ClientWithResponses) LogsStoragesRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*LogsStoragesRetrieveResponse, error) {
+func (c *ClientWithResponses) LogsStoragesRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*LogsStoragesRetrieveResponse, error) {
 	rsp, err := c.LogsStoragesRetrieve(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14815,7 +14815,7 @@ func (c *ClientWithResponses) LogsStoragesRetrieveWithResponse(ctx context.Conte
 }
 
 // LogsStoragesPartialUpdateWithBodyWithResponse request with arbitrary body returning *LogsStoragesPartialUpdateResponse
-func (c *ClientWithResponses) LogsStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error) {
 	rsp, err := c.LogsStoragesPartialUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14823,7 +14823,7 @@ func (c *ClientWithResponses) LogsStoragesPartialUpdateWithBodyWithResponse(ctx 
 	return ParseLogsStoragesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesPartialUpdateWithResponse(ctx context.Context, resourceId int64, body LogsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesPartialUpdateWithResponse(ctx context.Context, resourceId string, body LogsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error) {
 	rsp, err := c.LogsStoragesPartialUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14831,7 +14831,7 @@ func (c *ClientWithResponses) LogsStoragesPartialUpdateWithResponse(ctx context.
 	return ParseLogsStoragesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body LogsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body LogsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesPartialUpdateResponse, error) {
 	rsp, err := c.LogsStoragesPartialUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14840,7 +14840,7 @@ func (c *ClientWithResponses) LogsStoragesPartialUpdateWithFormdataBodyWithRespo
 }
 
 // LogsStoragesUpdateWithBodyWithResponse request with arbitrary body returning *LogsStoragesUpdateResponse
-func (c *ClientWithResponses) LogsStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error) {
 	rsp, err := c.LogsStoragesUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14848,7 +14848,7 @@ func (c *ClientWithResponses) LogsStoragesUpdateWithBodyWithResponse(ctx context
 	return ParseLogsStoragesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesUpdateWithResponse(ctx context.Context, resourceId int64, body LogsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesUpdateWithResponse(ctx context.Context, resourceId string, body LogsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error) {
 	rsp, err := c.LogsStoragesUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14856,7 +14856,7 @@ func (c *ClientWithResponses) LogsStoragesUpdateWithResponse(ctx context.Context
 	return ParseLogsStoragesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body LogsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body LogsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesUpdateResponse, error) {
 	rsp, err := c.LogsStoragesUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14865,7 +14865,7 @@ func (c *ClientWithResponses) LogsStoragesUpdateWithFormdataBodyWithResponse(ctx
 }
 
 // LogsStoragesSetExpireCreateWithBodyWithResponse request with arbitrary body returning *LogsStoragesSetExpireCreateResponse
-func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error) {
 	rsp, err := c.LogsStoragesSetExpireCreateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14873,7 +14873,7 @@ func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithBodyWithResponse(ct
 	return ParseLogsStoragesSetExpireCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithResponse(ctx context.Context, resourceId int64, body LogsStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithResponse(ctx context.Context, resourceId string, body LogsStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error) {
 	rsp, err := c.LogsStoragesSetExpireCreate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14881,7 +14881,7 @@ func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithResponse(ctx contex
 	return ParseLogsStoragesSetExpireCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body LogsStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error) {
+func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body LogsStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*LogsStoragesSetExpireCreateResponse, error) {
 	rsp, err := c.LogsStoragesSetExpireCreateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14890,7 +14890,7 @@ func (c *ClientWithResponses) LogsStoragesSetExpireCreateWithFormdataBodyWithRes
 }
 
 // LogsStoragesStatsDailyRetrieveWithResponse request returning *LogsStoragesStatsDailyRetrieveResponse
-func (c *ClientWithResponses) LogsStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId int64, params *LogsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*LogsStoragesStatsDailyRetrieveResponse, error) {
+func (c *ClientWithResponses) LogsStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId string, params *LogsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*LogsStoragesStatsDailyRetrieveResponse, error) {
 	rsp, err := c.LogsStoragesStatsDailyRetrieve(ctx, resourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -14899,7 +14899,7 @@ func (c *ClientWithResponses) LogsStoragesStatsDailyRetrieveWithResponse(ctx con
 }
 
 // LogsStoragesStatsMonthlyRetrieveWithResponse request returning *LogsStoragesStatsMonthlyRetrieveResponse
-func (c *ClientWithResponses) LogsStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId int64, params *LogsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*LogsStoragesStatsMonthlyRetrieveResponse, error) {
+func (c *ClientWithResponses) LogsStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId string, params *LogsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*LogsStoragesStatsMonthlyRetrieveResponse, error) {
 	rsp, err := c.LogsStoragesStatsMonthlyRetrieve(ctx, resourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15087,7 +15087,7 @@ func (c *ClientWithResponses) MetricsStoragesCreateWithFormdataBodyWithResponse(
 }
 
 // MetricsStoragesKeysListWithResponse request returning *MetricsStoragesKeysListResponse
-func (c *ClientWithResponses) MetricsStoragesKeysListWithResponse(ctx context.Context, metricsResourceId int64, params *MetricsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysListResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysListWithResponse(ctx context.Context, metricsResourceId string, params *MetricsStoragesKeysListParams, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysListResponse, error) {
 	rsp, err := c.MetricsStoragesKeysList(ctx, metricsResourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15096,7 +15096,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysListWithResponse(ctx context.Co
 }
 
 // MetricsStoragesKeysCreateWithBodyWithResponse request with arbitrary body returning *MetricsStoragesKeysCreateResponse
-func (c *ClientWithResponses) MetricsStoragesKeysCreateWithBodyWithResponse(ctx context.Context, metricsResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysCreateWithBodyWithResponse(ctx context.Context, metricsResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysCreateWithBody(ctx, metricsResourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15104,7 +15104,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysCreateWithBodyWithResponse(ctx 
 	return ParseMetricsStoragesKeysCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesKeysCreateWithResponse(ctx context.Context, metricsResourceId int64, body MetricsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysCreateWithResponse(ctx context.Context, metricsResourceId string, body MetricsStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysCreate(ctx, metricsResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15112,7 +15112,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysCreateWithResponse(ctx context.
 	return ParseMetricsStoragesKeysCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId int64, body MetricsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId string, body MetricsStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysCreateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysCreateWithFormdataBody(ctx, metricsResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15121,7 +15121,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysCreateWithFormdataBodyWithRespo
 }
 
 // MetricsStoragesKeysDestroyWithResponse request returning *MetricsStoragesKeysDestroyResponse
-func (c *ClientWithResponses) MetricsStoragesKeysDestroyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysDestroyResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysDestroyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysDestroyResponse, error) {
 	rsp, err := c.MetricsStoragesKeysDestroy(ctx, metricsResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15130,7 +15130,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysDestroyWithResponse(ctx context
 }
 
 // MetricsStoragesKeysRetrieveWithResponse request returning *MetricsStoragesKeysRetrieveResponse
-func (c *ClientWithResponses) MetricsStoragesKeysRetrieveWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysRetrieveResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysRetrieveWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysRetrieveResponse, error) {
 	rsp, err := c.MetricsStoragesKeysRetrieve(ctx, metricsResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15139,7 +15139,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysRetrieveWithResponse(ctx contex
 }
 
 // MetricsStoragesKeysPartialUpdateWithBodyWithResponse request with arbitrary body returning *MetricsStoragesKeysPartialUpdateResponse
-func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysPartialUpdateWithBody(ctx, metricsResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15147,7 +15147,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithBodyWithRespon
 	return ParseMetricsStoragesKeysPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysPartialUpdate(ctx, metricsResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15155,7 +15155,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithResponse(ctx c
 	return ParseMetricsStoragesKeysPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysPartialUpdateWithFormdataBody(ctx, metricsResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15164,7 +15164,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysPartialUpdateWithFormdataBodyWi
 }
 
 // MetricsStoragesKeysUpdateWithBodyWithResponse request with arbitrary body returning *MetricsStoragesKeysUpdateResponse
-func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysUpdateWithBody(ctx, metricsResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15172,7 +15172,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithBodyWithResponse(ctx 
 	return ParseMetricsStoragesKeysUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysUpdate(ctx, metricsResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15180,7 +15180,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithResponse(ctx context.
 	return ParseMetricsStoragesKeysUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId int64, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, metricsResourceId string, uid openapi_types.UUID, body MetricsStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesKeysUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesKeysUpdateWithFormdataBody(ctx, metricsResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15189,7 +15189,7 @@ func (c *ClientWithResponses) MetricsStoragesKeysUpdateWithFormdataBodyWithRespo
 }
 
 // MetricsStoragesDestroyWithResponse request returning *MetricsStoragesDestroyResponse
-func (c *ClientWithResponses) MetricsStoragesDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*MetricsStoragesDestroyResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*MetricsStoragesDestroyResponse, error) {
 	rsp, err := c.MetricsStoragesDestroy(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15198,7 +15198,7 @@ func (c *ClientWithResponses) MetricsStoragesDestroyWithResponse(ctx context.Con
 }
 
 // MetricsStoragesRetrieveWithResponse request returning *MetricsStoragesRetrieveResponse
-func (c *ClientWithResponses) MetricsStoragesRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*MetricsStoragesRetrieveResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*MetricsStoragesRetrieveResponse, error) {
 	rsp, err := c.MetricsStoragesRetrieve(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15207,7 +15207,7 @@ func (c *ClientWithResponses) MetricsStoragesRetrieveWithResponse(ctx context.Co
 }
 
 // MetricsStoragesPartialUpdateWithBodyWithResponse request with arbitrary body returning *MetricsStoragesPartialUpdateResponse
-func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesPartialUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15215,7 +15215,7 @@ func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithBodyWithResponse(c
 	return ParseMetricsStoragesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithResponse(ctx context.Context, resourceId int64, body MetricsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithResponse(ctx context.Context, resourceId string, body MetricsStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesPartialUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15223,7 +15223,7 @@ func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithResponse(ctx conte
 	return ParseMetricsStoragesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body MetricsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body MetricsStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesPartialUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesPartialUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15232,7 +15232,7 @@ func (c *ClientWithResponses) MetricsStoragesPartialUpdateWithFormdataBodyWithRe
 }
 
 // MetricsStoragesUpdateWithBodyWithResponse request with arbitrary body returning *MetricsStoragesUpdateResponse
-func (c *ClientWithResponses) MetricsStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15240,7 +15240,7 @@ func (c *ClientWithResponses) MetricsStoragesUpdateWithBodyWithResponse(ctx cont
 	return ParseMetricsStoragesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesUpdateWithResponse(ctx context.Context, resourceId int64, body MetricsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesUpdateWithResponse(ctx context.Context, resourceId string, body MetricsStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15248,7 +15248,7 @@ func (c *ClientWithResponses) MetricsStoragesUpdateWithResponse(ctx context.Cont
 	return ParseMetricsStoragesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) MetricsStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body MetricsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body MetricsStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*MetricsStoragesUpdateResponse, error) {
 	rsp, err := c.MetricsStoragesUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15257,7 +15257,7 @@ func (c *ClientWithResponses) MetricsStoragesUpdateWithFormdataBodyWithResponse(
 }
 
 // MetricsStoragesStatsDailyRetrieveWithResponse request returning *MetricsStoragesStatsDailyRetrieveResponse
-func (c *ClientWithResponses) MetricsStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId int64, params *MetricsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*MetricsStoragesStatsDailyRetrieveResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId string, params *MetricsStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*MetricsStoragesStatsDailyRetrieveResponse, error) {
 	rsp, err := c.MetricsStoragesStatsDailyRetrieve(ctx, resourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15266,7 +15266,7 @@ func (c *ClientWithResponses) MetricsStoragesStatsDailyRetrieveWithResponse(ctx 
 }
 
 // MetricsStoragesStatsMonthlyRetrieveWithResponse request returning *MetricsStoragesStatsMonthlyRetrieveResponse
-func (c *ClientWithResponses) MetricsStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId int64, params *MetricsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*MetricsStoragesStatsMonthlyRetrieveResponse, error) {
+func (c *ClientWithResponses) MetricsStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId string, params *MetricsStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*MetricsStoragesStatsMonthlyRetrieveResponse, error) {
 	rsp, err := c.MetricsStoragesStatsMonthlyRetrieve(ctx, resourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15327,7 +15327,7 @@ func (c *ClientWithResponses) TracesStoragesCreateWithFormdataBodyWithResponse(c
 }
 
 // TracesStoragesDestroyWithResponse request returning *TracesStoragesDestroyResponse
-func (c *ClientWithResponses) TracesStoragesDestroyWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*TracesStoragesDestroyResponse, error) {
+func (c *ClientWithResponses) TracesStoragesDestroyWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*TracesStoragesDestroyResponse, error) {
 	rsp, err := c.TracesStoragesDestroy(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15336,7 +15336,7 @@ func (c *ClientWithResponses) TracesStoragesDestroyWithResponse(ctx context.Cont
 }
 
 // TracesStoragesRetrieveWithResponse request returning *TracesStoragesRetrieveResponse
-func (c *ClientWithResponses) TracesStoragesRetrieveWithResponse(ctx context.Context, resourceId int64, reqEditors ...RequestEditorFn) (*TracesStoragesRetrieveResponse, error) {
+func (c *ClientWithResponses) TracesStoragesRetrieveWithResponse(ctx context.Context, resourceId string, reqEditors ...RequestEditorFn) (*TracesStoragesRetrieveResponse, error) {
 	rsp, err := c.TracesStoragesRetrieve(ctx, resourceId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15345,7 +15345,7 @@ func (c *ClientWithResponses) TracesStoragesRetrieveWithResponse(ctx context.Con
 }
 
 // TracesStoragesPartialUpdateWithBodyWithResponse request with arbitrary body returning *TracesStoragesPartialUpdateResponse
-func (c *ClientWithResponses) TracesStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesPartialUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error) {
 	rsp, err := c.TracesStoragesPartialUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15353,7 +15353,7 @@ func (c *ClientWithResponses) TracesStoragesPartialUpdateWithBodyWithResponse(ct
 	return ParseTracesStoragesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesPartialUpdateWithResponse(ctx context.Context, resourceId int64, body TracesStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesPartialUpdateWithResponse(ctx context.Context, resourceId string, body TracesStoragesPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error) {
 	rsp, err := c.TracesStoragesPartialUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15361,7 +15361,7 @@ func (c *ClientWithResponses) TracesStoragesPartialUpdateWithResponse(ctx contex
 	return ParseTracesStoragesPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body TracesStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body TracesStoragesPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesPartialUpdateResponse, error) {
 	rsp, err := c.TracesStoragesPartialUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15370,7 +15370,7 @@ func (c *ClientWithResponses) TracesStoragesPartialUpdateWithFormdataBodyWithRes
 }
 
 // TracesStoragesUpdateWithBodyWithResponse request with arbitrary body returning *TracesStoragesUpdateResponse
-func (c *ClientWithResponses) TracesStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesUpdateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error) {
 	rsp, err := c.TracesStoragesUpdateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15378,7 +15378,7 @@ func (c *ClientWithResponses) TracesStoragesUpdateWithBodyWithResponse(ctx conte
 	return ParseTracesStoragesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesUpdateWithResponse(ctx context.Context, resourceId int64, body TracesStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesUpdateWithResponse(ctx context.Context, resourceId string, body TracesStoragesUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error) {
 	rsp, err := c.TracesStoragesUpdate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15386,7 +15386,7 @@ func (c *ClientWithResponses) TracesStoragesUpdateWithResponse(ctx context.Conte
 	return ParseTracesStoragesUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body TracesStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesUpdateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body TracesStoragesUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesUpdateResponse, error) {
 	rsp, err := c.TracesStoragesUpdateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15395,7 +15395,7 @@ func (c *ClientWithResponses) TracesStoragesUpdateWithFormdataBodyWithResponse(c
 }
 
 // TracesStoragesSetExpireCreateWithBodyWithResponse request with arbitrary body returning *TracesStoragesSetExpireCreateResponse
-func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithBodyWithResponse(ctx context.Context, resourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithBodyWithResponse(ctx context.Context, resourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error) {
 	rsp, err := c.TracesStoragesSetExpireCreateWithBody(ctx, resourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15403,7 +15403,7 @@ func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithBodyWithResponse(
 	return ParseTracesStoragesSetExpireCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithResponse(ctx context.Context, resourceId int64, body TracesStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithResponse(ctx context.Context, resourceId string, body TracesStoragesSetExpireCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error) {
 	rsp, err := c.TracesStoragesSetExpireCreate(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15411,7 +15411,7 @@ func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithResponse(ctx cont
 	return ParseTracesStoragesSetExpireCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithFormdataBodyWithResponse(ctx context.Context, resourceId int64, body TracesStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithFormdataBodyWithResponse(ctx context.Context, resourceId string, body TracesStoragesSetExpireCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesSetExpireCreateResponse, error) {
 	rsp, err := c.TracesStoragesSetExpireCreateWithFormdataBody(ctx, resourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15420,7 +15420,7 @@ func (c *ClientWithResponses) TracesStoragesSetExpireCreateWithFormdataBodyWithR
 }
 
 // TracesStoragesStatsDailyRetrieveWithResponse request returning *TracesStoragesStatsDailyRetrieveResponse
-func (c *ClientWithResponses) TracesStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId int64, params *TracesStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*TracesStoragesStatsDailyRetrieveResponse, error) {
+func (c *ClientWithResponses) TracesStoragesStatsDailyRetrieveWithResponse(ctx context.Context, resourceId string, params *TracesStoragesStatsDailyRetrieveParams, reqEditors ...RequestEditorFn) (*TracesStoragesStatsDailyRetrieveResponse, error) {
 	rsp, err := c.TracesStoragesStatsDailyRetrieve(ctx, resourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15429,7 +15429,7 @@ func (c *ClientWithResponses) TracesStoragesStatsDailyRetrieveWithResponse(ctx c
 }
 
 // TracesStoragesStatsMonthlyRetrieveWithResponse request returning *TracesStoragesStatsMonthlyRetrieveResponse
-func (c *ClientWithResponses) TracesStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId int64, params *TracesStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*TracesStoragesStatsMonthlyRetrieveResponse, error) {
+func (c *ClientWithResponses) TracesStoragesStatsMonthlyRetrieveWithResponse(ctx context.Context, resourceId string, params *TracesStoragesStatsMonthlyRetrieveParams, reqEditors ...RequestEditorFn) (*TracesStoragesStatsMonthlyRetrieveResponse, error) {
 	rsp, err := c.TracesStoragesStatsMonthlyRetrieve(ctx, resourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15438,7 +15438,7 @@ func (c *ClientWithResponses) TracesStoragesStatsMonthlyRetrieveWithResponse(ctx
 }
 
 // TracesStoragesKeysListWithResponse request returning *TracesStoragesKeysListResponse
-func (c *ClientWithResponses) TracesStoragesKeysListWithResponse(ctx context.Context, traceResourceId int64, params *TracesStoragesKeysListParams, reqEditors ...RequestEditorFn) (*TracesStoragesKeysListResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysListWithResponse(ctx context.Context, traceResourceId string, params *TracesStoragesKeysListParams, reqEditors ...RequestEditorFn) (*TracesStoragesKeysListResponse, error) {
 	rsp, err := c.TracesStoragesKeysList(ctx, traceResourceId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15447,7 +15447,7 @@ func (c *ClientWithResponses) TracesStoragesKeysListWithResponse(ctx context.Con
 }
 
 // TracesStoragesKeysCreateWithBodyWithResponse request with arbitrary body returning *TracesStoragesKeysCreateResponse
-func (c *ClientWithResponses) TracesStoragesKeysCreateWithBodyWithResponse(ctx context.Context, traceResourceId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysCreateWithBodyWithResponse(ctx context.Context, traceResourceId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error) {
 	rsp, err := c.TracesStoragesKeysCreateWithBody(ctx, traceResourceId, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15455,7 +15455,7 @@ func (c *ClientWithResponses) TracesStoragesKeysCreateWithBodyWithResponse(ctx c
 	return ParseTracesStoragesKeysCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesKeysCreateWithResponse(ctx context.Context, traceResourceId int64, body TracesStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysCreateWithResponse(ctx context.Context, traceResourceId string, body TracesStoragesKeysCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error) {
 	rsp, err := c.TracesStoragesKeysCreate(ctx, traceResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15463,7 +15463,7 @@ func (c *ClientWithResponses) TracesStoragesKeysCreateWithResponse(ctx context.C
 	return ParseTracesStoragesKeysCreateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId int64, body TracesStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysCreateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId string, body TracesStoragesKeysCreateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysCreateResponse, error) {
 	rsp, err := c.TracesStoragesKeysCreateWithFormdataBody(ctx, traceResourceId, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15472,7 +15472,7 @@ func (c *ClientWithResponses) TracesStoragesKeysCreateWithFormdataBodyWithRespon
 }
 
 // TracesStoragesKeysDestroyWithResponse request returning *TracesStoragesKeysDestroyResponse
-func (c *ClientWithResponses) TracesStoragesKeysDestroyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*TracesStoragesKeysDestroyResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysDestroyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*TracesStoragesKeysDestroyResponse, error) {
 	rsp, err := c.TracesStoragesKeysDestroy(ctx, traceResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15481,7 +15481,7 @@ func (c *ClientWithResponses) TracesStoragesKeysDestroyWithResponse(ctx context.
 }
 
 // TracesStoragesKeysRetrieveWithResponse request returning *TracesStoragesKeysRetrieveResponse
-func (c *ClientWithResponses) TracesStoragesKeysRetrieveWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*TracesStoragesKeysRetrieveResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysRetrieveWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, reqEditors ...RequestEditorFn) (*TracesStoragesKeysRetrieveResponse, error) {
 	rsp, err := c.TracesStoragesKeysRetrieve(ctx, traceResourceId, uid, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15490,7 +15490,7 @@ func (c *ClientWithResponses) TracesStoragesKeysRetrieveWithResponse(ctx context
 }
 
 // TracesStoragesKeysPartialUpdateWithBodyWithResponse request with arbitrary body returning *TracesStoragesKeysPartialUpdateResponse
-func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithBodyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.TracesStoragesKeysPartialUpdateWithBody(ctx, traceResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15498,7 +15498,7 @@ func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithBodyWithRespons
 	return ParseTracesStoragesKeysPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.TracesStoragesKeysPartialUpdate(ctx, traceResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15506,7 +15506,7 @@ func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithResponse(ctx co
 	return ParseTracesStoragesKeysPartialUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysPartialUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysPartialUpdateResponse, error) {
 	rsp, err := c.TracesStoragesKeysPartialUpdateWithFormdataBody(ctx, traceResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15515,7 +15515,7 @@ func (c *ClientWithResponses) TracesStoragesKeysPartialUpdateWithFormdataBodyWit
 }
 
 // TracesStoragesKeysUpdateWithBodyWithResponse request with arbitrary body returning *TracesStoragesKeysUpdateResponse
-func (c *ClientWithResponses) TracesStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysUpdateWithBodyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error) {
 	rsp, err := c.TracesStoragesKeysUpdateWithBody(ctx, traceResourceId, uid, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15523,7 +15523,7 @@ func (c *ClientWithResponses) TracesStoragesKeysUpdateWithBodyWithResponse(ctx c
 	return ParseTracesStoragesKeysUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesKeysUpdateWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysUpdateWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateJSONRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error) {
 	rsp, err := c.TracesStoragesKeysUpdate(ctx, traceResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -15531,7 +15531,7 @@ func (c *ClientWithResponses) TracesStoragesKeysUpdateWithResponse(ctx context.C
 	return ParseTracesStoragesKeysUpdateResponse(rsp)
 }
 
-func (c *ClientWithResponses) TracesStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId int64, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error) {
+func (c *ClientWithResponses) TracesStoragesKeysUpdateWithFormdataBodyWithResponse(ctx context.Context, traceResourceId string, uid openapi_types.UUID, body TracesStoragesKeysUpdateFormdataRequestBody, reqEditors ...RequestEditorFn) (*TracesStoragesKeysUpdateResponse, error) {
 	rsp, err := c.TracesStoragesKeysUpdateWithFormdataBody(ctx, traceResourceId, uid, body, reqEditors...)
 	if err != nil {
 		return nil, err

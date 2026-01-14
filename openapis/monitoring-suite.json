@@ -128,8 +128,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -182,8 +181,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -258,8 +256,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -289,8 +286,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -342,8 +338,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -382,8 +377,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -442,8 +436,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -501,8 +494,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -554,8 +546,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -592,8 +583,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -645,8 +635,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -685,8 +674,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -745,8 +733,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -804,8 +791,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -840,8 +826,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -912,8 +897,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -956,8 +940,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -1009,8 +992,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1049,8 +1031,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1109,8 +1090,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1168,8 +1148,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1221,8 +1200,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -1252,8 +1230,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -1330,8 +1307,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1393,8 +1369,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1444,8 +1419,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1484,8 +1458,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1544,8 +1517,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1603,8 +1575,7 @@
             "in": "path",
             "name": "project_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -1638,10 +1609,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -1673,10 +1643,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -1727,10 +1696,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -1781,10 +1749,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -1893,10 +1860,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -1928,10 +1894,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -1982,10 +1947,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -2036,10 +2000,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -2091,8 +2054,7 @@
             "in": "query",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "description": "Log storage resource id"
           },
@@ -2375,8 +2337,7 @@
             "in": "query",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -2481,8 +2442,7 @@
             "in": "path",
             "name": "log_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -2512,8 +2472,7 @@
             "in": "path",
             "name": "log_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -2564,8 +2523,7 @@
             "in": "path",
             "name": "log_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -2604,8 +2562,7 @@
             "in": "path",
             "name": "log_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -2663,8 +2620,7 @@
             "in": "path",
             "name": "log_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -2722,8 +2678,7 @@
             "in": "path",
             "name": "log_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -2757,10 +2712,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -2792,10 +2746,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -2846,10 +2799,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -2900,10 +2852,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -2930,10 +2881,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -2995,10 +2945,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -3040,10 +2989,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -3207,8 +3155,7 @@
             "in": "query",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "description": "Metrics storage resource id"
           },
@@ -3478,8 +3425,7 @@
             "in": "query",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -3568,8 +3514,7 @@
             "in": "path",
             "name": "metrics_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -3599,8 +3544,7 @@
             "in": "path",
             "name": "metrics_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -3651,8 +3595,7 @@
             "in": "path",
             "name": "metrics_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -3691,8 +3634,7 @@
             "in": "path",
             "name": "metrics_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -3750,8 +3692,7 @@
             "in": "path",
             "name": "metrics_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -3809,8 +3750,7 @@
             "in": "path",
             "name": "metrics_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -3844,10 +3784,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -3879,10 +3818,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -3933,10 +3871,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -3987,10 +3924,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4025,10 +3961,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4070,10 +4005,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4229,8 +4163,7 @@
             "in": "query",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -4301,10 +4234,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4336,10 +4268,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4390,10 +4321,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4444,10 +4374,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4474,10 +4403,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4539,10 +4467,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4584,10 +4511,9 @@
             "in": "path",
             "name": "resource_id",
             "schema": {
-              "type": "integer",
+              "type": "string",
               "maximum": 999999999999,
               "minimum": 0,
-              "format": "int64",
               "title": "Cloud resource id",
               "example": 110000000000
             },
@@ -4649,8 +4575,7 @@
             "in": "path",
             "name": "trace_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -4680,8 +4605,7 @@
             "in": "path",
             "name": "trace_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           }
@@ -4732,8 +4656,7 @@
             "in": "path",
             "name": "trace_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -4772,8 +4695,7 @@
             "in": "path",
             "name": "trace_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -4831,8 +4753,7 @@
             "in": "path",
             "name": "trace_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -4890,8 +4811,7 @@
             "in": "path",
             "name": "trace_resource_id",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "required": true
           },
@@ -4923,8 +4843,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -4959,11 +4878,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -5162,8 +5080,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -5198,11 +5115,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -5370,10 +5286,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -5512,8 +5427,7 @@
             "readOnly": true
           },
           "resource_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "description": "対象リソースのID"
           },
@@ -5644,11 +5558,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -5691,10 +5604,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -5946,8 +5858,7 @@
             "readOnly": true
           },
           "resource_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "description": "対象リソースのID"
           },
@@ -6049,11 +5960,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -6120,10 +6030,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7059,8 +6968,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -7095,11 +7003,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7208,8 +7115,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -7244,11 +7150,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7265,10 +7170,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7343,10 +7247,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7357,8 +7260,7 @@
             "readOnly": true
           },
           "resource_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "description": "対象リソースのID"
           },
@@ -7410,8 +7312,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -7479,11 +7380,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7514,10 +7414,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7547,10 +7446,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7561,8 +7459,7 @@
             "readOnly": true
           },
           "resource_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "description": "対象リソースのID"
           },
@@ -7614,8 +7511,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -7654,11 +7550,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7713,10 +7608,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -7829,8 +7723,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -7898,10 +7791,9 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -8014,7 +7906,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true
           },
           "publisher": {
@@ -8157,9 +8049,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -8286,8 +8177,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -8355,10 +8245,9 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -8517,7 +8406,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true
           },
           "username": {
@@ -8558,8 +8447,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -8594,11 +8482,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -8652,8 +8539,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -8688,11 +8574,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -8734,8 +8619,7 @@
             "readOnly": true
           },
           "resource_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "description": "対象リソースのID"
           },
@@ -8870,11 +8754,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -8921,10 +8804,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -8977,8 +8859,7 @@
             "readOnly": true
           },
           "resource_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "description": "対象リソースのID"
           },
@@ -9084,11 +8965,10 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "nullable": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -9159,10 +9039,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -9230,8 +9109,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -9299,10 +9177,9 @@
             "title": "Cloud account id"
           },
           "resource_id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "title": "Cloud resource id",
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
