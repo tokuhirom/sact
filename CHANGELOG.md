@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.10](https://github.com/tokuhirom/sact/compare/v0.0.9...v0.0.10) - 2026-01-14
+- Include LB details in ASG detail view by @tokuhirom in https://github.com/tokuhirom/sact/pull/39
+
 ## [v0.0.9](https://github.com/tokuhirom/sact/compare/v0.0.8...v0.0.9) - 2026-01-14
 - Add AppRun Dedicated cluster list support by @tokuhirom in https://github.com/tokuhirom/sact/pull/35
 - Enhance DB detail display with missing API fields by @tokuhirom in https://github.com/tokuhirom/sact/pull/37
