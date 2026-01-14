@@ -921,6 +921,26 @@ func renderContainerRegistryDetail(detail *ContainerRegistryDetail) string {
 		}
 	}
 
+	// Display images
+	b.WriteString("\nImages:\n")
+	if detail.ImagesError != "" {
+		b.WriteString(fmt.Sprintf("  Error: %s\n", detail.ImagesError))
+	} else if len(detail.Images) == 0 {
+		b.WriteString("  (no images)\n")
+	} else {
+		for _, img := range detail.Images {
+			sizeStr := "-"
+			if img.Size > 0 {
+				sizeStr = formatBytes(img.Size)
+			}
+			createdStr := "-"
+			if img.CreatedAt != "" {
+				createdStr = img.CreatedAt
+			}
+			b.WriteString(fmt.Sprintf("  - %s:%s  [%s]  %s\n", img.Repository, img.Tag, sizeStr, createdStr))
+		}
+	}
+
 	if len(detail.Tags) > 0 {
 		b.WriteString(fmt.Sprintf("\nTags:          %s\n", strings.Join(detail.Tags, ", ")))
 	}
@@ -934,4 +954,18 @@ func renderContainerRegistryDetail(detail *ContainerRegistryDetail) string {
 	}
 
 	return b.String()
+}
+
+// formatBytes converts bytes to human-readable format
+func formatBytes(bytes int64) string {
+	const unit = 1024
+	if bytes < unit {
+		return fmt.Sprintf("%d B", bytes)
+	}
+	div, exp := int64(unit), 0
+	for n := bytes / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp])
 }
