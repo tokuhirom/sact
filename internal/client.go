@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"os"
 
+	client "github.com/sacloud/api-client-go"
 	"github.com/sacloud/iaas-api-go"
 	"github.com/sacloud/iaas-api-go/helper/api"
 
@@ -167,11 +167,17 @@ func (c *SakuraClient) GetAppRunClient() (*apprun.Client, error) {
 		return c.apprunClient, nil
 	}
 
-	token := os.Getenv("SAKURA_ACCESS_TOKEN")
-	secret := os.Getenv("SAKURA_ACCESS_TOKEN_SECRET")
+	// Use api-client-go to get credentials from profile or environment variables
+	clientOpts, err := client.DefaultOption()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get credentials: %w", err)
+	}
+
+	token := clientOpts.AccessToken
+	secret := clientOpts.AccessTokenSecret
 
 	if token == "" || secret == "" {
-		return nil, fmt.Errorf("SAKURA_ACCESS_TOKEN and SAKURA_ACCESS_TOKEN_SECRET environment variables are required")
+		return nil, fmt.Errorf("credentials not found in profile or environment variables")
 	}
 
 	secSource := &apprunSecuritySource{
@@ -179,7 +185,7 @@ func (c *SakuraClient) GetAppRunClient() (*apprun.Client, error) {
 		password: secret,
 	}
 
-	client, err := apprun.NewClient(
+	apprunClient, err := apprun.NewClient(
 		"https://secure.sakura.ad.jp/cloud/api/apprun-dedicated/1.0",
 		secSource,
 	)
@@ -187,6 +193,6 @@ func (c *SakuraClient) GetAppRunClient() (*apprun.Client, error) {
 		return nil, fmt.Errorf("failed to create AppRun client: %w", err)
 	}
 
-	c.apprunClient = client
+	c.apprunClient = apprunClient
 	return c.apprunClient, nil
 }
