@@ -487,6 +487,25 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				resourceID,
 				routings))
 		}
+	} else if ts, ok := item.(MonitoringTraceStorage); ok {
+		// Handle MonitoringTraceStorage
+		name := getStringPtr(ts.Name)
+		resourceID := getStringPtr(ts.ResourceId)
+		retention := 0
+		if ts.RetentionPeriodDays != nil {
+			retention = *ts.RetentionPeriodDays
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %10s  %d days retention",
+				name,
+				resourceID,
+				retention))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %10s  %d days retention",
+				name,
+				resourceID,
+				retention))
+		}
 	} else {
 		return
 	}
@@ -544,6 +563,7 @@ type model struct {
 	resourceType                   ResourceType
 	monitoringLogStorageDetail     *MonitoringLogStorageDetail
 	monitoringMetricsStorageDetail *MonitoringMetricsStorageDetail
+	monitoringTraceStorageDetail   *MonitoringTraceStorageDetail
 	detailViewport                 viewport.Model
 	// Resource type selector
 	resourceSelectMode   bool
@@ -801,6 +821,16 @@ type monitoringMetricsStoragesLoadedMsg struct {
 
 type monitoringMetricsStorageDetailLoadedMsg struct {
 	detail *MonitoringMetricsStorageDetail
+	err    error
+}
+
+type monitoringTraceStoragesLoadedMsg struct {
+	storages []MonitoringTraceStorage
+	err      error
+}
+
+type monitoringTraceStorageDetailLoadedMsg struct {
+	detail *MonitoringTraceStorageDetail
 	err    error
 }
 
@@ -1345,6 +1375,27 @@ func loadMonitoringMetricsStorageDetail(client *SakuraClient, resourceID string)
 	}
 }
 
+func loadMonitoringTraceStorages(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		storages, err := client.ListMonitoringTraceStorages(ctx)
+		return monitoringTraceStoragesLoadedMsg{storages: storages, err: err}
+	}
+}
+
+func loadMonitoringTraceStorageDetail(client *SakuraClient, resourceID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetMonitoringTraceStorageDetail(ctx, resourceID)
+		if err != nil {
+			slog.Error("Failed to load trace storage detail", slog.Any("error", err))
+			return monitoringTraceStorageDetailLoadedMsg{err: err}
+		}
+		slog.Info("Trace storage detail loaded successfully", slog.String("resourceID", resourceID))
+		return monitoringTraceStorageDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -1698,6 +1749,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, loadMonitoringLogStorages(m.client)
 					case ResourceTypeMonitoringMetricsStorage:
 						return m, loadMonitoringMetricsStorages(m.client)
+					case ResourceTypeMonitoringTraceStorage:
+						return m, loadMonitoringTraceStorages(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1872,6 +1925,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.detailLoading = true
 					return m, loadMonitoringMetricsStorageDetail(m.client, getStringPtr(ms.ResourceId))
 				}
+				if ts, ok := selectedItem.(MonitoringTraceStorage); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadMonitoringTraceStorageDetail(m.client, getStringPtr(ts.ResourceId))
+				}
 			}
 			return m, nil
 
@@ -1903,7 +1961,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "z":
 			// Zone switching only affects zone-dependent resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry, AppRunCluster, Monitoring are global)
-			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunDedicated || m.resourceType == ResourceTypeMonitoringLogStorage || m.resourceType == ResourceTypeMonitoringMetricsStorage {
+			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunDedicated || m.resourceType == ResourceTypeMonitoringLogStorage || m.resourceType == ResourceTypeMonitoringMetricsStorage || m.resourceType == ResourceTypeMonitoringTraceStorage {
 				return m, nil
 			}
 			oldZone := m.currentZone
@@ -2771,6 +2829,37 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case monitoringTraceStoragesLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load monitoring trace storages", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Monitoring trace storages loaded successfully", slog.Int("count", len(msg.storages)))
+
+		items := make([]list.Item, len(msg.storages))
+		for i, storage := range msg.storages {
+			items[i] = storage
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case monitoringTraceStorageDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load monitoring trace storage detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.monitoringTraceStorageDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderMonitoringTraceStorageDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -2797,7 +2886,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil || m.containerRegistryDetail != nil || m.appRunClusterDetail != nil || m.appRunLBDetail != nil || m.appRunASGDetail != nil || m.monitoringLogStorageDetail != nil || m.monitoringMetricsStorageDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil || m.containerRegistryDetail != nil || m.appRunClusterDetail != nil || m.appRunLBDetail != nil || m.appRunASGDetail != nil || m.monitoringLogStorageDetail != nil || m.monitoringMetricsStorageDetail != nil || m.monitoringTraceStorageDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
@@ -2824,7 +2913,7 @@ func (m model) View() string {
 
 	// Zone selector and resource type
 	// Show "global" for global resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry, AppRunCluster, Monitoring)
-	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunDedicated || m.resourceType == ResourceTypeMonitoringLogStorage || m.resourceType == ResourceTypeMonitoringMetricsStorage {
+	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunDedicated || m.resourceType == ResourceTypeMonitoringLogStorage || m.resourceType == ResourceTypeMonitoringMetricsStorage || m.resourceType == ResourceTypeMonitoringTraceStorage {
 		b.WriteString("Zone: ")
 		b.WriteString(zoneStyle.Render("global"))
 		b.WriteString(" | Type: ")

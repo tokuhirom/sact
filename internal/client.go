@@ -75,6 +75,7 @@ const (
 	ResourceTypeAppRunDedicated
 	ResourceTypeMonitoringLogStorage
 	ResourceTypeMonitoringMetricsStorage
+	ResourceTypeMonitoringTraceStorage
 )
 
 // AllResourceTypes returns all available resource types
@@ -100,6 +101,7 @@ var AllResourceTypes = []ResourceType{
 	ResourceTypeAppRunDedicated,
 	ResourceTypeMonitoringLogStorage,
 	ResourceTypeMonitoringMetricsStorage,
+	ResourceTypeMonitoringTraceStorage,
 }
 
 func (r ResourceType) String() string {
@@ -146,6 +148,8 @@ func (r ResourceType) String() string {
 		return "Log Storage"
 	case ResourceTypeMonitoringMetricsStorage:
 		return "Metrics Storage"
+	case ResourceTypeMonitoringTraceStorage:
+		return "Trace Storage"
 	default:
 		return "Unknown"
 	}

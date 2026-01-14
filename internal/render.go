@@ -1245,9 +1245,9 @@ func renderMonitoringLogStorageDetail(detail *MonitoringLogStorageDetail) string
 				uid = r.Uid.String()[:8]
 			}
 			srcID := getStringPtr(r.ResourceId)
-			destID := getInt64Ptr(r.LogStorageId)
+			destID := getStringPtr(r.LogStorageId)
 			b.WriteString(fmt.Sprintf("  - %s (variant: %s)\n", uid, r.Variant))
-			b.WriteString(fmt.Sprintf("    Resource: %s -> LogStorage: %d\n", srcID, destID))
+			b.WriteString(fmt.Sprintf("    Resource: %s -> LogStorage: %s\n", srcID, destID))
 		}
 	}
 
@@ -1305,9 +1305,9 @@ func renderMonitoringMetricsStorageDetail(detail *MonitoringMetricsStorageDetail
 				uid = r.Uid.String()[:8]
 			}
 			srcID := getStringPtr(r.ResourceId)
-			destID := getInt64Ptr(r.MetricsStorageId)
+			destID := getStringPtr(r.MetricsStorageId)
 			b.WriteString(fmt.Sprintf("  - %s (variant: %s)\n", uid, r.Variant))
-			b.WriteString(fmt.Sprintf("    Resource: %s -> MetricsStorage: %d\n", srcID, destID))
+			b.WriteString(fmt.Sprintf("    Resource: %s -> MetricsStorage: %s\n", srcID, destID))
 		}
 	}
 
@@ -1317,6 +1317,48 @@ func renderMonitoringMetricsStorageDetail(detail *MonitoringMetricsStorageDetail
 
 	if detail.UpdatedAt != nil {
 		b.WriteString(fmt.Sprintf("Updated:     %s\n", detail.UpdatedAt.Format("2006-01-02 15:04:05")))
+	}
+
+	return b.String()
+}
+
+func renderMonitoringTraceStorageDetail(detail *MonitoringTraceStorageDetail) string {
+	var b strings.Builder
+
+	name := ""
+	if detail.Name != nil {
+		name = *detail.Name
+	}
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Trace Storage: %s", name)))
+	b.WriteString("\n\n")
+
+	if detail.ResourceId != nil {
+		b.WriteString(fmt.Sprintf("Resource ID: %s\n", *detail.ResourceId))
+	}
+	if detail.Id != nil {
+		b.WriteString(fmt.Sprintf("ID:          %s\n", *detail.Id))
+	}
+
+	if detail.TraceStorage.Description != nil && *detail.TraceStorage.Description != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", *detail.TraceStorage.Description))
+	}
+
+	if detail.RetentionPeriodDays != nil {
+		b.WriteString(fmt.Sprintf("Retention:   %d days\n", *detail.RetentionPeriodDays))
+	}
+
+	// Endpoints
+	if detail.Endpoints != nil {
+		b.WriteString(fmt.Sprintf("\nIngester:    %s\n", detail.Endpoints.Ingester.Address))
+	}
+
+	// Tags
+	if len(detail.Tags) > 0 {
+		b.WriteString(fmt.Sprintf("\nTags: %v\n", detail.Tags))
+	}
+
+	if detail.CreatedAt != nil {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt.Format("2006-01-02 15:04:05")))
 	}
 
 	return b.String()

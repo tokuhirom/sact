@@ -285,7 +285,7 @@ type AlertRule struct {
 	EnabledWarning            *bool               `json:"enabled_warning,omitempty"`
 	Format                    *string             `json:"format,omitempty"`
 	HistoryUrl                *string             `json:"history_url,omitempty"`
-	MetricsStorageId          *int64              `json:"metrics_storage_id"`
+	MetricsStorageId          *string             `json:"metrics_storage_id"`
 	Name                      *string             `json:"name,omitempty"`
 	Open                      *bool               `json:"open,omitempty"`
 	ProjectId                 *int64              `json:"project_id"`
@@ -379,9 +379,9 @@ type LogMeasureRule struct {
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	Id               *string             `json:"id,omitempty"`
 	LogStorage       *LogStorage         `json:"log_storage,omitempty"`
-	LogStorageId     *int64              `json:"log_storage_id"`
+	LogStorageId     *string             `json:"log_storage_id"`
 	MetricsStorage   *MetricsStorage     `json:"metrics_storage,omitempty"`
-	MetricsStorageId *int64              `json:"metrics_storage_id"`
+	MetricsStorageId *string             `json:"metrics_storage_id"`
 	Name             *string             `json:"name,omitempty"`
 	ProjectId        *int64              `json:"project_id"`
 	Rule             LogMeasureRuleModel `json:"rule"`
@@ -409,7 +409,7 @@ type LogRouting struct {
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	Id            *string     `json:"id,omitempty"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
-	LogStorageId  *int64      `json:"log_storage_id"`
+	LogStorageId  *string     `json:"log_storage_id"`
 	Publisher     *Publisher  `json:"publisher,omitempty"`
 	PublisherCode *string     `json:"publisher_code,omitempty"`
 
@@ -531,7 +531,7 @@ type MetricsRouting struct {
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	Id               *string         `json:"id,omitempty"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
-	MetricsStorageId *int64          `json:"metrics_storage_id"`
+	MetricsStorageId *string         `json:"metrics_storage_id"`
 	Publisher        *Publisher      `json:"publisher,omitempty"`
 	PublisherCode    *string         `json:"publisher_code,omitempty"`
 
@@ -842,7 +842,7 @@ type PatchedAlertRule struct {
 	EnabledWarning            *bool               `json:"enabled_warning,omitempty"`
 	Format                    *string             `json:"format,omitempty"`
 	HistoryUrl                *string             `json:"history_url,omitempty"`
-	MetricsStorageId          *int64              `json:"metrics_storage_id"`
+	MetricsStorageId          *string             `json:"metrics_storage_id"`
 	Name                      *string             `json:"name,omitempty"`
 	Open                      *bool               `json:"open,omitempty"`
 	ProjectId                 *int64              `json:"project_id"`
@@ -876,9 +876,9 @@ type PatchedLogMeasureRule struct {
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	Id               *string              `json:"id,omitempty"`
 	LogStorage       *LogStorage          `json:"log_storage,omitempty"`
-	LogStorageId     *int64               `json:"log_storage_id"`
+	LogStorageId     *string              `json:"log_storage_id"`
 	MetricsStorage   *MetricsStorage      `json:"metrics_storage,omitempty"`
-	MetricsStorageId *int64               `json:"metrics_storage_id"`
+	MetricsStorageId *string              `json:"metrics_storage_id"`
 	Name             *string              `json:"name,omitempty"`
 	ProjectId        *int64               `json:"project_id"`
 	Rule             *LogMeasureRuleModel `json:"rule,omitempty"`
@@ -892,7 +892,7 @@ type PatchedLogRouting struct {
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	Id            *string     `json:"id,omitempty"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
-	LogStorageId  *int64      `json:"log_storage_id"`
+	LogStorageId  *string     `json:"log_storage_id"`
 	Publisher     *Publisher  `json:"publisher,omitempty"`
 	PublisherCode *string     `json:"publisher_code,omitempty"`
 
@@ -947,7 +947,7 @@ type PatchedMetricsRouting struct {
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
 	Id               *string         `json:"id,omitempty"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
-	MetricsStorageId *int64          `json:"metrics_storage_id"`
+	MetricsStorageId *string         `json:"metrics_storage_id"`
 	Publisher        *Publisher      `json:"publisher,omitempty"`
 	PublisherCode    *string         `json:"publisher_code,omitempty"`
 
@@ -1260,7 +1260,7 @@ type WrappedLogRouting struct {
 	Id            *string     `json:"id,omitempty"`
 	IsOk          bool        `json:"is_ok"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
-	LogStorageId  *int64      `json:"log_storage_id"`
+	LogStorageId  *string     `json:"log_storage_id"`
 	Publisher     *Publisher  `json:"publisher,omitempty"`
 	PublisherCode *string     `json:"publisher_code,omitempty"`
 
@@ -1318,7 +1318,7 @@ type WrappedMetricsRouting struct {
 	Id               *string         `json:"id,omitempty"`
 	IsOk             bool            `json:"is_ok"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
-	MetricsStorageId *int64          `json:"metrics_storage_id"`
+	MetricsStorageId *string         `json:"metrics_storage_id"`
 	Publisher        *Publisher      `json:"publisher,omitempty"`
 	PublisherCode    *string         `json:"publisher_code,omitempty"`
 

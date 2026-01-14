@@ -4959,8 +4959,7 @@
             "readOnly": true
           },
           "metrics_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id"
           },
@@ -5323,8 +5322,7 @@
             "readOnly": true
           },
           "log_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -5338,8 +5336,7 @@
             "readOnly": true
           },
           "metrics_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -5455,8 +5452,7 @@
             "readOnly": true
           },
           "log_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -5886,8 +5882,7 @@
             "readOnly": true
           },
           "metrics_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -7055,8 +7050,7 @@
             "readOnly": true
           },
           "metrics_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id"
           },
@@ -7207,8 +7201,7 @@
             "readOnly": true
           },
           "log_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -7222,8 +7215,7 @@
             "readOnly": true
           },
           "metrics_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -7288,8 +7280,7 @@
             "readOnly": true
           },
           "log_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -7487,8 +7478,7 @@
             "readOnly": true
           },
           "metrics_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -8647,8 +8637,7 @@
             "readOnly": true
           },
           "log_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
@@ -8887,8 +8876,7 @@
             "readOnly": true
           },
           "metrics_storage_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true,
             "title": "Cloud resource id",
             "writeOnly": true
