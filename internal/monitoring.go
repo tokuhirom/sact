@@ -200,11 +200,20 @@ func (c *SakuraClient) ListMonitoringLogStorages(ctx context.Context) ([]Monitor
 
 	resp, err := monClient.LogsStoragesListWithResponse(ctx, nil)
 	if err != nil {
-		slog.Error("Failed to fetch log storages", slog.Any("error", err))
+		rawBody := ""
+		if resp != nil {
+			rawBody = string(resp.Body)
+		}
+		slog.Error("Failed to fetch log storages",
+			slog.Any("error", err),
+			slog.String("raw_body", rawBody))
 		return nil, err
 	}
 
 	if resp.JSON200 == nil {
+		slog.Error("Unexpected response from log storages API",
+			slog.String("status", resp.Status()),
+			slog.String("raw_body", string(resp.Body)))
 		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
 	}
 
@@ -228,11 +237,20 @@ func (c *SakuraClient) ListMonitoringMetricsStorages(ctx context.Context) ([]Mon
 
 	resp, err := monClient.MetricsStoragesListWithResponse(ctx, nil)
 	if err != nil {
-		slog.Error("Failed to fetch metrics storages", slog.Any("error", err))
+		rawBody := ""
+		if resp != nil {
+			rawBody = string(resp.Body)
+		}
+		slog.Error("Failed to fetch metrics storages",
+			slog.Any("error", err),
+			slog.String("raw_body", rawBody))
 		return nil, err
 	}
 
 	if resp.JSON200 == nil {
+		slog.Error("Unexpected response from metrics storages API",
+			slog.String("status", resp.Status()),
+			slog.String("raw_body", string(resp.Body)))
 		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
 	}
 
