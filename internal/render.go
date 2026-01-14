@@ -311,14 +311,17 @@ func renderDBDetail(detail *DBDetail) string {
 	b.WriteString(fmt.Sprintf("Memory:      %d GB\n", detail.MemoryGB))
 	b.WriteString(fmt.Sprintf("Disk Size:   %d GB\n", detail.DiskSizeGB))
 
-	if detail.IPAddress != "" {
-		b.WriteString(fmt.Sprintf("IP Address:  %s\n", detail.IPAddress))
-		if detail.NetworkMaskLen > 0 {
-			b.WriteString(fmt.Sprintf("Netmask:     /%d\n", detail.NetworkMaskLen))
-		}
-		if detail.DefaultRoute != "" {
-			b.WriteString(fmt.Sprintf("Gateway:     %s\n", detail.DefaultRoute))
-		}
+	if len(detail.IPAddresses) > 0 {
+		b.WriteString(fmt.Sprintf("IP Address:  %s\n", strings.Join(detail.IPAddresses, ", ")))
+	}
+	if detail.NetworkMaskLen > 0 {
+		b.WriteString(fmt.Sprintf("Netmask:     /%d\n", detail.NetworkMaskLen))
+	}
+	if detail.DefaultRoute != "" {
+		b.WriteString(fmt.Sprintf("Gateway:     %s\n", detail.DefaultRoute))
+	}
+	if detail.SwitchID != "" {
+		b.WriteString(fmt.Sprintf("Switch ID:   %s\n", detail.SwitchID))
 	}
 
 	if detail.Port > 0 {
@@ -329,12 +332,60 @@ func renderDBDetail(detail *DBDetail) string {
 		b.WriteString(fmt.Sprintf("User:        %s\n", detail.DefaultUser))
 	}
 
+	if detail.WebUI != "" {
+		b.WriteString(fmt.Sprintf("WebUI:       %s\n", detail.WebUI))
+	}
+
+	// Source Networks (allowed connections)
+	if len(detail.SourceNetworks) > 0 {
+		b.WriteString(fmt.Sprintf("\nSource Networks:\n"))
+		for _, net := range detail.SourceNetworks {
+			b.WriteString(fmt.Sprintf("  - %s\n", net))
+		}
+	}
+
+	// Backup settings
+	if detail.BackupTime != "" || detail.BackupRotate > 0 {
+		b.WriteString("\nBackup Settings:\n")
+		if detail.BackupTime != "" {
+			b.WriteString(fmt.Sprintf("  Time:      %s\n", detail.BackupTime))
+		}
+		if len(detail.BackupWeekdays) > 0 {
+			b.WriteString(fmt.Sprintf("  Weekdays:  %s\n", strings.Join(detail.BackupWeekdays, ", ")))
+		}
+		if detail.BackupRotate > 0 {
+			b.WriteString(fmt.Sprintf("  Rotate:    %d generations\n", detail.BackupRotate))
+		}
+	}
+
+	// Replication settings
+	if detail.ReplicationModel != "" {
+		b.WriteString("\nReplication:\n")
+		b.WriteString(fmt.Sprintf("  Model:     %s\n", detail.ReplicationModel))
+		if detail.ReplicationIP != "" {
+			b.WriteString(fmt.Sprintf("  IP:        %s\n", detail.ReplicationIP))
+		}
+	}
+
+	// Host info
+	if detail.HostName != "" {
+		b.WriteString(fmt.Sprintf("\nHost:        %s\n", detail.HostName))
+	}
+
+	if detail.Availability != "" {
+		b.WriteString(fmt.Sprintf("Availability: %s\n", detail.Availability))
+	}
+
 	if len(detail.Tags) > 0 {
 		b.WriteString(fmt.Sprintf("\nTags:        %s\n", strings.Join(detail.Tags, ", ")))
 	}
 
 	if detail.CreatedAt != "" {
 		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	if detail.ModifiedAt != "" {
+		b.WriteString(fmt.Sprintf("Modified:    %s\n", detail.ModifiedAt))
 	}
 
 	return b.String()
