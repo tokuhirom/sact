@@ -351,10 +351,14 @@ func (c *SakuraClient) GetMonitoringLogStorageDetail(ctx context.Context, resour
 	// Also fetch routings
 	routings, _ := c.ListMonitoringLogRoutings(ctx)
 
-	// Filter routings for this storage (by LogStorageId)
+	// Filter routings for this storage (by LogStorageId or LogStorage.ResourceId)
 	var filteredRoutings []MonitoringLogRouting
 	for _, r := range routings {
 		logStorageID := getStringPtr(r.LogStorageId)
+		// Also check embedded LogStorage object
+		if logStorageID == "" && r.LogStorage != nil {
+			logStorageID = getStringPtr(r.LogStorage.ResourceId)
+		}
 		if logStorageID == "" {
 			continue
 		}
@@ -416,10 +420,14 @@ func (c *SakuraClient) GetMonitoringMetricsStorageDetail(ctx context.Context, re
 	// Also fetch routings
 	routings, _ := c.ListMonitoringMetricsRoutings(ctx)
 
-	// Filter routings for this storage (by MetricsStorageId)
+	// Filter routings for this storage (by MetricsStorageId or MetricsStorage.ResourceId)
 	var filteredRoutings []MonitoringMetricsRouting
 	for _, r := range routings {
 		metricsStorageID := getStringPtr(r.MetricsStorageId)
+		// Also check embedded MetricsStorage object
+		if metricsStorageID == "" && r.MetricsStorage != nil {
+			metricsStorageID = getStringPtr(r.MetricsStorage.ResourceId)
+		}
 		if metricsStorageID == "" {
 			continue
 		}

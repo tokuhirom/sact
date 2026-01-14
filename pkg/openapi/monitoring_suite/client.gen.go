@@ -407,7 +407,7 @@ type LogMeasureRuleVersionEnum string
 type LogRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id            *string     `json:"id,omitempty"`
+	Id            *int64      `json:"id,omitempty"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
 	LogStorageId  *string     `json:"log_storage_id"`
 	Publisher     *Publisher  `json:"publisher,omitempty"`
@@ -529,7 +529,7 @@ type MatchLabelsItem struct {
 type MetricsRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id               *string         `json:"id,omitempty"`
+	Id               *int64          `json:"id,omitempty"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
 	MetricsStorageId *string         `json:"metrics_storage_id"`
 	Publisher        *Publisher      `json:"publisher,omitempty"`
@@ -612,6 +612,7 @@ type MetricsStorageMonthlyUsageBody struct {
 
 // NotificationRouting defines model for NotificationRouting.
 type NotificationRouting struct {
+	Id                    *int64              `json:"id,omitempty"`
 	MatchLabels           []MatchLabelsItem   `json:"match_labels"`
 	NotificationTarget    *NotificationTarget `json:"notification_target,omitempty"`
 	NotificationTargetUid *openapi_types.UUID `json:"notification_target_uid,omitempty"`
@@ -890,7 +891,7 @@ type PatchedLogMeasureRule struct {
 type PatchedLogRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id            *string     `json:"id,omitempty"`
+	Id            *int64      `json:"id,omitempty"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
 	LogStorageId  *string     `json:"log_storage_id"`
 	Publisher     *Publisher  `json:"publisher,omitempty"`
@@ -945,7 +946,7 @@ type PatchedLogStorageAccessKey struct {
 type PatchedMetricsRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id               *string         `json:"id,omitempty"`
+	Id               *int64          `json:"id,omitempty"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
 	MetricsStorageId *string         `json:"metrics_storage_id"`
 	Publisher        *Publisher      `json:"publisher,omitempty"`
@@ -996,6 +997,7 @@ type PatchedMetricsStorageAccessKey struct {
 
 // PatchedNotificationRouting defines model for PatchedNotificationRouting.
 type PatchedNotificationRouting struct {
+	Id                    *int64              `json:"id,omitempty"`
 	MatchLabels           *[]MatchLabelsItem  `json:"match_labels,omitempty"`
 	NotificationTarget    *NotificationTarget `json:"notification_target,omitempty"`
 	NotificationTargetUid *openapi_types.UUID `json:"notification_target_uid,omitempty"`
@@ -1257,7 +1259,7 @@ type WrappedDashboardProject struct {
 type WrappedLogRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id            *string     `json:"id,omitempty"`
+	Id            *int64      `json:"id,omitempty"`
 	IsOk          bool        `json:"is_ok"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
 	LogStorageId  *string     `json:"log_storage_id"`
@@ -1315,7 +1317,7 @@ type WrappedLogStorageAccessKey struct {
 type WrappedMetricsRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id               *string         `json:"id,omitempty"`
+	Id               *int64          `json:"id,omitempty"`
 	IsOk             bool            `json:"is_ok"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
 	MetricsStorageId *string         `json:"metrics_storage_id"`

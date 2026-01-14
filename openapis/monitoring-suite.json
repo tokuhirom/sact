@@ -5411,12 +5411,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
             "readOnly": true,
             "deprecated": true,
             "minimum": 0,
             "maximum": 999999999999,
-            "example": 110000000000
+            "format": "int64"
           },
           "uid": {
             "type": "string",
@@ -5454,8 +5454,7 @@
           "log_storage_id": {
             "type": "string",
             "nullable": true,
-            "title": "Cloud resource id",
-            "writeOnly": true
+            "title": "Cloud resource id"
           },
           "created_at": {
             "type": "string",
@@ -5841,12 +5840,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
             "readOnly": true,
             "deprecated": true,
             "minimum": 0,
             "maximum": 999999999999,
-            "example": 110000000000
+            "format": "int64"
           },
           "uid": {
             "type": "string",
@@ -5884,8 +5883,7 @@
           "metrics_storage_id": {
             "type": "string",
             "nullable": true,
-            "title": "Cloud resource id",
-            "writeOnly": true
+            "title": "Cloud resource id"
           },
           "created_at": {
             "type": "string",
@@ -6203,6 +6201,10 @@
           "order": {
             "type": "integer",
             "readOnly": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "required": [
@@ -7239,12 +7241,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
             "readOnly": true,
             "deprecated": true,
             "minimum": 0,
             "maximum": 999999999999,
-            "example": 110000000000
+            "format": "int64"
           },
           "uid": {
             "type": "string",
@@ -7282,8 +7284,7 @@
           "log_storage_id": {
             "type": "string",
             "nullable": true,
-            "title": "Cloud resource id",
-            "writeOnly": true
+            "title": "Cloud resource id"
           },
           "created_at": {
             "type": "string",
@@ -7437,12 +7438,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
             "readOnly": true,
             "deprecated": true,
             "minimum": 0,
             "maximum": 999999999999,
-            "example": 110000000000
+            "format": "int64"
           },
           "uid": {
             "type": "string",
@@ -7480,8 +7481,7 @@
           "metrics_storage_id": {
             "type": "string",
             "nullable": true,
-            "title": "Cloud resource id",
-            "writeOnly": true
+            "title": "Cloud resource id"
           },
           "created_at": {
             "type": "string",
@@ -7668,6 +7668,10 @@
           "order": {
             "type": "integer",
             "readOnly": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -8596,12 +8600,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
             "readOnly": true,
             "deprecated": true,
             "minimum": 0,
             "maximum": 999999999999,
-            "example": 110000000000
+            "format": "int64"
           },
           "uid": {
             "type": "string",
@@ -8639,8 +8643,7 @@
           "log_storage_id": {
             "type": "string",
             "nullable": true,
-            "title": "Cloud resource id",
-            "writeOnly": true
+            "title": "Cloud resource id"
           },
           "created_at": {
             "type": "string",
@@ -8835,12 +8838,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
             "readOnly": true,
             "deprecated": true,
             "minimum": 0,
             "maximum": 999999999999,
-            "example": 110000000000
+            "format": "int64"
           },
           "uid": {
             "type": "string",
@@ -8878,8 +8881,7 @@
           "metrics_storage_id": {
             "type": "string",
             "nullable": true,
-            "title": "Cloud resource id",
-            "writeOnly": true
+            "title": "Cloud resource id"
           },
           "created_at": {
             "type": "string",
