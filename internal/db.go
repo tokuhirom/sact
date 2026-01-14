@@ -28,12 +28,26 @@ type DBDetail struct {
 	CPU            int
 	MemoryGB       int
 	DiskSizeGB     int
-	IPAddress      string
+	IPAddresses    []string
 	Port           int
 	DefaultUser    string
 	NetworkMaskLen int
 	DefaultRoute   string
-	CreatedAt      string
+	SwitchID       string
+	SourceNetworks []string
+	WebUI          string
+	// Backup settings
+	BackupTime     string
+	BackupWeekdays []string
+	BackupRotate   int
+	// Replication
+	ReplicationModel string
+	ReplicationIP    string
+	// Host info
+	HostName     string
+	Availability string
+	ModifiedAt   string
+	CreatedAt    string
 }
 
 // Implement list.Item interface for DB
@@ -148,6 +162,12 @@ func (c *SakuraClient) GetDBDetail(ctx context.Context, dbID string) (*DBDetail,
 		createdAt = db.CreatedAt.Format("2006-01-02 15:04:05")
 	}
 
+	// Format modified at
+	modifiedAt := ""
+	if !db.ModifiedAt.IsZero() {
+		modifiedAt = db.ModifiedAt.Format("2006-01-02 15:04:05")
+	}
+
 	// Get instance status
 	instanceStatus := string(db.InstanceStatus)
 
@@ -177,29 +197,67 @@ func (c *SakuraClient) GetDBDetail(ctx context.Context, dbID string) (*DBDetail,
 		diskSizeGB = 20
 	}
 
-	// Get network info
-	ipAddress := ""
-	port := 0
-	defaultUser := ""
-	networkMaskLen := 0
-	defaultRoute := ""
-
-	if len(db.Interfaces) > 0 {
-		ipAddress = db.Interfaces[0].IPAddress
-		networkMaskLen = 24 // Default
-		defaultRoute = ""
+	// Get network info from API (not hardcoded)
+	ipAddresses := db.IPAddresses
+	networkMaskLen := db.NetworkMaskLen
+	defaultRoute := db.DefaultRoute
+	switchID := ""
+	if !db.SwitchID.IsEmpty() {
+		switchID = db.SwitchID.String()
 	}
 
-	if db.Conf != nil {
+	// Get port and user from CommonSetting
+	port := 0
+	defaultUser := ""
+	var sourceNetworks []string
+	webUI := ""
+
+	if db.CommonSetting != nil {
+		port = db.CommonSetting.ServicePort
+		defaultUser = db.CommonSetting.DefaultUser
+		sourceNetworks = db.CommonSetting.SourceNetwork
+		webUI = string(db.CommonSetting.WebUI)
+	}
+
+	// Fallback port if not set
+	if port == 0 && db.Conf != nil {
 		if db.Conf.DatabaseName == "postgres" {
 			port = 5432
 		} else {
 			port = 3306
 		}
-		if db.Conf.DefaultUser != "" {
-			defaultUser = db.Conf.DefaultUser
+	}
+
+	// Fallback user if not set
+	if defaultUser == "" && db.Conf != nil && db.Conf.DefaultUser != "" {
+		defaultUser = db.Conf.DefaultUser
+	}
+
+	// Backup settings
+	backupTime := ""
+	var backupWeekdays []string
+	backupRotate := 0
+	if db.BackupSetting != nil {
+		backupTime = db.BackupSetting.Time
+		backupRotate = db.BackupSetting.Rotate
+		for _, day := range db.BackupSetting.DayOfWeek {
+			backupWeekdays = append(backupWeekdays, string(day))
 		}
 	}
+
+	// Replication settings
+	replicationModel := ""
+	replicationIP := ""
+	if db.ReplicationSetting != nil {
+		replicationModel = string(db.ReplicationSetting.Model)
+		replicationIP = db.ReplicationSetting.IPAddress
+	}
+
+	// Host info
+	hostName := db.InstanceHostName
+
+	// Availability
+	availability := string(db.Availability)
 
 	detail := &DBDetail{
 		DB: DB{
@@ -212,16 +270,27 @@ func (c *SakuraClient) GetDBDetail(ctx context.Context, dbID string) (*DBDetail,
 			InstanceStatus: instanceStatus,
 			CreatedAt:      createdAt,
 		},
-		Tags:           db.Tags,
-		CPU:            cpu,
-		MemoryGB:       memoryGB,
-		DiskSizeGB:     diskSizeGB,
-		IPAddress:      ipAddress,
-		Port:           port,
-		DefaultUser:    defaultUser,
-		NetworkMaskLen: networkMaskLen,
-		DefaultRoute:   defaultRoute,
-		CreatedAt:      createdAt,
+		Tags:             db.Tags,
+		CPU:              cpu,
+		MemoryGB:         memoryGB,
+		DiskSizeGB:       diskSizeGB,
+		IPAddresses:      ipAddresses,
+		Port:             port,
+		DefaultUser:      defaultUser,
+		NetworkMaskLen:   networkMaskLen,
+		DefaultRoute:     defaultRoute,
+		SwitchID:         switchID,
+		SourceNetworks:   sourceNetworks,
+		WebUI:            webUI,
+		BackupTime:       backupTime,
+		BackupWeekdays:   backupWeekdays,
+		BackupRotate:     backupRotate,
+		ReplicationModel: replicationModel,
+		ReplicationIP:    replicationIP,
+		HostName:         hostName,
+		Availability:     availability,
+		ModifiedAt:       modifiedAt,
+		CreatedAt:        createdAt,
 	}
 
 	slog.Info("Successfully fetched DB detail",
