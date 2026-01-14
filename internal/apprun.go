@@ -81,6 +81,16 @@ type AppRunApplication struct {
 	DesiredCount  int32
 }
 
+// AppRunVersion represents an application version for list display
+type AppRunVersion struct {
+	Version         int32
+	Image           string
+	ActiveNodeCount int64
+	CreatedAt       string
+	ApplicationID   string // parent application ID
+	ClusterID       string // parent cluster ID
+}
+
 // Implement list.Item interface for AppRunCluster
 func (c AppRunCluster) FilterValue() string {
 	return c.Name
@@ -135,6 +145,19 @@ func (a AppRunApplication) Description() string {
 		versionStr = fmt.Sprintf("v%d", a.ActiveVersion)
 	}
 	return fmt.Sprintf("Version: %s | Desired: %d", versionStr, a.DesiredCount)
+}
+
+// Implement list.Item interface for AppRunVersion
+func (v AppRunVersion) FilterValue() string {
+	return fmt.Sprintf("v%d", v.Version)
+}
+
+func (v AppRunVersion) Title() string {
+	return fmt.Sprintf("v%d", v.Version)
+}
+
+func (v AppRunVersion) Description() string {
+	return fmt.Sprintf("Nodes: %d | %s", v.ActiveNodeCount, v.Image)
 }
 
 // ListAppRunClusters fetches all AppRun Dedicated clusters
@@ -430,4 +453,60 @@ func (c *SakuraClient) ListAppRunApplications(ctx context.Context, clusterID str
 
 	slog.Info("Successfully fetched AppRun Applications", slog.Int("count", len(allApps)))
 	return allApps, nil
+}
+
+// ListAppRunVersions fetches all versions for a specific application
+func (c *SakuraClient) ListAppRunVersions(ctx context.Context, applicationID, clusterID string) ([]AppRunVersion, error) {
+	slog.Info("Fetching AppRun Versions", slog.String("applicationID", applicationID))
+
+	client, err := c.GetAppRunClient()
+	if err != nil {
+		slog.Error("Failed to get AppRun client", slog.Any("error", err))
+		return nil, err
+	}
+
+	parsed, err := uuid.Parse(applicationID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid application ID: %w", err)
+	}
+
+	var allVersions []AppRunVersion
+	var cursor apprun.OptApplicationVersionNumber
+
+	for {
+		params := apprun.ListApplicationVersionsParams{
+			ApplicationID: apprun.ApplicationID(parsed),
+			MaxItems:      30,
+			Cursor:        cursor,
+		}
+
+		resp, err := client.ListApplicationVersions(ctx, params)
+		if err != nil {
+			slog.Error("Failed to fetch AppRun Versions", slog.Any("error", err))
+			return nil, err
+		}
+
+		for _, ver := range resp.Versions {
+			createdAt := ""
+			if ver.Created > 0 {
+				createdAt = time.Unix(int64(ver.Created), 0).Format("2006-01-02 15:04:05")
+			}
+			allVersions = append(allVersions, AppRunVersion{
+				Version:         int32(ver.Version),
+				Image:           ver.Image,
+				ActiveNodeCount: ver.ActiveNodeCount,
+				CreatedAt:       createdAt,
+				ApplicationID:   applicationID,
+				ClusterID:       clusterID,
+			})
+		}
+
+		if !resp.NextCursor.Set {
+			break
+		}
+		cursor = resp.NextCursor
+	}
+
+	slog.Info("Successfully fetched AppRun Versions", slog.Int("count", len(allVersions)))
+	return allVersions, nil
 }

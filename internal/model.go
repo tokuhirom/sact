@@ -377,14 +377,14 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 	} else if asg, ok := item.(AppRunASG); ok {
 		// Handle AppRunASG
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-10s %d/%d-%d nodes",
+			str = selectedItemStyle.Render(fmt.Sprintf("> [ASG] %-30s %-10s %d/%d-%d nodes",
 				asg.Name,
 				asg.Zone,
 				asg.WorkerNodeCount,
 				asg.MinNodes,
 				asg.MaxNodes))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %-10s %d/%d-%d nodes",
+			str = itemStyle.Render(fmt.Sprintf("  [ASG] %-30s %-10s %d/%d-%d nodes",
 				asg.Name,
 				asg.Zone,
 				asg.WorkerNodeCount,
@@ -411,15 +411,33 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 			versionStr = fmt.Sprintf("v%d", app.ActiveVersion)
 		}
 		if index == m.Index() {
-			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-10s %d replicas",
+			str = selectedItemStyle.Render(fmt.Sprintf("> [App] %-30s %-10s %d replicas",
 				app.Name,
 				versionStr,
 				app.DesiredCount))
 		} else {
-			str = itemStyle.Render(fmt.Sprintf("  %-40s %-10s %d replicas",
+			str = itemStyle.Render(fmt.Sprintf("  [App] %-30s %-10s %d replicas",
 				app.Name,
 				versionStr,
 				app.DesiredCount))
+		}
+	} else if ver, ok := item.(AppRunVersion); ok {
+		// Handle AppRunVersion
+		// Truncate image name if too long
+		image := ver.Image
+		if len(image) > 40 {
+			image = image[:37] + "..."
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> v%-5d %3d nodes  %s",
+				ver.Version,
+				ver.ActiveNodeCount,
+				image))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  v%-5d %3d nodes  %s",
+				ver.Version,
+				ver.ActiveNodeCount,
+				image))
 		}
 	} else {
 		return
@@ -466,9 +484,10 @@ type model struct {
 	containerRegistryDetail *ContainerRegistryDetail
 	appRunClusterDetail     *AppRunClusterDetail
 	// AppRun Dedicated drilldown state
-	appRunDrilldownLevel    int    // 0: Cluster, 1: ASG, 2: LB
-	appRunSelectedClusterID string // selected cluster ID for ASG list
+	appRunDrilldownLevel    int    // 0: Cluster, 1: ASG+App, 2: LB (from ASG) or Version (from App), 3: Version detail
+	appRunSelectedClusterID string // selected cluster ID for ASG/App list
 	appRunSelectedASGID     string // selected ASG ID for LB list
+	appRunSelectedAppID     string // selected Application ID for Version list
 	detailLoading           bool
 	resourceType            ResourceType
 	detailViewport          viewport.Model
@@ -691,6 +710,13 @@ type appRunClusterContentsLoadedMsg struct {
 	apps      []AppRunApplication
 	clusterID string
 	err       error
+}
+
+type appRunVersionsLoadedMsg struct {
+	versions      []AppRunVersion
+	applicationID string
+	clusterID     string
+	err           error
 }
 
 func loadServers(client *SakuraClient) tea.Cmd {
@@ -1136,6 +1162,14 @@ func loadAppRunClusterContents(client *SakuraClient, clusterID string) tea.Cmd {
 	}
 }
 
+func loadAppRunVersions(client *SakuraClient, applicationID, clusterID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		versions, err := client.ListAppRunVersions(ctx, applicationID, clusterID)
+		return appRunVersionsLoadedMsg{versions: versions, applicationID: applicationID, clusterID: clusterID, err: err}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -1323,6 +1357,11 @@ func (m model) getTableHeader() string {
 		case 1:
 			return "  [ASG] + [Applications]"
 		case 2:
+			if m.appRunSelectedAppID != "" {
+				// Version list
+				return fmt.Sprintf("  %-8s %5s  %s", "Version", "Nodes", "Image")
+			}
+			// LB list
 			return fmt.Sprintf("  %-40s %-36s %s", "Name", "ID", "ServiceClass")
 		}
 		return ""
@@ -1487,9 +1526,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.resourceType == ResourceTypeAppRunDedicated && m.appRunDrilldownLevel > 0 {
 				m.loading = true
 				if m.appRunDrilldownLevel == 2 {
-					// From LB list, go back to ASG + Applications list
+					// From LB or Version list, go back to ASG + Applications list
 					m.appRunDrilldownLevel = 1
 					m.appRunSelectedASGID = ""
+					m.appRunSelectedAppID = ""
 					return m, loadAppRunClusterContents(m.client, m.appRunSelectedClusterID)
 				} else if m.appRunDrilldownLevel == 1 {
 					// From ASG + Applications list, go back to Cluster list
@@ -1610,11 +1650,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, loadAppRunLBs(m.client, asg.ClusterID, asg.ID)
 				}
 				if _, ok := selectedItem.(AppRunLB); ok {
-					// LB is the deepest level, do nothing for now
+					// LB - show detail later
 					return m, nil
 				}
-				if _, ok := selectedItem.(AppRunApplication); ok {
-					// Application - do nothing for now
+				if app, ok := selectedItem.(AppRunApplication); ok {
+					// Drilldown into Version list
+					m.loading = true
+					m.appRunSelectedAppID = app.ID
+					m.appRunDrilldownLevel = 2
+					return m, loadAppRunVersions(m.client, app.ID, app.ClusterID)
+				}
+				if _, ok := selectedItem.(AppRunVersion); ok {
+					// Version - show detail later
 					return m, nil
 				}
 			}
@@ -2404,6 +2451,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		for _, app := range msg.apps {
 			items = append(items, app)
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case appRunVersionsLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load AppRun versions", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("AppRun versions loaded", slog.Int("count", len(msg.versions)))
+
+		items := make([]list.Item, len(msg.versions))
+		for i, ver := range msg.versions {
+			items[i] = ver
 		}
 		m.list.SetItems(items)
 		return m, nil
