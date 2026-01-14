@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.0.8](https://github.com/tokuhirom/sact/compare/v0.0.7...v0.0.8) - 2026-01-14
+- Add AutoBackup resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/27
+- Add SimpleMonitor resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/29
+- Add Bridge resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/31
+- Add ContainerRegistry resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/32
+
 ## [v0.0.7](https://github.com/tokuhirom/sact/compare/v0.0.6...v0.0.7) - 2026-01-13
 - Add SSH key resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/25
 
