@@ -1191,3 +1191,107 @@ func renderAppRunASGDetail(detail *AppRunASGDetail, workerNodes []AppRunWorkerNo
 
 	return b.String()
 }
+
+func renderMonitoringLogStorageDetail(detail *MonitoringLogStorageDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Log Storage: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("Resource ID: %d\n", detail.ResourceID))
+	b.WriteString(fmt.Sprintf("ID:          %d\n", detail.ID))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	b.WriteString(fmt.Sprintf("Expire Days: %d\n", detail.ExpireDay))
+
+	if detail.IsSystem {
+		b.WriteString("System:      Yes\n")
+	}
+
+	// Endpoints
+	if detail.Endpoints.Ingester.Address != "" {
+		b.WriteString(fmt.Sprintf("\nIngester:    %s\n", detail.Endpoints.Ingester.Address))
+		if detail.Endpoints.Ingester.Insecure {
+			b.WriteString("  (insecure)\n")
+		}
+	}
+
+	// Usage
+	b.WriteString(fmt.Sprintf("\nUsage:\n"))
+	b.WriteString(fmt.Sprintf("  Log Routings:      %d\n", detail.Usage.LogRoutings))
+	b.WriteString(fmt.Sprintf("  Log Measure Rules: %d\n", detail.Usage.LogMeasureRules))
+
+	// Routings
+	if len(detail.Routings) > 0 {
+		b.WriteString(fmt.Sprintf("\nRelated Routings: %d\n", len(detail.Routings)))
+		for _, r := range detail.Routings {
+			enabled := "enabled"
+			if !r.Enabled {
+				enabled = "disabled"
+			}
+			b.WriteString(fmt.Sprintf("  - %s (%s)\n", r.Name, enabled))
+			b.WriteString(fmt.Sprintf("    Src: %d -> Dest: %d\n", r.SourceResourceID, r.DestResourceID))
+		}
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	return b.String()
+}
+
+func renderMonitoringMetricsStorageDetail(detail *MonitoringMetricsStorageDetail) string {
+	var b strings.Builder
+
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Metrics Storage: %s", detail.Name)))
+	b.WriteString("\n\n")
+
+	b.WriteString(fmt.Sprintf("Resource ID: %d\n", detail.ResourceID))
+	b.WriteString(fmt.Sprintf("ID:          %d\n", detail.ID))
+
+	if detail.Desc != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	}
+
+	if detail.IsSystem {
+		b.WriteString("System:      Yes\n")
+	}
+
+	// Endpoints
+	if detail.Endpoints.Address != "" {
+		b.WriteString(fmt.Sprintf("\nEndpoint:    %s\n", detail.Endpoints.Address))
+	}
+
+	// Usage
+	b.WriteString(fmt.Sprintf("\nUsage:\n"))
+	b.WriteString(fmt.Sprintf("  Metrics Routings:  %d\n", detail.Usage.MetricsRoutings))
+	b.WriteString(fmt.Sprintf("  Alert Rules:       %d\n", detail.Usage.AlertRules))
+	b.WriteString(fmt.Sprintf("  Log Measure Rules: %d\n", detail.Usage.LogMeasureRules))
+
+	// Routings
+	if len(detail.Routings) > 0 {
+		b.WriteString(fmt.Sprintf("\nRelated Routings: %d\n", len(detail.Routings)))
+		for _, r := range detail.Routings {
+			enabled := "enabled"
+			if !r.Enabled {
+				enabled = "disabled"
+			}
+			b.WriteString(fmt.Sprintf("  - %s (%s)\n", r.Name, enabled))
+			b.WriteString(fmt.Sprintf("    Src: %d -> Dest: %d\n", r.SourceResourceID, r.DestResourceID))
+		}
+	}
+
+	if detail.CreatedAt != "" {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	}
+
+	if detail.UpdatedAt != "" {
+		b.WriteString(fmt.Sprintf("Updated:     %s\n", detail.UpdatedAt))
+	}
+
+	return b.String()
+}

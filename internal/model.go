@@ -446,6 +446,34 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				ver.ActiveNodeCount,
 				image))
 		}
+	} else if ls, ok := item.(MonitoringLogStorage); ok {
+		// Handle MonitoringLogStorage
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %10d  %3d days  %d routings",
+				ls.Name,
+				ls.ResourceID,
+				ls.ExpireDay,
+				ls.Usage.LogRoutings))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %10d  %3d days  %d routings",
+				ls.Name,
+				ls.ResourceID,
+				ls.ExpireDay,
+				ls.Usage.LogRoutings))
+		}
+	} else if ms, ok := item.(MonitoringMetricsStorage); ok {
+		// Handle MonitoringMetricsStorage
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %10d  %d routings",
+				ms.Name,
+				ms.ResourceID,
+				ms.Usage.MetricsRoutings))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %10d  %d routings",
+				ms.Name,
+				ms.ResourceID,
+				ms.Usage.MetricsRoutings))
+		}
 	} else {
 		return
 	}
@@ -494,14 +522,16 @@ type model struct {
 	appRunASGDetail         *AppRunASGDetail
 	appRunWorkerNodes       []AppRunWorkerNode
 	// AppRun Dedicated drilldown state
-	appRunDrilldownLevel    int    // 0: Cluster, 1: ASG+App, 2: LB (from ASG) or Version (from App), 3: Version detail
-	appRunSelectedClusterID string // selected cluster ID for ASG/App list
-	appRunSelectedASGID     string // selected ASG ID for LB list
-	appRunSelectedAppID     string // selected Application ID for Version list
-	appRunActiveVersion     int32  // active version of selected application
-	detailLoading           bool
-	resourceType            ResourceType
-	detailViewport          viewport.Model
+	appRunDrilldownLevel           int    // 0: Cluster, 1: ASG+App, 2: LB (from ASG) or Version (from App), 3: Version detail
+	appRunSelectedClusterID        string // selected cluster ID for ASG/App list
+	appRunSelectedASGID            string // selected ASG ID for LB list
+	appRunSelectedAppID            string // selected Application ID for Version list
+	appRunActiveVersion            int32  // active version of selected application
+	detailLoading                  bool
+	resourceType                   ResourceType
+	monitoringLogStorageDetail     *MonitoringLogStorageDetail
+	monitoringMetricsStorageDetail *MonitoringMetricsStorageDetail
+	detailViewport                 viewport.Model
 	// Resource type selector
 	resourceSelectMode   bool
 	resourceSelectCursor int
@@ -739,6 +769,26 @@ type appRunASGDetailLoadedMsg struct {
 	detail      *AppRunASGDetail
 	workerNodes []AppRunWorkerNode
 	err         error
+}
+
+type monitoringLogStoragesLoadedMsg struct {
+	storages []MonitoringLogStorage
+	err      error
+}
+
+type monitoringLogStorageDetailLoadedMsg struct {
+	detail *MonitoringLogStorageDetail
+	err    error
+}
+
+type monitoringMetricsStoragesLoadedMsg struct {
+	storages []MonitoringMetricsStorage
+	err      error
+}
+
+type monitoringMetricsStorageDetailLoadedMsg struct {
+	detail *MonitoringMetricsStorageDetail
+	err    error
 }
 
 func loadServers(client *SakuraClient) tea.Cmd {
@@ -1240,6 +1290,48 @@ func loadAppRunASGDetail(client *SakuraClient, clusterID, asgID string) tea.Cmd 
 	}
 }
 
+func loadMonitoringLogStorages(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		storages, err := client.ListMonitoringLogStorages(ctx)
+		return monitoringLogStoragesLoadedMsg{storages: storages, err: err}
+	}
+}
+
+func loadMonitoringLogStorageDetail(client *SakuraClient, resourceID int64) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetMonitoringLogStorageDetail(ctx, resourceID)
+		if err != nil {
+			slog.Error("Failed to load log storage detail", slog.Any("error", err))
+			return monitoringLogStorageDetailLoadedMsg{err: err}
+		}
+		slog.Info("Log storage detail loaded successfully", slog.Int64("resourceID", resourceID))
+		return monitoringLogStorageDetailLoadedMsg{detail: detail}
+	}
+}
+
+func loadMonitoringMetricsStorages(client *SakuraClient) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		storages, err := client.ListMonitoringMetricsStorages(ctx)
+		return monitoringMetricsStoragesLoadedMsg{storages: storages, err: err}
+	}
+}
+
+func loadMonitoringMetricsStorageDetail(client *SakuraClient, resourceID int64) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		detail, err := client.GetMonitoringMetricsStorageDetail(ctx, resourceID)
+		if err != nil {
+			slog.Error("Failed to load metrics storage detail", slog.Any("error", err))
+			return monitoringMetricsStorageDetailLoadedMsg{err: err}
+		}
+		slog.Info("Metrics storage detail loaded successfully", slog.Int64("resourceID", resourceID))
+		return monitoringMetricsStorageDetailLoadedMsg{detail: detail}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -1589,6 +1681,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.appRunSelectedClusterID = ""
 						m.appRunSelectedASGID = ""
 						return m, loadAppRunClusters(m.client)
+					case ResourceTypeMonitoringLogStorage:
+						return m, loadMonitoringLogStorages(m.client)
+					case ResourceTypeMonitoringMetricsStorage:
+						return m, loadMonitoringMetricsStorages(m.client)
 					}
 				}
 				m.resourceSelectMode = false
@@ -1753,6 +1849,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					// Version - show detail later
 					return m, nil
 				}
+				if ls, ok := selectedItem.(MonitoringLogStorage); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadMonitoringLogStorageDetail(m.client, ls.ResourceID)
+				}
+				if ms, ok := selectedItem.(MonitoringMetricsStorage); ok {
+					m.detailMode = true
+					m.detailLoading = true
+					return m, loadMonitoringMetricsStorageDetail(m.client, ms.ResourceID)
+				}
 			}
 			return m, nil
 
@@ -1783,8 +1889,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "z":
-			// Zone switching only affects zone-dependent resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry, AppRunCluster are global)
-			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunDedicated {
+			// Zone switching only affects zone-dependent resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry, AppRunCluster, Monitoring are global)
+			if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunDedicated || m.resourceType == ResourceTypeMonitoringLogStorage || m.resourceType == ResourceTypeMonitoringMetricsStorage {
 				return m, nil
 			}
 			oldZone := m.currentZone
@@ -2590,6 +2696,68 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
 		m.detailViewport.SetContent(content)
 		return m, nil
+
+	case monitoringLogStoragesLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load monitoring log storages", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Monitoring log storages loaded successfully", slog.Int("count", len(msg.storages)))
+
+		items := make([]list.Item, len(msg.storages))
+		for i, storage := range msg.storages {
+			items[i] = storage
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case monitoringLogStorageDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load monitoring log storage detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.monitoringLogStorageDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderMonitoringLogStorageDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
+
+	case monitoringMetricsStoragesLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load monitoring metrics storages", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("Monitoring metrics storages loaded successfully", slog.Int("count", len(msg.storages)))
+
+		items := make([]list.Item, len(msg.storages))
+		for i, storage := range msg.storages {
+			items[i] = storage
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case monitoringMetricsStorageDetailLoadedMsg:
+		m.detailLoading = false
+		if msg.err != nil {
+			slog.Error("Failed to load monitoring metrics storage detail", slog.Any("error", msg.err))
+			m.err = msg.err
+			m.detailMode = false
+			return m, nil
+		}
+		m.monitoringMetricsStorageDetail = msg.detail
+		// Setup viewport for detail view
+		content := renderMonitoringMetricsStorageDetail(msg.detail)
+		m.detailViewport = viewport.New(m.windowWidth, m.windowHeight-10)
+		m.detailViewport.SetContent(content)
+		return m, nil
 	}
 
 	// Delegate to list for navigation
@@ -2616,7 +2784,7 @@ func (m model) View() string {
 	if m.detailMode {
 		if m.detailLoading {
 			b.WriteString("Loading details...\n")
-		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil || m.containerRegistryDetail != nil || m.appRunClusterDetail != nil || m.appRunLBDetail != nil || m.appRunASGDetail != nil {
+		} else if m.serverDetail != nil || m.switchDetail != nil || m.dnsDetail != nil || m.elbDetail != nil || m.gslbDetail != nil || m.dbDetail != nil || m.diskDetail != nil || m.archiveDetail != nil || m.internetDetail != nil || m.vpcRouterDetail != nil || m.packetFilterDetail != nil || m.loadBalancerDetail != nil || m.nfsDetail != nil || m.sshKeyDetail != nil || m.autoBackupDetail != nil || m.simpleMonitorDetail != nil || m.bridgeDetail != nil || m.containerRegistryDetail != nil || m.appRunClusterDetail != nil || m.appRunLBDetail != nil || m.appRunASGDetail != nil || m.monitoringLogStorageDetail != nil || m.monitoringMetricsStorageDetail != nil {
 			b.WriteString(m.detailViewport.View())
 			b.WriteString("\n")
 			b.WriteString(helpStyle.Render("↑/↓/j/k: scroll | ESC/q: back"))
@@ -2642,8 +2810,8 @@ func (m model) View() string {
 	}
 
 	// Zone selector and resource type
-	// Show "global" for global resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry, AppRunCluster)
-	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunDedicated {
+	// Show "global" for global resources (DNS, ELB, GSLB, SSHKey, SimpleMonitor, ContainerRegistry, AppRunCluster, Monitoring)
+	if m.resourceType == ResourceTypeDNS || m.resourceType == ResourceTypeELB || m.resourceType == ResourceTypeGSLB || m.resourceType == ResourceTypeSSHKey || m.resourceType == ResourceTypeSimpleMonitor || m.resourceType == ResourceTypeContainerRegistry || m.resourceType == ResourceTypeAppRunDedicated || m.resourceType == ResourceTypeMonitoringLogStorage || m.resourceType == ResourceTypeMonitoringMetricsStorage {
 		b.WriteString("Zone: ")
 		b.WriteString(zoneStyle.Render("global"))
 		b.WriteString(" | Type: ")
