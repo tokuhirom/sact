@@ -68,7 +68,7 @@ func (c *SakuraClient) ListAppRunClusters(ctx context.Context) ([]AppRunCluster,
 
 	for {
 		params := apprun.ListClustersParams{
-			MaxItems: 100,
+			MaxItems: 30, // API limit is 30
 			Cursor:   cursor,
 		}
 
