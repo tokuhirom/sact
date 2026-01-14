@@ -448,31 +448,44 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 		}
 	} else if ls, ok := item.(MonitoringLogStorage); ok {
 		// Handle MonitoringLogStorage
+		name := getStringPtr(ls.Name)
+		resourceID := getInt64Ptr(ls.ResourceId)
+		expireDay := getIntPtr(ls.ExpireDay)
+		routings := 0
+		if ls.Usage != nil {
+			routings = ls.Usage.LogRoutings
+		}
 		if index == m.Index() {
 			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %10d  %3d days  %d routings",
-				ls.Name,
-				ls.ResourceID,
-				ls.ExpireDay,
-				ls.Usage.LogRoutings))
+				name,
+				resourceID,
+				expireDay,
+				routings))
 		} else {
 			str = itemStyle.Render(fmt.Sprintf("  %-40s %10d  %3d days  %d routings",
-				ls.Name,
-				ls.ResourceID,
-				ls.ExpireDay,
-				ls.Usage.LogRoutings))
+				name,
+				resourceID,
+				expireDay,
+				routings))
 		}
 	} else if ms, ok := item.(MonitoringMetricsStorage); ok {
 		// Handle MonitoringMetricsStorage
+		name := getStringPtr(ms.Name)
+		resourceID := getInt64Ptr(ms.ResourceId)
+		routings := 0
+		if ms.Usage != nil {
+			routings = ms.Usage.MetricsRoutings
+		}
 		if index == m.Index() {
 			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %10d  %d routings",
-				ms.Name,
-				ms.ResourceID,
-				ms.Usage.MetricsRoutings))
+				name,
+				resourceID,
+				routings))
 		} else {
 			str = itemStyle.Render(fmt.Sprintf("  %-40s %10d  %d routings",
-				ms.Name,
-				ms.ResourceID,
-				ms.Usage.MetricsRoutings))
+				name,
+				resourceID,
+				routings))
 		}
 	} else {
 		return
@@ -1852,12 +1865,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if ls, ok := selectedItem.(MonitoringLogStorage); ok {
 					m.detailMode = true
 					m.detailLoading = true
-					return m, loadMonitoringLogStorageDetail(m.client, ls.ResourceID)
+					return m, loadMonitoringLogStorageDetail(m.client, getInt64Ptr(ls.ResourceId))
 				}
 				if ms, ok := selectedItem.(MonitoringMetricsStorage); ok {
 					m.detailMode = true
 					m.detailLoading = true
-					return m, loadMonitoringMetricsStorageDetail(m.client, ms.ResourceID)
+					return m, loadMonitoringMetricsStorageDetail(m.client, getInt64Ptr(ms.ResourceId))
 				}
 			}
 			return m, nil

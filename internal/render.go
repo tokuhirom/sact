@@ -1195,50 +1195,64 @@ func renderAppRunASGDetail(detail *AppRunASGDetail, workerNodes []AppRunWorkerNo
 func renderMonitoringLogStorageDetail(detail *MonitoringLogStorageDetail) string {
 	var b strings.Builder
 
-	b.WriteString(selectedStyle.Render(fmt.Sprintf("Log Storage: %s", detail.Name)))
+	name := ""
+	if detail.Name != nil {
+		name = *detail.Name
+	}
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Log Storage: %s", name)))
 	b.WriteString("\n\n")
 
-	b.WriteString(fmt.Sprintf("Resource ID: %d\n", detail.ResourceID))
-	b.WriteString(fmt.Sprintf("ID:          %d\n", detail.ID))
-
-	if detail.Desc != "" {
-		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	if detail.ResourceId != nil {
+		b.WriteString(fmt.Sprintf("Resource ID: %d\n", *detail.ResourceId))
+	}
+	if detail.Id != nil {
+		b.WriteString(fmt.Sprintf("ID:          %d\n", *detail.Id))
 	}
 
-	b.WriteString(fmt.Sprintf("Expire Days: %d\n", detail.ExpireDay))
+	if detail.LogStorage.Description != nil && *detail.LogStorage.Description != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", *detail.LogStorage.Description))
+	}
 
-	if detail.IsSystem {
+	if detail.ExpireDay != nil {
+		b.WriteString(fmt.Sprintf("Expire Days: %d\n", *detail.ExpireDay))
+	}
+
+	if detail.IsSystem != nil && *detail.IsSystem {
 		b.WriteString("System:      Yes\n")
 	}
 
 	// Endpoints
-	if detail.Endpoints.Ingester.Address != "" {
+	if detail.Endpoints != nil {
 		b.WriteString(fmt.Sprintf("\nIngester:    %s\n", detail.Endpoints.Ingester.Address))
-		if detail.Endpoints.Ingester.Insecure {
+		if detail.Endpoints.Ingester.Insecure != nil && *detail.Endpoints.Ingester.Insecure {
 			b.WriteString("  (insecure)\n")
 		}
 	}
 
 	// Usage
-	b.WriteString(fmt.Sprintf("\nUsage:\n"))
-	b.WriteString(fmt.Sprintf("  Log Routings:      %d\n", detail.Usage.LogRoutings))
-	b.WriteString(fmt.Sprintf("  Log Measure Rules: %d\n", detail.Usage.LogMeasureRules))
+	if detail.Usage != nil {
+		b.WriteString(fmt.Sprintf("\nUsage:\n"))
+		b.WriteString(fmt.Sprintf("  Log Routings:      %d\n", detail.Usage.LogRoutings))
+		b.WriteString(fmt.Sprintf("  Log Measure Rules: %d\n", detail.Usage.LogMeasureRules))
+	}
 
 	// Routings
 	if len(detail.Routings) > 0 {
 		b.WriteString(fmt.Sprintf("\nRelated Routings: %d\n", len(detail.Routings)))
 		for _, r := range detail.Routings {
-			enabled := "enabled"
-			if !r.Enabled {
-				enabled = "disabled"
+			uid := ""
+			if r.Uid != nil {
+				uid = r.Uid.String()[:8]
 			}
-			b.WriteString(fmt.Sprintf("  - %s (%s)\n", r.Name, enabled))
-			b.WriteString(fmt.Sprintf("    Src: %d -> Dest: %d\n", r.SourceResourceID, r.DestResourceID))
+			srcID := getInt64Ptr(r.ResourceId)
+			destID := getInt64Ptr(r.LogStorageId)
+			b.WriteString(fmt.Sprintf("  - %s (variant: %s)\n", uid, r.Variant))
+			b.WriteString(fmt.Sprintf("    Resource: %d -> LogStorage: %d\n", srcID, destID))
 		}
 	}
 
-	if detail.CreatedAt != "" {
-		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	if detail.CreatedAt != nil {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt.Format("2006-01-02 15:04:05")))
 	}
 
 	return b.String()
@@ -1247,50 +1261,62 @@ func renderMonitoringLogStorageDetail(detail *MonitoringLogStorageDetail) string
 func renderMonitoringMetricsStorageDetail(detail *MonitoringMetricsStorageDetail) string {
 	var b strings.Builder
 
-	b.WriteString(selectedStyle.Render(fmt.Sprintf("Metrics Storage: %s", detail.Name)))
+	name := ""
+	if detail.Name != nil {
+		name = *detail.Name
+	}
+	b.WriteString(selectedStyle.Render(fmt.Sprintf("Metrics Storage: %s", name)))
 	b.WriteString("\n\n")
 
-	b.WriteString(fmt.Sprintf("Resource ID: %d\n", detail.ResourceID))
-	b.WriteString(fmt.Sprintf("ID:          %d\n", detail.ID))
-
-	if detail.Desc != "" {
-		b.WriteString(fmt.Sprintf("Description: %s\n", detail.Desc))
+	if detail.ResourceId != nil {
+		b.WriteString(fmt.Sprintf("Resource ID: %d\n", *detail.ResourceId))
+	}
+	if detail.Id != nil {
+		b.WriteString(fmt.Sprintf("ID:          %d\n", *detail.Id))
 	}
 
-	if detail.IsSystem {
+	if detail.MetricsStorage.Description != nil && *detail.MetricsStorage.Description != "" {
+		b.WriteString(fmt.Sprintf("Description: %s\n", *detail.MetricsStorage.Description))
+	}
+
+	if detail.IsSystem != nil && *detail.IsSystem {
 		b.WriteString("System:      Yes\n")
 	}
 
 	// Endpoints
-	if detail.Endpoints.Address != "" {
+	if detail.Endpoints != nil {
 		b.WriteString(fmt.Sprintf("\nEndpoint:    %s\n", detail.Endpoints.Address))
 	}
 
 	// Usage
-	b.WriteString(fmt.Sprintf("\nUsage:\n"))
-	b.WriteString(fmt.Sprintf("  Metrics Routings:  %d\n", detail.Usage.MetricsRoutings))
-	b.WriteString(fmt.Sprintf("  Alert Rules:       %d\n", detail.Usage.AlertRules))
-	b.WriteString(fmt.Sprintf("  Log Measure Rules: %d\n", detail.Usage.LogMeasureRules))
+	if detail.Usage != nil {
+		b.WriteString(fmt.Sprintf("\nUsage:\n"))
+		b.WriteString(fmt.Sprintf("  Metrics Routings:  %d\n", detail.Usage.MetricsRoutings))
+		b.WriteString(fmt.Sprintf("  Alert Rules:       %d\n", detail.Usage.AlertRules))
+		b.WriteString(fmt.Sprintf("  Log Measure Rules: %d\n", detail.Usage.LogMeasureRules))
+	}
 
 	// Routings
 	if len(detail.Routings) > 0 {
 		b.WriteString(fmt.Sprintf("\nRelated Routings: %d\n", len(detail.Routings)))
 		for _, r := range detail.Routings {
-			enabled := "enabled"
-			if !r.Enabled {
-				enabled = "disabled"
+			uid := ""
+			if r.Uid != nil {
+				uid = r.Uid.String()[:8]
 			}
-			b.WriteString(fmt.Sprintf("  - %s (%s)\n", r.Name, enabled))
-			b.WriteString(fmt.Sprintf("    Src: %d -> Dest: %d\n", r.SourceResourceID, r.DestResourceID))
+			srcID := getInt64Ptr(r.ResourceId)
+			destID := getInt64Ptr(r.MetricsStorageId)
+			b.WriteString(fmt.Sprintf("  - %s (variant: %s)\n", uid, r.Variant))
+			b.WriteString(fmt.Sprintf("    Resource: %d -> MetricsStorage: %d\n", srcID, destID))
 		}
 	}
 
-	if detail.CreatedAt != "" {
-		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt))
+	if detail.CreatedAt != nil {
+		b.WriteString(fmt.Sprintf("\nCreated:     %s\n", detail.CreatedAt.Format("2006-01-02 15:04:05")))
 	}
 
-	if detail.UpdatedAt != "" {
-		b.WriteString(fmt.Sprintf("Updated:     %s\n", detail.UpdatedAt))
+	if detail.UpdatedAt != nil {
+		b.WriteString(fmt.Sprintf("Updated:     %s\n", detail.UpdatedAt.Format("2006-01-02 15:04:05")))
 	}
 
 	return b.String()
