@@ -46,12 +46,65 @@ type AppRunASG struct {
 	ClusterID       string // parent cluster ID for navigation
 }
 
+// AppRunASGInterface represents a network interface for ASG
+type AppRunASGInterface struct {
+	Index          int16
+	Upstream       string
+	NetmaskLen     int16
+	DefaultGateway string
+	PacketFilterID string
+	ConnectsToLB   bool
+	IPPool         []string
+}
+
 // AppRunASGDetail contains detailed information about an ASG
 type AppRunASGDetail struct {
 	AppRunASG
 	NameServers []string
-	Interfaces  []string
+	Interfaces  []AppRunASGInterface
 	Deleting    bool
+}
+
+// AppRunWorkerNode represents a worker node
+type AppRunWorkerNode struct {
+	ID             string
+	ResourceID     string
+	Status         string
+	Draining       bool
+	ArchiveVersion string
+	CreatedAt      string
+	ErrorMessage   string
+	IPAddresses    []string // flattened from network interfaces
+	ClusterID      string   // parent cluster ID
+	ASGID          string   // parent ASG ID
+}
+
+// Implement list.Item interface for AppRunWorkerNode
+func (w AppRunWorkerNode) FilterValue() string {
+	return w.ResourceID
+}
+
+func (w AppRunWorkerNode) Title() string {
+	return w.ResourceID
+}
+
+func (w AppRunWorkerNode) Description() string {
+	status := w.Status
+	if w.Draining {
+		status += " (draining)"
+	}
+	return fmt.Sprintf("Status: %s | IPs: %s", status, joinStrings(w.IPAddresses, ", "))
+}
+
+func joinStrings(s []string, sep string) string {
+	if len(s) == 0 {
+		return "-"
+	}
+	result := s[0]
+	for i := 1; i < len(s); i++ {
+		result += sep + s[i]
+	}
+	return result
 }
 
 // AppRunLB represents a load balancer for list display
@@ -343,6 +396,185 @@ func (c *SakuraClient) ListAppRunASGs(ctx context.Context, clusterID string) ([]
 
 	slog.Info("Successfully fetched AppRun ASGs", slog.Int("count", len(allASGs)))
 	return allASGs, nil
+}
+
+// GetAppRunASGDetail fetches detailed information about a specific ASG
+func (c *SakuraClient) GetAppRunASGDetail(ctx context.Context, clusterID, asgID string) (*AppRunASGDetail, error) {
+	slog.Info("Fetching AppRun ASG detail", slog.String("clusterID", clusterID), slog.String("asgID", asgID))
+
+	client, err := c.GetAppRunClient()
+	if err != nil {
+		slog.Error("Failed to get AppRun client", slog.Any("error", err))
+		return nil, err
+	}
+
+	parsedCluster, err := uuid.Parse(clusterID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid cluster ID: %w", err)
+	}
+	parsedASG, err := uuid.Parse(asgID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid ASG ID: %w", err)
+	}
+
+	params := apprun.GetAutoScalingGroupParams{
+		ClusterID:          apprun.ClusterID(parsedCluster),
+		AutoScalingGroupID: apprun.AutoScalingGroupID(parsedASG),
+	}
+
+	resp, err := client.GetAutoScalingGroup(ctx, params)
+	if err != nil {
+		slog.Error("Failed to fetch AppRun ASG detail", slog.String("asgID", asgID), slog.Any("error", err))
+		return nil, err
+	}
+
+	asg := resp.AutoScalingGroup
+
+	// Convert name servers
+	nameServers := make([]string, len(asg.NameServers))
+	for i, ns := range asg.NameServers {
+		nameServers[i] = string(ns)
+	}
+
+	// Convert interfaces
+	interfaces := make([]AppRunASGInterface, len(asg.Interfaces))
+	for i, iface := range asg.Interfaces {
+		ipPool := make([]string, len(iface.IpPool))
+		for j, ip := range iface.IpPool {
+			ipPool[j] = fmt.Sprintf("%s-%s", string(ip.Start), string(ip.End))
+		}
+
+		netmaskLen := int16(0)
+		if iface.NetmaskLen.Set {
+			netmaskLen = iface.NetmaskLen.Value
+		}
+		defaultGateway := ""
+		if iface.DefaultGateway.Set {
+			defaultGateway = iface.DefaultGateway.Value
+		}
+		packetFilterID := ""
+		if iface.PacketFilterID.Set {
+			packetFilterID = iface.PacketFilterID.Value
+		}
+
+		interfaces[i] = AppRunASGInterface{
+			Index:          iface.InterfaceIndex,
+			Upstream:       iface.Upstream,
+			NetmaskLen:     netmaskLen,
+			DefaultGateway: defaultGateway,
+			PacketFilterID: packetFilterID,
+			ConnectsToLB:   iface.ConnectsToLB,
+			IPPool:         ipPool,
+		}
+	}
+
+	detail := &AppRunASGDetail{
+		AppRunASG: AppRunASG{
+			ID:              uuid.UUID(asg.AutoScalingGroupID).String(),
+			Name:            asg.Name,
+			Zone:            asg.Zone,
+			MinNodes:        asg.MinNodes,
+			MaxNodes:        asg.MaxNodes,
+			WorkerNodeCount: asg.WorkerNodeCount,
+			ServiceClass:    asg.WorkerServiceClassPath,
+			ClusterID:       clusterID,
+		},
+		NameServers: nameServers,
+		Interfaces:  interfaces,
+		Deleting:    asg.Deleting,
+	}
+
+	slog.Info("Successfully fetched AppRun ASG detail", slog.String("asgID", asgID))
+	return detail, nil
+}
+
+// ListAppRunWorkerNodes fetches all worker nodes for a specific ASG
+func (c *SakuraClient) ListAppRunWorkerNodes(ctx context.Context, clusterID, asgID string) ([]AppRunWorkerNode, error) {
+	slog.Info("Fetching AppRun Worker Nodes", slog.String("clusterID", clusterID), slog.String("asgID", asgID))
+
+	client, err := c.GetAppRunClient()
+	if err != nil {
+		slog.Error("Failed to get AppRun client", slog.Any("error", err))
+		return nil, err
+	}
+
+	parsedCluster, err := uuid.Parse(clusterID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid cluster ID: %w", err)
+	}
+	parsedASG, err := uuid.Parse(asgID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid ASG ID: %w", err)
+	}
+
+	var allNodes []AppRunWorkerNode
+	var cursor apprun.OptWorkerNodeID
+
+	for {
+		params := apprun.ListWorkerNodesParams{
+			ClusterID:          apprun.ClusterID(parsedCluster),
+			AutoScalingGroupID: apprun.AutoScalingGroupID(parsedASG),
+			MaxItems:           30,
+			Cursor:             cursor,
+		}
+
+		resp, err := client.ListWorkerNodes(ctx, params)
+		if err != nil {
+			slog.Error("Failed to fetch AppRun Worker Nodes", slog.Any("error", err))
+			return nil, err
+		}
+
+		for _, node := range resp.WorkerNodes {
+			createdAt := ""
+			if node.Created > 0 {
+				createdAt = time.Unix(int64(node.Created), 0).Format("2006-01-02 15:04:05")
+			}
+
+			// Extract IP addresses from network interfaces
+			var ipAddresses []string
+			for _, iface := range node.NetworkInterfaces {
+				for _, addr := range iface.Addresses {
+					ipAddresses = append(ipAddresses, addr.Address)
+				}
+			}
+
+			resourceID := ""
+			if !node.ResourceID.Null {
+				resourceID = node.ResourceID.Value
+			}
+
+			errorMsg := ""
+			if node.CreateErrorMessage.Set {
+				errorMsg = node.CreateErrorMessage.Value
+			}
+
+			archiveVersion := ""
+			if node.ArchiveVersion.Set {
+				archiveVersion = node.ArchiveVersion.Value
+			}
+
+			allNodes = append(allNodes, AppRunWorkerNode{
+				ID:             uuid.UUID(node.WorkerNodeID).String(),
+				ResourceID:     resourceID,
+				Status:         string(node.Status),
+				Draining:       node.Draining,
+				ArchiveVersion: archiveVersion,
+				CreatedAt:      createdAt,
+				ErrorMessage:   errorMsg,
+				IPAddresses:    ipAddresses,
+				ClusterID:      clusterID,
+				ASGID:          asgID,
+			})
+		}
+
+		if !resp.NextCursor.Set {
+			break
+		}
+		cursor = resp.NextCursor
+	}
+
+	slog.Info("Successfully fetched AppRun Worker Nodes", slog.Int("count", len(allNodes)))
+	return allNodes, nil
 }
 
 // ListAppRunLBs fetches all load balancers for a specific ASG
