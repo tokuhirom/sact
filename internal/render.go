@@ -1245,7 +1245,11 @@ func renderMonitoringLogStorageDetail(detail *MonitoringLogStorageDetail) string
 				uid = r.Uid.String()[:8]
 			}
 			srcID := getStringPtr(r.ResourceId)
+			// Get destination LogStorage ID from embedded object if available
 			destID := getStringPtr(r.LogStorageId)
+			if destID == "" && r.LogStorage != nil {
+				destID = getStringPtr(r.LogStorage.ResourceId)
+			}
 			b.WriteString(fmt.Sprintf("  - %s (variant: %s)\n", uid, r.Variant))
 			b.WriteString(fmt.Sprintf("    Resource: %s -> LogStorage: %s\n", srcID, destID))
 		}
@@ -1305,7 +1309,11 @@ func renderMonitoringMetricsStorageDetail(detail *MonitoringMetricsStorageDetail
 				uid = r.Uid.String()[:8]
 			}
 			srcID := getStringPtr(r.ResourceId)
+			// Get destination MetricsStorage ID from embedded object if available
 			destID := getStringPtr(r.MetricsStorageId)
+			if destID == "" && r.MetricsStorage != nil {
+				destID = getStringPtr(r.MetricsStorage.ResourceId)
+			}
 			b.WriteString(fmt.Sprintf("  - %s (variant: %s)\n", uid, r.Variant))
 			b.WriteString(fmt.Sprintf("    Resource: %s -> MetricsStorage: %s\n", srcID, destID))
 		}
