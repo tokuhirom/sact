@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.9](https://github.com/tokuhirom/sact/compare/v0.0.8...v0.0.9) - 2026-01-14
+- Add AppRun Dedicated cluster list support by @tokuhirom in https://github.com/tokuhirom/sact/pull/35
+- Enhance DB detail display with missing API fields by @tokuhirom in https://github.com/tokuhirom/sact/pull/37
+- Add ASG detail view with network info and worker nodes by @tokuhirom in https://github.com/tokuhirom/sact/pull/38
+
 ## [v0.0.8](https://github.com/tokuhirom/sact/compare/v0.0.7...v0.0.8) - 2026-01-14
 - Add AutoBackup resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/27
 - Add SimpleMonitor resource support by @tokuhirom in https://github.com/tokuhirom/sact/pull/29
