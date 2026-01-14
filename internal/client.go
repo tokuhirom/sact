@@ -1,9 +1,12 @@
 package internal
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"log/slog"
+	"net/http"
 
 	client "github.com/sacloud/api-client-go"
 	"github.com/sacloud/iaas-api-go"
@@ -11,6 +14,41 @@ import (
 
 	apprun "github.com/tokuhirom/sact/pkg/openapi/apprun_dedicated"
 )
+
+// debugTransport logs HTTP request/response for debugging
+type debugTransport struct {
+	base http.RoundTripper
+}
+
+func (t *debugTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	slog.Debug("AppRun API request",
+		slog.String("method", req.Method),
+		slog.String("url", req.URL.String()))
+
+	resp, err := t.base.RoundTrip(req)
+	if err != nil {
+		return nil, err
+	}
+
+	// Log response for non-2xx status codes
+	if resp.StatusCode >= 400 {
+		body, readErr := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if readErr != nil {
+			slog.Error("Failed to read error response body", slog.Any("error", readErr))
+			return nil, readErr
+		}
+
+		slog.Error("AppRun API error response",
+			slog.Int("status", resp.StatusCode),
+			slog.String("body", string(body)))
+
+		// Restore the body for further processing
+		resp.Body = io.NopCloser(bytes.NewReader(body))
+	}
+
+	return resp, nil
+}
 
 // ResourceType represents different cloud resource types
 type ResourceType int
@@ -185,9 +223,15 @@ func (c *SakuraClient) GetAppRunClient() (*apprun.Client, error) {
 		password: secret,
 	}
 
+	// Use debug transport to log error responses
+	httpClient := &http.Client{
+		Transport: &debugTransport{base: http.DefaultTransport},
+	}
+
 	apprunClient, err := apprun.NewClient(
 		"https://secure.sakura.ad.jp/cloud/api/apprun-dedicated/1.0",
 		secSource,
+		apprun.WithClient(httpClient),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create AppRun client: %w", err)
