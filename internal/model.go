@@ -404,6 +404,23 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 				lb.ID,
 				lb.ServiceClass))
 		}
+	} else if app, ok := item.(AppRunApplication); ok {
+		// Handle AppRunApplication
+		versionStr := "-"
+		if app.ActiveVersion > 0 {
+			versionStr = fmt.Sprintf("v%d", app.ActiveVersion)
+		}
+		if index == m.Index() {
+			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %-10s %d replicas",
+				app.Name,
+				versionStr,
+				app.DesiredCount))
+		} else {
+			str = itemStyle.Render(fmt.Sprintf("  %-40s %-10s %d replicas",
+				app.Name,
+				versionStr,
+				app.DesiredCount))
+		}
 	} else {
 		return
 	}
@@ -665,6 +682,14 @@ type appRunLBsLoadedMsg struct {
 	lbs       []AppRunLB
 	clusterID string
 	asgID     string
+	err       error
+}
+
+// appRunClusterContentsLoadedMsg contains both ASGs and Applications for a cluster
+type appRunClusterContentsLoadedMsg struct {
+	asgs      []AppRunASG
+	apps      []AppRunApplication
+	clusterID string
 	err       error
 }
 
@@ -1096,6 +1121,21 @@ func loadAppRunLBs(client *SakuraClient, clusterID, asgID string) tea.Cmd {
 	}
 }
 
+func loadAppRunClusterContents(client *SakuraClient, clusterID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		asgs, err := client.ListAppRunASGs(ctx, clusterID)
+		if err != nil {
+			return appRunClusterContentsLoadedMsg{err: err}
+		}
+		apps, err := client.ListAppRunApplications(ctx, clusterID)
+		if err != nil {
+			return appRunClusterContentsLoadedMsg{err: err}
+		}
+		return appRunClusterContentsLoadedMsg{asgs: asgs, apps: apps, clusterID: clusterID}
+	}
+}
+
 func InitialModel(client *SakuraClient, defaultZone string) model {
 	zones := []string{"tk1a", "tk1b", "is1a", "is1b", "is1c"}
 
@@ -1281,7 +1321,7 @@ func (m model) getTableHeader() string {
 		case 0:
 			return fmt.Sprintf("  %-40s %-36s %s", "Name", "ID", "ASG")
 		case 1:
-			return fmt.Sprintf("  %-40s %-10s %s", "Name", "Zone", "Nodes")
+			return "  [ASG] + [Applications]"
 		case 2:
 			return fmt.Sprintf("  %-40s %-36s %s", "Name", "ID", "ServiceClass")
 		}
@@ -1447,12 +1487,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.resourceType == ResourceTypeAppRunDedicated && m.appRunDrilldownLevel > 0 {
 				m.loading = true
 				if m.appRunDrilldownLevel == 2 {
-					// From LB list, go back to ASG list
+					// From LB list, go back to ASG + Applications list
 					m.appRunDrilldownLevel = 1
 					m.appRunSelectedASGID = ""
-					return m, loadAppRunASGs(m.client, m.appRunSelectedClusterID)
+					return m, loadAppRunClusterContents(m.client, m.appRunSelectedClusterID)
 				} else if m.appRunDrilldownLevel == 1 {
-					// From ASG list, go back to Cluster list
+					// From ASG + Applications list, go back to Cluster list
 					m.appRunDrilldownLevel = 0
 					m.appRunSelectedClusterID = ""
 					return m, loadAppRunClusters(m.client)
@@ -1556,11 +1596,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, loadContainerRegistryDetail(m.client, cr.ID)
 				}
 				if arc, ok := selectedItem.(AppRunCluster); ok {
-					// Drilldown into ASG list
+					// Drilldown into ASG + Applications list
 					m.loading = true
 					m.appRunSelectedClusterID = arc.ID
 					m.appRunDrilldownLevel = 1
-					return m, loadAppRunASGs(m.client, arc.ID)
+					return m, loadAppRunClusterContents(m.client, arc.ID)
 				}
 				if asg, ok := selectedItem.(AppRunASG); ok {
 					// Drilldown into LB list
@@ -1570,8 +1610,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, loadAppRunLBs(m.client, asg.ClusterID, asg.ID)
 				}
 				if _, ok := selectedItem.(AppRunLB); ok {
-					// LB is the deepest level, show detail (optional)
-					// For now, do nothing
+					// LB is the deepest level, do nothing for now
+					return m, nil
+				}
+				if _, ok := selectedItem.(AppRunApplication); ok {
+					// Application - do nothing for now
 					return m, nil
 				}
 			}
@@ -2341,6 +2384,26 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		items := make([]list.Item, len(msg.lbs))
 		for i, lb := range msg.lbs {
 			items[i] = lb
+		}
+		m.list.SetItems(items)
+		return m, nil
+
+	case appRunClusterContentsLoadedMsg:
+		m.loading = false
+		if msg.err != nil {
+			slog.Error("Failed to load AppRun cluster contents", slog.Any("error", msg.err))
+			m.err = msg.err
+			return m, nil
+		}
+		slog.Info("AppRun cluster contents loaded", slog.Int("asgs", len(msg.asgs)), slog.Int("apps", len(msg.apps)))
+
+		// Combine ASGs and Applications into a single list
+		items := make([]list.Item, 0, len(msg.asgs)+len(msg.apps))
+		for _, asg := range msg.asgs {
+			items = append(items, asg)
+		}
+		for _, app := range msg.apps {
+			items = append(items, app)
 		}
 		m.list.SetItems(items)
 		return m, nil

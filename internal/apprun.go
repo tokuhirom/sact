@@ -71,6 +71,16 @@ type AppRunLBDetail struct {
 	Deleting    bool
 }
 
+// AppRunApplication represents an application for list display
+type AppRunApplication struct {
+	ID            string
+	Name          string
+	ClusterID     string
+	ClusterName   string
+	ActiveVersion int32
+	DesiredCount  int32
+}
+
 // Implement list.Item interface for AppRunCluster
 func (c AppRunCluster) FilterValue() string {
 	return c.Name
@@ -108,6 +118,23 @@ func (l AppRunLB) Title() string {
 
 func (l AppRunLB) Description() string {
 	return fmt.Sprintf("Service: %s | Created: %s", l.ServiceClass, l.CreatedAt)
+}
+
+// Implement list.Item interface for AppRunApplication
+func (a AppRunApplication) FilterValue() string {
+	return a.Name
+}
+
+func (a AppRunApplication) Title() string {
+	return a.Name
+}
+
+func (a AppRunApplication) Description() string {
+	versionStr := "-"
+	if a.ActiveVersion > 0 {
+		versionStr = fmt.Sprintf("v%d", a.ActiveVersion)
+	}
+	return fmt.Sprintf("Version: %s | Desired: %d", versionStr, a.DesiredCount)
 }
 
 // ListAppRunClusters fetches all AppRun Dedicated clusters
@@ -343,4 +370,64 @@ func (c *SakuraClient) ListAppRunLBs(ctx context.Context, clusterID, asgID strin
 
 	slog.Info("Successfully fetched AppRun LBs", slog.Int("count", len(allLBs)))
 	return allLBs, nil
+}
+
+// ListAppRunApplications fetches all applications for a specific cluster
+func (c *SakuraClient) ListAppRunApplications(ctx context.Context, clusterID string) ([]AppRunApplication, error) {
+	slog.Info("Fetching AppRun Applications", slog.String("clusterID", clusterID))
+
+	client, err := c.GetAppRunClient()
+	if err != nil {
+		slog.Error("Failed to get AppRun client", slog.Any("error", err))
+		return nil, err
+	}
+
+	parsed, err := uuid.Parse(clusterID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid cluster ID: %w", err)
+	}
+
+	var allApps []AppRunApplication
+	var cursor apprun.OptString
+
+	for {
+		params := apprun.ListApplicationsParams{
+			ClusterID: apprun.OptClusterID{Value: apprun.ClusterID(parsed), Set: true},
+			MaxItems:  30,
+			Cursor:    cursor,
+		}
+
+		resp, err := client.ListApplications(ctx, params)
+		if err != nil {
+			slog.Error("Failed to fetch AppRun Applications", slog.Any("error", err))
+			return nil, err
+		}
+
+		for _, app := range resp.Applications {
+			activeVersion := int32(0)
+			if !app.ActiveVersion.Null {
+				activeVersion = app.ActiveVersion.Value
+			}
+			desiredCount := int32(0)
+			if !app.DesiredCount.Null {
+				desiredCount = app.DesiredCount.Value
+			}
+			allApps = append(allApps, AppRunApplication{
+				ID:            uuid.UUID(app.ApplicationID).String(),
+				Name:          app.Name,
+				ClusterID:     clusterID,
+				ClusterName:   app.ClusterName,
+				ActiveVersion: activeVersion,
+				DesiredCount:  desiredCount,
+			})
+		}
+
+		if resp.NextCursor.Value == "" {
+			break
+		}
+		cursor = resp.NextCursor
+	}
+
+	slog.Info("Successfully fetched AppRun Applications", slog.Int("count", len(allApps)))
+	return allApps, nil
 }
