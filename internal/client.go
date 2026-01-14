@@ -145,11 +145,11 @@ func (r ResourceType) String() string {
 	case ResourceTypeAppRunDedicated:
 		return "AppRun Dedicated"
 	case ResourceTypeMonitoringLogStorage:
-		return "Log Storage"
+		return "Monitoring Suite - Log Storage"
 	case ResourceTypeMonitoringMetricsStorage:
-		return "Metrics Storage"
+		return "Monitoring Suite - Metrics Storage"
 	case ResourceTypeMonitoringTraceStorage:
-		return "Trace Storage"
+		return "Monitoring Suite - Trace Storage"
 	default:
 		return "Unknown"
 	}
