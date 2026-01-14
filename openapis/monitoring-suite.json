@@ -5499,10 +5499,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -5577,8 +5576,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -5935,10 +5933,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -6013,8 +6010,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -8725,10 +8721,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -8807,8 +8802,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },
@@ -8970,10 +8964,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "readOnly": true,
             "deprecated": true,
-            "format": "int64",
             "minimum": 0,
             "maximum": 999999999999,
             "example": 110000000000
@@ -9052,8 +9045,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "title": "Cloud resource id",
             "readOnly": true
           },

@@ -407,7 +407,7 @@ type LogMeasureRuleVersionEnum string
 type LogRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id            *int64      `json:"id,omitempty"`
+	Id            *string     `json:"id,omitempty"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
 	LogStorageId  *int64      `json:"log_storage_id"`
 	Publisher     *Publisher  `json:"publisher,omitempty"`
@@ -435,7 +435,7 @@ type LogStorage struct {
 	Icon      *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64    `json:"id,omitempty"`
+	Id         *string   `json:"id,omitempty"`
 	IsSystem   *bool     `json:"is_system,omitempty"`
 	Name       *string   `json:"name,omitempty"`
 	ResourceId *int64    `json:"resource_id"`
@@ -529,7 +529,7 @@ type MatchLabelsItem struct {
 type MetricsRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id               *int64          `json:"id,omitempty"`
+	Id               *string         `json:"id,omitempty"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
 	MetricsStorageId *int64          `json:"metrics_storage_id"`
 	Publisher        *Publisher      `json:"publisher,omitempty"`
@@ -553,7 +553,7 @@ type MetricsStorage struct {
 	Icon *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64     `json:"id,omitempty"`
+	Id         *string    `json:"id,omitempty"`
 	IsSystem   *bool      `json:"is_system,omitempty"`
 	Name       *string    `json:"name,omitempty"`
 	ResourceId *int64     `json:"resource_id"`
@@ -1257,7 +1257,7 @@ type WrappedDashboardProject struct {
 type WrappedLogRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id            *int64      `json:"id,omitempty"`
+	Id            *string     `json:"id,omitempty"`
 	IsOk          bool        `json:"is_ok"`
 	LogStorage    *LogStorage `json:"log_storage,omitempty"`
 	LogStorageId  *int64      `json:"log_storage_id"`
@@ -1286,7 +1286,7 @@ type WrappedLogStorage struct {
 	Icon      *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64    `json:"id,omitempty"`
+	Id         *string   `json:"id,omitempty"`
 	IsOk       bool      `json:"is_ok"`
 	IsSystem   *bool     `json:"is_system,omitempty"`
 	Name       *string   `json:"name,omitempty"`
@@ -1315,7 +1315,7 @@ type WrappedLogStorageAccessKey struct {
 type WrappedMetricsRouting struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// Deprecated: this property has been marked as deprecated upstream, but no `x-deprecated-reason` was set
-	Id               *int64          `json:"id,omitempty"`
+	Id               *string         `json:"id,omitempty"`
 	IsOk             bool            `json:"is_ok"`
 	MetricsStorage   *MetricsStorage `json:"metrics_storage,omitempty"`
 	MetricsStorageId *int64          `json:"metrics_storage_id"`
@@ -1340,7 +1340,7 @@ type WrappedMetricsStorage struct {
 	Icon *struct {
 		Id *string `json:"id,omitempty"`
 	} `json:"icon"`
-	Id         *int64     `json:"id,omitempty"`
+	Id         *string    `json:"id,omitempty"`
 	IsOk       bool       `json:"is_ok"`
 	IsSystem   *bool      `json:"is_system,omitempty"`
 	Name       *string    `json:"name,omitempty"`

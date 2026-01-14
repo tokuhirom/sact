@@ -1206,7 +1206,7 @@ func renderMonitoringLogStorageDetail(detail *MonitoringLogStorageDetail) string
 		b.WriteString(fmt.Sprintf("Resource ID: %d\n", *detail.ResourceId))
 	}
 	if detail.Id != nil {
-		b.WriteString(fmt.Sprintf("ID:          %d\n", *detail.Id))
+		b.WriteString(fmt.Sprintf("ID:          %s\n", *detail.Id))
 	}
 
 	if detail.LogStorage.Description != nil && *detail.LogStorage.Description != "" {
@@ -1272,7 +1272,7 @@ func renderMonitoringMetricsStorageDetail(detail *MonitoringMetricsStorageDetail
 		b.WriteString(fmt.Sprintf("Resource ID: %d\n", *detail.ResourceId))
 	}
 	if detail.Id != nil {
-		b.WriteString(fmt.Sprintf("ID:          %d\n", *detail.Id))
+		b.WriteString(fmt.Sprintf("ID:          %s\n", *detail.Id))
 	}
 
 	if detail.MetricsStorage.Description != nil && *detail.MetricsStorage.Description != "" {
