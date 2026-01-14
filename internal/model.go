@@ -1219,6 +1219,22 @@ func loadAppRunASGDetail(client *SakuraClient, clusterID, asgID string) tea.Cmd 
 			slog.Error("Failed to load AppRun Worker Nodes", slog.Any("error", err))
 			return appRunASGDetailLoadedMsg{detail: detail, err: err}
 		}
+		// Also load LBs and their details
+		lbs, err := client.ListAppRunLBs(ctx, clusterID, asgID)
+		if err != nil {
+			slog.Error("Failed to load AppRun LBs", slog.Any("error", err))
+			// Continue without LBs
+		} else {
+			// Fetch detail for each LB
+			for _, lb := range lbs {
+				lbDetail, err := client.GetAppRunLBDetail(ctx, clusterID, asgID, lb.ID)
+				if err != nil {
+					slog.Error("Failed to load AppRun LB detail", slog.String("lbID", lb.ID), slog.Any("error", err))
+					continue
+				}
+				detail.LoadBalancers = append(detail.LoadBalancers, *lbDetail)
+			}
+		}
 		slog.Info("AppRun ASG detail loaded successfully", slog.String("asgID", asgID))
 		return appRunASGDetailLoadedMsg{detail: detail, workerNodes: workerNodes}
 	}

@@ -1143,5 +1143,51 @@ func renderAppRunASGDetail(detail *AppRunASGDetail, workerNodes []AppRunWorkerNo
 		}
 	}
 
+	// Display load balancers
+	if len(detail.LoadBalancers) > 0 {
+		b.WriteString(fmt.Sprintf("\n%s\n", strings.Repeat("─", 60)))
+		b.WriteString(fmt.Sprintf("Load Balancers: %d\n", len(detail.LoadBalancers)))
+
+		for _, lb := range detail.LoadBalancers {
+			b.WriteString(fmt.Sprintf("\n  [LB] %s\n", lb.Name))
+			b.WriteString(fmt.Sprintf("    ID:            %s\n", lb.ID))
+			b.WriteString(fmt.Sprintf("    Service Class: %s\n", lb.ServiceClass))
+
+			if lb.Deleting {
+				b.WriteString("    ** DELETING **\n")
+			}
+
+			// Display name servers
+			if len(lb.NameServers) > 0 {
+				b.WriteString(fmt.Sprintf("    Name Servers:  %s\n", strings.Join(lb.NameServers, ", ")))
+			}
+
+			// Display network interfaces
+			if len(lb.Interfaces) > 0 {
+				b.WriteString(fmt.Sprintf("    Network Interfaces: %d\n", len(lb.Interfaces)))
+				for _, iface := range lb.Interfaces {
+					b.WriteString(fmt.Sprintf("      [eth%d]\n", iface.Index))
+					b.WriteString(fmt.Sprintf("        Upstream:        %s\n", iface.Upstream))
+					if iface.VIP != "" {
+						b.WriteString(fmt.Sprintf("        VIP:             %s\n", iface.VIP))
+					}
+					if iface.DefaultGateway != "" {
+						b.WriteString(fmt.Sprintf("        Default Gateway: %s\n", iface.DefaultGateway))
+					}
+					if iface.NetmaskLen > 0 {
+						b.WriteString(fmt.Sprintf("        Netmask:         /%d\n", iface.NetmaskLen))
+					}
+					if len(iface.IPPool) > 0 {
+						b.WriteString(fmt.Sprintf("        IP Pool:         %s\n", strings.Join(iface.IPPool, ", ")))
+					}
+				}
+			}
+
+			if lb.CreatedAt != "" {
+				b.WriteString(fmt.Sprintf("    Created:       %s\n", lb.CreatedAt))
+			}
+		}
+	}
+
 	return b.String()
 }
