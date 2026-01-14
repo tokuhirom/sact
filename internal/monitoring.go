@@ -2,7 +2,9 @@ package internal
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"time"
@@ -198,27 +200,42 @@ func (c *SakuraClient) ListMonitoringLogStorages(ctx context.Context) ([]Monitor
 		return nil, err
 	}
 
-	resp, err := monClient.LogsStoragesListWithResponse(ctx, nil)
+	// First, make a raw HTTP call to get the body for debugging
+	httpResp, err := monClient.LogsStoragesList(ctx, nil)
 	if err != nil {
-		rawBody := ""
-		if resp != nil {
-			rawBody = string(resp.Body)
-		}
-		slog.Error("Failed to fetch log storages",
-			slog.Any("error", err),
-			slog.String("raw_body", rawBody))
+		slog.Error("Failed to fetch log storages (HTTP)", slog.Any("error", err))
+		return nil, err
+	}
+	defer httpResp.Body.Close()
+
+	bodyBytes, err := io.ReadAll(httpResp.Body)
+	if err != nil {
+		slog.Error("Failed to read response body", slog.Any("error", err))
 		return nil, err
 	}
 
-	if resp.JSON200 == nil {
-		slog.Error("Unexpected response from log storages API",
-			slog.String("status", resp.Status()),
-			slog.String("raw_body", string(resp.Body)))
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
+	slog.Debug("Log storages raw response",
+		slog.Int("status", httpResp.StatusCode),
+		slog.String("raw_body", string(bodyBytes)))
+
+	if httpResp.StatusCode != 200 {
+		slog.Error("Unexpected status from log storages API",
+			slog.Int("status", httpResp.StatusCode),
+			slog.String("raw_body", string(bodyBytes)))
+		return nil, fmt.Errorf("unexpected status: %d", httpResp.StatusCode)
 	}
 
-	result := make([]MonitoringLogStorage, len(resp.JSON200.Results))
-	for i, storage := range resp.JSON200.Results {
+	// Parse JSON manually
+	var parsed monitoring.PaginatedLogStorageList
+	if err := json.Unmarshal(bodyBytes, &parsed); err != nil {
+		slog.Error("Failed to parse log storages response",
+			slog.Any("error", err),
+			slog.String("raw_body", string(bodyBytes)))
+		return nil, err
+	}
+
+	result := make([]MonitoringLogStorage, len(parsed.Results))
+	for i, storage := range parsed.Results {
 		result[i] = MonitoringLogStorage{LogStorage: storage}
 	}
 
