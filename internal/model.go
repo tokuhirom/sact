@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/list"
@@ -448,13 +449,10 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 		}
 	} else if ls, ok := item.(MonitoringLogStorage); ok {
 		// Handle MonitoringLogStorage
-		name := getStringPtr(ls.Name)
-		resourceID := getStringPtr(ls.ResourceId)
-		expireDay := getIntPtr(ls.ExpireDay)
-		routings := 0
-		if ls.Usage != nil {
-			routings = ls.Usage.LogRoutings
-		}
+		name := getOptString(ls.Name)
+		resourceID := getNilInt64AsString(ls.ResourceID)
+		expireDay := ls.ExpireDay.Or(0)
+		routings := ls.Usage.LogRoutings
 		if index == m.Index() {
 			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %10s  %3d days  %d routings",
 				name,
@@ -470,12 +468,9 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 		}
 	} else if ms, ok := item.(MonitoringMetricsStorage); ok {
 		// Handle MonitoringMetricsStorage
-		name := getStringPtr(ms.Name)
-		resourceID := getStringPtr(ms.ResourceId)
-		routings := 0
-		if ms.Usage != nil {
-			routings = ms.Usage.MetricsRoutings
-		}
+		name := getOptString(ms.Name)
+		resourceID := getNilInt64AsString(ms.ResourceID)
+		routings := ms.Usage.MetricsRoutings
 		if index == m.Index() {
 			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %10s  %d routings",
 				name,
@@ -489,12 +484,9 @@ func (d resourceDelegate) Render(w io.Writer, m list.Model, index int, item list
 		}
 	} else if ts, ok := item.(MonitoringTraceStorage); ok {
 		// Handle MonitoringTraceStorage
-		name := getStringPtr(ts.Name)
-		resourceID := getStringPtr(ts.ResourceId)
-		retention := 0
-		if ts.RetentionPeriodDays != nil {
-			retention = *ts.RetentionPeriodDays
-		}
+		name := getOptString(ts.Name)
+		resourceID := strconv.FormatInt(ts.ResourceID, 10)
+		retention := ts.RetentionPeriodDays
 		if index == m.Index() {
 			str = selectedItemStyle.Render(fmt.Sprintf("> %-40s %10s  %d days retention",
 				name,
@@ -1918,17 +1910,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if ls, ok := selectedItem.(MonitoringLogStorage); ok {
 					m.detailMode = true
 					m.detailLoading = true
-					return m, loadMonitoringLogStorageDetail(m.client, getStringPtr(ls.ResourceId))
+					return m, loadMonitoringLogStorageDetail(m.client, getNilInt64AsString(ls.ResourceID))
 				}
 				if ms, ok := selectedItem.(MonitoringMetricsStorage); ok {
 					m.detailMode = true
 					m.detailLoading = true
-					return m, loadMonitoringMetricsStorageDetail(m.client, getStringPtr(ms.ResourceId))
+					return m, loadMonitoringMetricsStorageDetail(m.client, getNilInt64AsString(ms.ResourceID))
 				}
 				if ts, ok := selectedItem.(MonitoringTraceStorage); ok {
 					m.detailMode = true
 					m.detailLoading = true
-					return m, loadMonitoringTraceStorageDetail(m.client, getStringPtr(ts.ResourceId))
+					return m, loadMonitoringTraceStorageDetail(m.client, strconv.FormatInt(ts.ResourceID, 10))
 				}
 			}
 			return m, nil
