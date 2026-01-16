@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.12](https://github.com/tokuhirom/sact/compare/v0.0.11...v0.0.12) - 2026-01-16
+- refactor(monitoring): switch to sacloud/monitoring-suite-api-go by @tokuhirom in https://github.com/tokuhirom/sact/pull/43
+
 ## [v0.0.11](https://github.com/tokuhirom/sact/compare/v0.0.10...v0.0.11) - 2026-01-14
 - Add Monitoring Suite support for log and metrics storages by @tokuhirom in https://github.com/tokuhirom/sact/pull/41
 
