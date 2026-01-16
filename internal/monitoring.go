@@ -4,217 +4,150 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"net/http"
-	"time"
+	"strconv"
 
-	client "github.com/sacloud/api-client-go"
-	monitoring "github.com/tokuhirom/sact/pkg/openapi/monitoring_suite"
+	monitoringsuite "github.com/sacloud/monitoring-suite-api-go"
+	v1 "github.com/sacloud/monitoring-suite-api-go/apis/v1"
 )
 
 // MonitoringLogStorage wraps the generated LogStorage type for TUI display
 type MonitoringLogStorage struct {
-	monitoring.LogStorage
+	v1.LogStorage
 }
 
 // MonitoringMetricsStorage wraps the generated MetricsStorage type for TUI display
 type MonitoringMetricsStorage struct {
-	monitoring.MetricsStorage
+	v1.MetricsStorage
+}
+
+// MonitoringTraceStorage wraps the generated TraceStorage type for TUI display
+type MonitoringTraceStorage struct {
+	v1.TraceStorage
 }
 
 // MonitoringLogRouting wraps the generated LogRouting type for TUI display
 type MonitoringLogRouting struct {
-	monitoring.LogRouting
+	v1.LogRouting
 }
 
 // MonitoringMetricsRouting wraps the generated MetricsRouting type for TUI display
 type MonitoringMetricsRouting struct {
-	monitoring.MetricsRouting
+	v1.MetricsRouting
 }
 
-// Helper functions to safely get values from pointers
-func getStringPtr(s *string) string {
-	if s == nil {
-		return ""
+// Helper functions to safely get values from optional types
+func getOptString(s v1.OptString) string {
+	if v, ok := s.Get(); ok {
+		return v
 	}
-	return *s
+	return ""
 }
 
-func getInt64Ptr(i *int64) int64 {
-	if i == nil {
-		return 0
+func getNilInt64AsString(n v1.NilInt64) string {
+	if v, ok := n.Get(); ok {
+		return strconv.FormatInt(v, 10)
 	}
-	return *i
+	return ""
 }
 
-func getIntPtr(i *int) int {
-	if i == nil {
-		return 0
+func getOptNilInt64AsString(n v1.OptNilInt64) string {
+	if v, ok := n.Get(); ok {
+		return strconv.FormatInt(v, 10)
 	}
-	return *i
-}
-
-func getBoolPtr(b *bool) bool {
-	if b == nil {
-		return false
-	}
-	return *b
+	return ""
 }
 
 // Implement list.Item interface for MonitoringLogStorage
 func (s MonitoringLogStorage) FilterValue() string {
-	return getStringPtr(s.Name)
+	return getOptString(s.Name)
 }
 
 func (s MonitoringLogStorage) Title() string {
-	return getStringPtr(s.Name)
+	return getOptString(s.Name)
 }
 
 func (s MonitoringLogStorage) Description() string {
-	routings := 0
-	if s.Usage != nil {
-		routings = s.Usage.LogRoutings
-	}
-	return fmt.Sprintf("ID: %s | Expire: %d days | Routings: %d", getStringPtr(s.ResourceId), getIntPtr(s.ExpireDay), routings)
+	resourceID := getNilInt64AsString(s.ResourceID)
+	return fmt.Sprintf("ID: %s | Expire: %d days | Routings: %d", resourceID, s.ExpireDay.Or(0), s.Usage.LogRoutings)
 }
 
 // Implement list.Item interface for MonitoringMetricsStorage
 func (s MonitoringMetricsStorage) FilterValue() string {
-	return getStringPtr(s.Name)
+	return getOptString(s.Name)
 }
 
 func (s MonitoringMetricsStorage) Title() string {
-	return getStringPtr(s.Name)
+	return getOptString(s.Name)
 }
 
 func (s MonitoringMetricsStorage) Description() string {
-	routings := 0
-	alertRules := 0
-	if s.Usage != nil {
-		routings = s.Usage.MetricsRoutings
-		alertRules = s.Usage.AlertRules
-	}
-	return fmt.Sprintf("ID: %s | Routings: %d | Alert Rules: %d", getStringPtr(s.ResourceId), routings, alertRules)
+	resourceID := getNilInt64AsString(s.ResourceID)
+	return fmt.Sprintf("ID: %s | Routings: %d | Alert Rules: %d", resourceID, s.Usage.MetricsRoutings, s.Usage.AlertRules)
+}
+
+// Implement list.Item interface for MonitoringTraceStorage
+func (s MonitoringTraceStorage) FilterValue() string {
+	return getOptString(s.Name)
+}
+
+func (s MonitoringTraceStorage) Title() string {
+	return getOptString(s.Name)
+}
+
+func (s MonitoringTraceStorage) Description() string {
+	return fmt.Sprintf("ID: %d | Retention: %d days", s.ResourceID, s.RetentionPeriodDays)
 }
 
 // Implement list.Item interface for MonitoringLogRouting
 func (r MonitoringLogRouting) FilterValue() string {
-	if r.Uid != nil {
-		return r.Uid.String()
-	}
-	return ""
+	return r.UID.String()
 }
 
 func (r MonitoringLogRouting) Title() string {
-	if r.Uid != nil {
-		return r.Uid.String()[:8]
-	}
-	return ""
+	return r.UID.String()[:8]
 }
 
 func (r MonitoringLogRouting) Description() string {
-	return fmt.Sprintf("ResourceID: %s -> LogStorage: %s | Variant: %s",
-		getStringPtr(r.ResourceId),
-		getStringPtr(r.LogStorageId),
-		r.Variant)
+	resourceID := getOptNilInt64AsString(r.ResourceID)
+	logStorageID := getOptNilInt64AsString(r.LogStorageID)
+	return fmt.Sprintf("ResourceID: %s -> LogStorage: %s | Variant: %s", resourceID, logStorageID, r.Variant)
 }
 
 // Implement list.Item interface for MonitoringMetricsRouting
 func (r MonitoringMetricsRouting) FilterValue() string {
-	if r.Uid != nil {
-		return r.Uid.String()
-	}
-	return ""
+	return r.UID.String()
 }
 
 func (r MonitoringMetricsRouting) Title() string {
-	if r.Uid != nil {
-		return r.Uid.String()[:8]
-	}
-	return ""
+	return r.UID.String()[:8]
 }
 
 func (r MonitoringMetricsRouting) Description() string {
-	return fmt.Sprintf("ResourceID: %s -> MetricsStorage: %s | Variant: %s",
-		getStringPtr(r.ResourceId),
-		getStringPtr(r.MetricsStorageId),
-		r.Variant)
+	resourceID := getOptNilInt64AsString(r.ResourceID)
+	metricsStorageID := getOptNilInt64AsString(r.MetricsStorageID)
+	return fmt.Sprintf("ResourceID: %s -> MetricsStorage: %s | Variant: %s", resourceID, metricsStorageID, r.Variant)
 }
 
 // MonitoringLogStorageDetail contains detailed info about a log storage
 type MonitoringLogStorageDetail struct {
-	MonitoringLogStorage
-	Tags     []string
+	v1.LogStorage
 	Routings []MonitoringLogRouting
 }
 
 // MonitoringMetricsStorageDetail contains detailed info about a metrics storage
 type MonitoringMetricsStorageDetail struct {
-	MonitoringMetricsStorage
-	Tags     []string
+	v1.MetricsStorage
 	Routings []MonitoringMetricsRouting
-}
-
-// MonitoringTraceStorage wraps the generated TraceStorage type for TUI display
-type MonitoringTraceStorage struct {
-	monitoring.TraceStorage
-}
-
-// Implement list.Item interface for MonitoringTraceStorage
-func (s MonitoringTraceStorage) FilterValue() string {
-	return getStringPtr(s.Name)
-}
-
-func (s MonitoringTraceStorage) Title() string {
-	return getStringPtr(s.Name)
-}
-
-func (s MonitoringTraceStorage) Description() string {
-	retention := 0
-	if s.RetentionPeriodDays != nil {
-		retention = *s.RetentionPeriodDays
-	}
-	return fmt.Sprintf("ID: %s | Retention: %d days", getStringPtr(s.ResourceId), retention)
 }
 
 // MonitoringTraceStorageDetail contains detailed info about a trace storage
 type MonitoringTraceStorageDetail struct {
-	MonitoringTraceStorage
-	Tags []string
+	v1.TraceStorage
 }
 
 // getMonitoringClient creates a monitoring suite API client
-func (c *SakuraClient) getMonitoringClient() (*monitoring.ClientWithResponses, error) {
-	clientOpts, err := client.DefaultOption()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get credentials: %w", err)
-	}
-
-	token := clientOpts.AccessToken
-	secret := clientOpts.AccessTokenSecret
-
-	if token == "" || secret == "" {
-		return nil, fmt.Errorf("credentials not found")
-	}
-
-	// Create HTTP client with timeout
-	httpClient := &http.Client{
-		Timeout: 30 * time.Second,
-	}
-
-	// Create client with basic auth
-	monClient, err := monitoring.NewClientWithResponses(
-		"https://secure.sakura.ad.jp/cloud/zone/is1a/api/monitoring/1.0",
-		monitoring.WithHTTPClient(httpClient),
-		monitoring.WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
-			req.SetBasicAuth(token, secret)
-			return nil
-		}),
-	)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create monitoring client: %w", err)
-	}
-
-	return monClient, nil
+func (c *SakuraClient) getMonitoringClient() (*v1.Client, error) {
+	return monitoringsuite.NewClient()
 }
 
 // ListMonitoringLogStorages fetches all log storages
@@ -226,18 +159,15 @@ func (c *SakuraClient) ListMonitoringLogStorages(ctx context.Context) ([]Monitor
 		return nil, err
 	}
 
-	resp, err := monClient.LogsStoragesListWithResponse(ctx, nil)
+	op := monitoringsuite.NewLogsStorageOp(monClient)
+	storages, err := op.List(ctx, monitoringsuite.LogsStoragesListParams{})
 	if err != nil {
 		slog.Error("Failed to fetch log storages", slog.Any("error", err))
 		return nil, err
 	}
 
-	if resp.JSON200 == nil {
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
-	}
-
-	result := make([]MonitoringLogStorage, len(resp.JSON200.Results))
-	for i, storage := range resp.JSON200.Results {
+	result := make([]MonitoringLogStorage, len(storages))
+	for i, storage := range storages {
 		result[i] = MonitoringLogStorage{LogStorage: storage}
 	}
 
@@ -254,22 +184,44 @@ func (c *SakuraClient) ListMonitoringMetricsStorages(ctx context.Context) ([]Mon
 		return nil, err
 	}
 
-	resp, err := monClient.MetricsStoragesListWithResponse(ctx, nil)
+	op := monitoringsuite.NewMetricsStorageOp(monClient)
+	storages, err := op.List(ctx, monitoringsuite.MetricsStorageListParams{})
 	if err != nil {
 		slog.Error("Failed to fetch metrics storages", slog.Any("error", err))
 		return nil, err
 	}
 
-	if resp.JSON200 == nil {
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
-	}
-
-	result := make([]MonitoringMetricsStorage, len(resp.JSON200.Results))
-	for i, storage := range resp.JSON200.Results {
+	result := make([]MonitoringMetricsStorage, len(storages))
+	for i, storage := range storages {
 		result[i] = MonitoringMetricsStorage{MetricsStorage: storage}
 	}
 
 	slog.Info("Successfully fetched metrics storages", slog.Int("count", len(result)))
+	return result, nil
+}
+
+// ListMonitoringTraceStorages fetches all trace storages
+func (c *SakuraClient) ListMonitoringTraceStorages(ctx context.Context) ([]MonitoringTraceStorage, error) {
+	slog.Info("Fetching Monitoring Trace Storages")
+
+	monClient, err := c.getMonitoringClient()
+	if err != nil {
+		return nil, err
+	}
+
+	op := monitoringsuite.NewTracesStorageOp(monClient)
+	storages, err := op.List(ctx, monitoringsuite.TracesStorageListParams{})
+	if err != nil {
+		slog.Error("Failed to fetch trace storages", slog.Any("error", err))
+		return nil, err
+	}
+
+	result := make([]MonitoringTraceStorage, len(storages))
+	for i, storage := range storages {
+		result[i] = MonitoringTraceStorage{TraceStorage: storage}
+	}
+
+	slog.Info("Successfully fetched trace storages", slog.Int("count", len(result)))
 	return result, nil
 }
 
@@ -282,18 +234,15 @@ func (c *SakuraClient) ListMonitoringLogRoutings(ctx context.Context) ([]Monitor
 		return nil, err
 	}
 
-	resp, err := monClient.LogsRoutingsListWithResponse(ctx, nil)
+	op := monitoringsuite.NewLogRoutingOp(monClient)
+	routings, err := op.List(ctx, monitoringsuite.LogsRoutingsListParams{})
 	if err != nil {
 		slog.Error("Failed to fetch log routings", slog.Any("error", err))
 		return nil, err
 	}
 
-	if resp.JSON200 == nil {
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
-	}
-
-	result := make([]MonitoringLogRouting, len(resp.JSON200.Results))
-	for i, routing := range resp.JSON200.Results {
+	result := make([]MonitoringLogRouting, len(routings))
+	for i, routing := range routings {
 		result[i] = MonitoringLogRouting{LogRouting: routing}
 	}
 
@@ -310,18 +259,15 @@ func (c *SakuraClient) ListMonitoringMetricsRoutings(ctx context.Context) ([]Mon
 		return nil, err
 	}
 
-	resp, err := monClient.MetricsRoutingsListWithResponse(ctx, nil)
+	op := monitoringsuite.NewMetricsRoutingOp(monClient)
+	routings, err := op.List(ctx, monitoringsuite.MetricsRoutingsListParams{})
 	if err != nil {
 		slog.Error("Failed to fetch metrics routings", slog.Any("error", err))
 		return nil, err
 	}
 
-	if resp.JSON200 == nil {
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
-	}
-
-	result := make([]MonitoringMetricsRouting, len(resp.JSON200.Results))
-	for i, routing := range resp.JSON200.Results {
+	result := make([]MonitoringMetricsRouting, len(routings))
+	for i, routing := range routings {
 		result[i] = MonitoringMetricsRouting{MetricsRouting: routing}
 	}
 
@@ -338,60 +284,29 @@ func (c *SakuraClient) GetMonitoringLogStorageDetail(ctx context.Context, resour
 		return nil, err
 	}
 
-	resp, err := monClient.LogsStoragesRetrieveWithResponse(ctx, resourceID)
+	op := monitoringsuite.NewLogsStorageOp(monClient)
+	storage, err := op.Read(ctx, resourceID)
 	if err != nil {
 		slog.Error("Failed to fetch log storage detail", slog.Any("error", err))
 		return nil, err
 	}
 
-	if resp.JSON200 == nil {
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
-	}
-
 	// Also fetch routings
 	routings, _ := c.ListMonitoringLogRoutings(ctx)
 
-	// Filter routings for this storage (by LogStorageId or LogStorage.ResourceId)
+	// Filter routings for this storage
 	var filteredRoutings []MonitoringLogRouting
 	for _, r := range routings {
-		logStorageID := getStringPtr(r.LogStorageId)
-		// Also check embedded LogStorage object
-		if logStorageID == "" && r.LogStorage != nil {
-			logStorageID = getStringPtr(r.LogStorage.ResourceId)
-		}
-		if logStorageID == "" {
-			continue
-		}
-		if logStorageID == resourceID {
+		// Use embedded LogStorage's ResourceID
+		storageResourceID := getNilInt64AsString(r.LogStorage.ResourceID)
+		if storageResourceID == resourceID {
 			filteredRoutings = append(filteredRoutings, r)
 		}
 	}
 
-	var tags []string
-	if resp.JSON200.Tags != nil {
-		tags = *resp.JSON200.Tags
-	}
-
-	// Convert WrappedLogStorage to LogStorage
-	storage := monitoring.LogStorage{
-		AccountId:   resp.JSON200.AccountId,
-		CreatedAt:   resp.JSON200.CreatedAt,
-		Description: resp.JSON200.Description,
-		Endpoints:   resp.JSON200.Endpoints,
-		ExpireDay:   resp.JSON200.ExpireDay,
-		Icon:        resp.JSON200.Icon,
-		Id:          resp.JSON200.Id,
-		IsSystem:    resp.JSON200.IsSystem,
-		Name:        resp.JSON200.Name,
-		ResourceId:  resp.JSON200.ResourceId,
-		Tags:        resp.JSON200.Tags,
-		Usage:       resp.JSON200.Usage,
-	}
-
 	detail := &MonitoringLogStorageDetail{
-		MonitoringLogStorage: MonitoringLogStorage{LogStorage: storage},
-		Tags:                 tags,
-		Routings:             filteredRoutings,
+		LogStorage: *storage,
+		Routings:   filteredRoutings,
 	}
 
 	slog.Info("Successfully fetched log storage detail", slog.String("resourceID", resourceID))
@@ -407,92 +322,33 @@ func (c *SakuraClient) GetMonitoringMetricsStorageDetail(ctx context.Context, re
 		return nil, err
 	}
 
-	resp, err := monClient.MetricsStoragesRetrieveWithResponse(ctx, resourceID)
+	op := monitoringsuite.NewMetricsStorageOp(monClient)
+	storage, err := op.Read(ctx, resourceID)
 	if err != nil {
 		slog.Error("Failed to fetch metrics storage detail", slog.Any("error", err))
 		return nil, err
 	}
 
-	if resp.JSON200 == nil {
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
-	}
-
 	// Also fetch routings
 	routings, _ := c.ListMonitoringMetricsRoutings(ctx)
 
-	// Filter routings for this storage (by MetricsStorageId or MetricsStorage.ResourceId)
+	// Filter routings for this storage
 	var filteredRoutings []MonitoringMetricsRouting
 	for _, r := range routings {
-		metricsStorageID := getStringPtr(r.MetricsStorageId)
-		// Also check embedded MetricsStorage object
-		if metricsStorageID == "" && r.MetricsStorage != nil {
-			metricsStorageID = getStringPtr(r.MetricsStorage.ResourceId)
-		}
-		if metricsStorageID == "" {
-			continue
-		}
-		if metricsStorageID == resourceID {
+		// Use embedded MetricsStorage's ResourceID
+		storageResourceID := getNilInt64AsString(r.MetricsStorage.ResourceID)
+		if storageResourceID == resourceID {
 			filteredRoutings = append(filteredRoutings, r)
 		}
 	}
 
-	var tags []string
-	if resp.JSON200.Tags != nil {
-		tags = *resp.JSON200.Tags
-	}
-
-	// Convert WrappedMetricsStorage to MetricsStorage
-	storage := monitoring.MetricsStorage{
-		AccountId:   resp.JSON200.AccountId,
-		CreatedAt:   resp.JSON200.CreatedAt,
-		Description: resp.JSON200.Description,
-		Endpoints:   resp.JSON200.Endpoints,
-		Icon:        resp.JSON200.Icon,
-		Id:          resp.JSON200.Id,
-		IsSystem:    resp.JSON200.IsSystem,
-		Name:        resp.JSON200.Name,
-		ResourceId:  resp.JSON200.ResourceId,
-		Tags:        resp.JSON200.Tags,
-		UpdatedAt:   resp.JSON200.UpdatedAt,
-		Usage:       resp.JSON200.Usage,
-	}
-
 	detail := &MonitoringMetricsStorageDetail{
-		MonitoringMetricsStorage: MonitoringMetricsStorage{MetricsStorage: storage},
-		Tags:                     tags,
-		Routings:                 filteredRoutings,
+		MetricsStorage: *storage,
+		Routings:       filteredRoutings,
 	}
 
 	slog.Info("Successfully fetched metrics storage detail", slog.String("resourceID", resourceID))
 	return detail, nil
-}
-
-// ListMonitoringTraceStorages fetches all trace storages
-func (c *SakuraClient) ListMonitoringTraceStorages(ctx context.Context) ([]MonitoringTraceStorage, error) {
-	slog.Info("Fetching Monitoring Trace Storages")
-
-	monClient, err := c.getMonitoringClient()
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := monClient.TracesStoragesListWithResponse(ctx, nil)
-	if err != nil {
-		slog.Error("Failed to fetch trace storages", slog.Any("error", err))
-		return nil, err
-	}
-
-	if resp.JSON200 == nil {
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
-	}
-
-	result := make([]MonitoringTraceStorage, len(resp.JSON200.Results))
-	for i, storage := range resp.JSON200.Results {
-		result[i] = MonitoringTraceStorage{TraceStorage: storage}
-	}
-
-	slog.Info("Successfully fetched trace storages", slog.Int("count", len(result)))
-	return result, nil
 }
 
 // GetMonitoringTraceStorageDetail fetches detail for a trace storage
@@ -504,37 +360,15 @@ func (c *SakuraClient) GetMonitoringTraceStorageDetail(ctx context.Context, reso
 		return nil, err
 	}
 
-	resp, err := monClient.TracesStoragesRetrieveWithResponse(ctx, resourceID)
+	op := monitoringsuite.NewTracesStorageOp(monClient)
+	storage, err := op.Read(ctx, resourceID)
 	if err != nil {
 		slog.Error("Failed to fetch trace storage detail", slog.Any("error", err))
 		return nil, err
 	}
 
-	if resp.JSON200 == nil {
-		return nil, fmt.Errorf("unexpected response: %s", resp.Status())
-	}
-
-	var tags []string
-	if resp.JSON200.Tags != nil {
-		tags = *resp.JSON200.Tags
-	}
-
-	// Convert WrappedTraceStorage to TraceStorage
-	storage := monitoring.TraceStorage{
-		CreatedAt:           resp.JSON200.CreatedAt,
-		Description:         resp.JSON200.Description,
-		Endpoints:           resp.JSON200.Endpoints,
-		Icon:                resp.JSON200.Icon,
-		Id:                  resp.JSON200.Id,
-		Name:                resp.JSON200.Name,
-		ResourceId:          resp.JSON200.ResourceId,
-		RetentionPeriodDays: resp.JSON200.RetentionPeriodDays,
-		Tags:                resp.JSON200.Tags,
-	}
-
 	detail := &MonitoringTraceStorageDetail{
-		MonitoringTraceStorage: MonitoringTraceStorage{TraceStorage: storage},
-		Tags:                   tags,
+		TraceStorage: *storage,
 	}
 
 	slog.Info("Successfully fetched trace storage detail", slog.String("resourceID", resourceID))
