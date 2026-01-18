@@ -49,13 +49,12 @@ export SAKURACLOUD_ACCESS_TOKEN_SECRET=your_secret
 - `j`/`k` または `↑`/`↓`: カーソル移動
 - `q` または `Ctrl+C`: 終了
 
-### 設定ファイル
+### デフォルトゾーン
 
-`~/.config/sact/config.toml` でデフォルトゾーンを設定できます:
+デフォルトゾーンは usacloud プロファイルの `Zone` フィールドで設定できます。
+プロファイルの設定ファイルは `~/.usacloud/{プロファイル名}/config.json` に保存されます。
 
-```toml
-default_zone = "tk1b"
-```
+デフォルトゾーンが設定されていない場合は `tk1b` が使用されます。
 
 ## 実装方針
 

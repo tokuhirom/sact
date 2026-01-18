@@ -9,9 +9,26 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// testNewClientForModel creates a client for model testing
+func testNewClientForModel(t *testing.T, zone string) *SakuraClient {
+	opts, _, err := LoadProfileAndZone()
+	if err != nil {
+		t.Skipf("Skipping test: no profile or environment variables configured: %v", err)
+		return nil
+	}
+
+	client, err := NewSakuraClient(opts, zone)
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+	return client
+}
+
 func TestInitialModel(t *testing.T) {
-	client, err := NewSakuraClient("tk1b")
-	assert.NoError(t, err)
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 
 	m := InitialModel(client, "tk1b")
 
@@ -24,8 +41,10 @@ func TestInitialModel(t *testing.T) {
 }
 
 func TestInitialModelWithDifferentZone(t *testing.T) {
-	client, err := NewSakuraClient("is1a")
-	assert.NoError(t, err)
+	client := testNewClientForModel(t, "is1a")
+	if client == nil {
+		return
+	}
 
 	m := InitialModel(client, "is1a")
 
@@ -34,7 +53,10 @@ func TestInitialModelWithDifferentZone(t *testing.T) {
 }
 
 func TestUpdateWindowSize(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	msg := tea.WindowSizeMsg{Width: 100, Height: 50}
@@ -46,7 +68,10 @@ func TestUpdateWindowSize(t *testing.T) {
 }
 
 func TestUpdateQuit(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	msg := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}}
@@ -58,7 +83,10 @@ func TestUpdateQuit(t *testing.T) {
 }
 
 func TestEscInListViewDoesNotQuit(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.loading = false
 
@@ -70,7 +98,10 @@ func TestEscInListViewDoesNotQuit(t *testing.T) {
 }
 
 func TestUpdateZoneSwitch(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.loading = false // Simulate finished loading
 
@@ -89,7 +120,10 @@ func TestUpdateZoneSwitch(t *testing.T) {
 }
 
 func TestUpdateEnterSearchMode(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	msg := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'/'}}
@@ -100,7 +134,10 @@ func TestUpdateEnterSearchMode(t *testing.T) {
 }
 
 func TestSearchModeEscape(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.searchMode = true
 	m.searchInput.SetValue("test")
@@ -114,7 +151,10 @@ func TestSearchModeEscape(t *testing.T) {
 }
 
 func TestSearchModeEnter(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.searchMode = true
 	m.searchInput.SetValue("web")
@@ -143,7 +183,10 @@ func TestSearchModeEnter(t *testing.T) {
 }
 
 func TestNextMatch(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	servers := []Server{
@@ -176,7 +219,10 @@ func TestNextMatch(t *testing.T) {
 }
 
 func TestPrevMatch(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	servers := []Server{
@@ -209,7 +255,10 @@ func TestPrevMatch(t *testing.T) {
 }
 
 func TestPerformSearch(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	servers := []Server{
@@ -244,7 +293,10 @@ func TestPerformSearch(t *testing.T) {
 }
 
 func TestViewQuitting(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.quitting = true
 
@@ -253,7 +305,10 @@ func TestViewQuitting(t *testing.T) {
 }
 
 func TestViewLoading(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.loading = true
 
@@ -263,7 +318,10 @@ func TestViewLoading(t *testing.T) {
 }
 
 func TestViewWithAccountName(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.accountName = "test-account"
 	m.loading = false
@@ -273,7 +331,10 @@ func TestViewWithAccountName(t *testing.T) {
 }
 
 func TestViewSearchMode(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.searchMode = true
 	m.loading = false
@@ -283,7 +344,10 @@ func TestViewSearchMode(t *testing.T) {
 }
 
 func TestViewWithSearchResults(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.searchQuery = "web"
 	m.searchMatches = []int{0, 2, 5}
@@ -295,7 +359,10 @@ func TestViewWithSearchResults(t *testing.T) {
 }
 
 func TestViewZoneDisplay(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.loading = false
 
@@ -313,7 +380,10 @@ func TestViewZoneDisplay(t *testing.T) {
 }
 
 func TestServersLoadedMsg(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	servers := []Server{
@@ -330,7 +400,10 @@ func TestServersLoadedMsg(t *testing.T) {
 }
 
 func TestServersLoadedMsgWithError(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	msg := serversLoadedMsg{servers: nil, err: assert.AnError}
@@ -342,7 +415,10 @@ func TestServersLoadedMsgWithError(t *testing.T) {
 }
 
 func TestAuthStatusLoadedMsg(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	msg := authStatusLoadedMsg{accountName: "my-account", err: nil}
@@ -376,7 +452,10 @@ func TestServerListItem(t *testing.T) {
 }
 
 func TestNavigationKeysWork(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	servers := []Server{
@@ -406,7 +485,10 @@ func TestNavigationKeysWork(t *testing.T) {
 }
 
 func TestRefreshKey(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.loading = false
 
@@ -419,7 +501,10 @@ func TestRefreshKey(t *testing.T) {
 }
 
 func TestViewDoesNotPanic(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 
 	// Test various states don't cause panics
@@ -439,7 +524,10 @@ func TestViewDoesNotPanic(t *testing.T) {
 }
 
 func TestMultipleZoneSwitches(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.loading = false
 
@@ -456,7 +544,10 @@ func TestMultipleZoneSwitches(t *testing.T) {
 }
 
 func TestEmptyServerList(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.loading = false
 
@@ -473,7 +564,10 @@ func TestEmptyServerList(t *testing.T) {
 }
 
 func TestEnterDetailMode(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.loading = false
 
@@ -498,7 +592,10 @@ func TestEnterDetailMode(t *testing.T) {
 }
 
 func TestExitDetailMode(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.detailMode = true
 	m.serverDetail = &ServerDetail{
@@ -515,7 +612,10 @@ func TestExitDetailMode(t *testing.T) {
 }
 
 func TestDetailViewRendering(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.detailMode = true
 	m.detailLoading = true
@@ -566,7 +666,10 @@ func TestDetailViewRendering(t *testing.T) {
 }
 
 func TestServerDetailLoadedMsg(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.detailMode = true
 	m.detailLoading = true
@@ -586,7 +689,10 @@ func TestServerDetailLoadedMsg(t *testing.T) {
 }
 
 func TestServerDetailLoadedMsgWithError(t *testing.T) {
-	client, _ := NewSakuraClient("tk1b")
+	client := testNewClientForModel(t, "tk1b")
+	if client == nil {
+		return
+	}
 	m := InitialModel(client, "tk1b")
 	m.detailMode = true
 	m.detailLoading = true

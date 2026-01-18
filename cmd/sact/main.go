@@ -50,18 +50,18 @@ func main() {
 
 	slog.Info("Starting sact", slog.String("log_path", *logPath))
 
-	config, err := internal.LoadConfig()
+	opts, defaultZone, err := internal.LoadProfileAndZone()
 	if err != nil {
-		slog.Error("Failed to load config", slog.Any("error", err))
-		_, err := fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
+		slog.Error("Failed to load profile", slog.Any("error", err))
+		_, err := fmt.Fprintf(os.Stderr, "Error loading profile: %v\n", err)
 		if err != nil {
 			slog.Error("Failed to write to stderr", slog.Any("error", err))
 		}
 		os.Exit(1)
 	}
-	slog.Info("Config loaded", slog.String("default_zone", config.DefaultZone))
+	slog.Info("Profile loaded", slog.String("default_zone", defaultZone))
 
-	client, err := internal.NewSakuraClient(config.DefaultZone)
+	client, err := internal.NewSakuraClient(opts, defaultZone)
 	if err != nil {
 		slog.Error("Failed to create client", slog.Any("error", err))
 		_, err := fmt.Fprintf(os.Stderr, "Error creating client: %v\n", err)
@@ -70,9 +70,9 @@ func main() {
 		}
 		os.Exit(1)
 	}
-	slog.Info("Client created", slog.String("zone", config.DefaultZone))
+	slog.Info("Client created", slog.String("zone", defaultZone))
 
-	p := tea.NewProgram(internal.InitialModel(client, config.DefaultZone))
+	p := tea.NewProgram(internal.InitialModel(client, defaultZone))
 	if _, err := p.Run(); err != nil {
 		slog.Error("Program failed", slog.Any("error", err))
 		_, err := fmt.Fprintf(os.Stderr, "Error running program: %v\n", err)
