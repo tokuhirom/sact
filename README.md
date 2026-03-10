@@ -4,6 +4,9 @@
 
 基本的に､サーバーの追加･削除は terraform でする前提で､オペレーションとしては停止と開始とかメインとする｡
 
+**ターミナル派のあなたへ**: このツールは TUI (Terminal User Interface) です。
+**GUI がお好みなら**: [sakpilot](https://github.com/tokuhirom/sakpilot) をどうぞ！
+
 ## 構成要素
 
  * bubbletea
