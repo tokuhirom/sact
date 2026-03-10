@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.13](https://github.com/tokuhirom/sact/compare/v0.0.12...v0.0.13) - 2026-03-10
+- Add cross-reference to sakpilot in README by @tokuhirom in https://github.com/tokuhirom/sact/pull/46
+
 ## [v0.0.12](https://github.com/tokuhirom/sact/compare/v0.0.11...v0.0.12) - 2026-01-16
 - refactor(monitoring): switch to sacloud/monitoring-suite-api-go by @tokuhirom in https://github.com/tokuhirom/sact/pull/43
 
