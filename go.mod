@@ -15,9 +15,9 @@ require (
 	github.com/sacloud/iaas-api-go v1.24.1
 	github.com/sacloud/monitoring-suite-api-go v0.1.1
 	github.com/stretchr/testify v1.11.1
-	go.opentelemetry.io/otel v1.39.0
-	go.opentelemetry.io/otel/metric v1.39.0
-	go.opentelemetry.io/otel/trace v1.39.0
+	go.opentelemetry.io/otel v1.41.0
+	go.opentelemetry.io/otel/metric v1.41.0
+	go.opentelemetry.io/otel/trace v1.41.0
 )
 
 require (
