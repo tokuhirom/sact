@@ -25,18 +25,23 @@ The application uses the Bubble Tea framework (bubbletea) for the TUI, following
 
 ### Key Components
 
-- `cmd/sact/main.go`: Entry point that handles logging setup, config loading, and TUI initialization
+- `cmd/sact/main.go`: Entry point that handles logging setup, profile loading, and TUI initialization
 - `internal/client.go`: Wrapper around `github.com/sacloud/iaas-api-go` for Sakura Cloud API operations
 - `internal/model.go`: Bubble Tea TUI implementation
-- `internal/config.go`: Configuration loading from `~/.config/sact/config.toml`
+- `internal/profile.go`: Profile and credentials loading from usacloud profile system
 
 ### Authentication
 
-Credentials are loaded from environment variables via the sacloud API client:
-- `SAKURA_ACCESS_TOKEN`
-- `SAKURA_ACCESS_TOKEN_SECRET`
+Credentials are loaded from usacloud profile or environment variables via the sacloud API client:
+- Profile: `~/.usacloud/{profileName}/config.json` (automatically detected from `~/.usacloud/current`)
+- Environment variables: `SAKURACLOUD_ACCESS_TOKEN` and `SAKURACLOUD_ACCESS_TOKEN_SECRET`
 
-These must be set before running the application.
+The application automatically falls back to environment variables if no profile is configured.
+
+### Default Zone
+
+The default zone is stored in the usacloud profile's `Zone` field in `~/.usacloud/{profileName}/config.json`.
+If not set, the application defaults to `tk1b`. Valid zones are validated against: `tk1a`, `tk1b`, `is1a`, `is1b`, `is1c`.
 
 ### Supported Zones
 

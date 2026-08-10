@@ -174,7 +174,7 @@ func (s *apprunSecuritySource) BasicAuth(ctx context.Context, operationName appr
 	}, nil
 }
 
-func NewSakuraClient(zone string) (*SakuraClient, error) {
+func NewSakuraClient(opts *api.CallerOptions, zone string) (*SakuraClient, error) {
 	if zone == "" {
 		slog.Error("Zone is empty")
 		return nil, fmt.Errorf("zone must be specified")
@@ -182,10 +182,7 @@ func NewSakuraClient(zone string) (*SakuraClient, error) {
 
 	slog.Info("Creating Sakura Cloud API caller", slog.String("zone", zone))
 
-	caller, err := api.NewCaller()
-	if err != nil {
-		return nil, fmt.Errorf("failed to create Sakura Cloud API caller: %w", err)
-	}
+	caller := api.NewCallerWithOptions(opts)
 
 	slog.Info("Sakura Cloud API caller created successfully!", slog.String("zone", zone))
 

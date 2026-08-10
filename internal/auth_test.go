@@ -8,7 +8,13 @@ import (
 )
 
 func TestGetAuthStatus(t *testing.T) {
-	client, err := NewSakuraClient("tk1b")
+	opts, _, err := LoadProfileAndZone()
+	if err != nil {
+		t.Skipf("Skipping test: no profile or environment variables configured: %v", err)
+		return
+	}
+
+	client, err := NewSakuraClient(opts, "tk1b")
 	assert.NoError(t, err)
 
 	ctx := context.Background()
