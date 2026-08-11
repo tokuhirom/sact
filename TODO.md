@@ -67,6 +67,26 @@ iaas-api-go v1.24.1 で利用可能なリソースの対応状況です。
 7. [x] Bridge - ブリッジ接続の対応
 8. [x] ContainerRegistry - コンテナレジストリの対応
 
+## 既知の制限事項
+
+### ContainerRegistry のイメージ一覧表示
+
+さくらのクラウドのコンテナレジストリでは、Docker Registry HTTP API v2 の `_catalog` エンドポイントへのアクセスが制限されています。そのため、sact からコンテナイメージの一覧を取得することができません。
+
+- `GET /v2/_catalog` → `UNAUTHORIZED` エラー（認証済みでも）
+- `GET /v2/<repo>/tags/list` → リポジトリ名を指定すれば取得可能
+
+イメージ一覧を確認するには、`crane` コマンドを使用してください:
+
+```bash
+# crane のインストール
+go install github.com/google/go-containerregistry/cmd/crane@latest
+
+# 特定リポジトリのタグ一覧
+crane ls <fqdn>/<repository>
+# 例: crane ls tokuhirom.sakuracr.jp/myapp
+```
+
 ## 実装パターン
 
 新しいリソースを追加する際の基本パターン:
